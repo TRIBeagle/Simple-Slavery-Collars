@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+
+  <SetSlaveCollar.reportString>TargetA에게 노예 목걸이를 조정합니다.</SetSlaveCollar.reportString>
+  <ShackleSlave.reportString>TargetA에게 족쇄를 조정합니다.</ShackleSlave.reportString>
+  <ActivateRemoteCollar.reportString>TargetA에게 원격 노예 목걸이를 작동합니다.</ActivateRemoteCollar.reportString>
+  <ActivateRemoteCollar.reportString>지정된 인원에게 원격 노예 목걸이를 작동합니다.</ActivateRemoteCollar.reportString>
+
+
+</LanguageData>
