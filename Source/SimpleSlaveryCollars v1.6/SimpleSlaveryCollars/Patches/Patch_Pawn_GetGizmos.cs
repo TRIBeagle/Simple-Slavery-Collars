@@ -24,7 +24,10 @@ namespace SimpleSlaveryCollars.Patches
         /// </summary>
         static void Postfix(Pawn __instance, ref IEnumerable<Gizmo> __result)
         {
-            __result = __result.Concat(SlaveGizmos(__instance));
+            var baseGizmos = __result ?? Enumerable.Empty<Gizmo>();
+            var slaveGizmos = SlaveGizmos(__instance) ?? Enumerable.Empty<Gizmo>();
+
+            __result = baseGizmos.Concat(slaveGizmos);
         }
 
         /// <summary>

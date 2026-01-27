@@ -1,9 +1,8 @@
 ﻿// SimpleSlaveryCollars | Patches | Patch_PreceptRole_ValidatePawn.cs
-// 목적   : Precept_Role.ValidatePawn 실행 시 노예 Pawn도 역할(Precept Role) 부여 가능하도록 허용
-// 용도   : Harmony Postfix 패치로 조건 충족 시 __result 강제 true 반환
-// 변경   : 2025-09-22 주석 규칙(v4.2) 적용 — 헤더/클래스/메서드 요약 재작성
-// 주의   : SlaveryStage/RebelCycle/AssignSlave 옵션 모두 ON일 때만 발동
-// 저장   : 역할 부여 결과는 Pawn 세이브에 간접 반영됨
+// 목적   : Precept_Role.ValidatePawn에서 Stage5 노예를 예외 허용하여 역할/작업 제한을 해제
+// 용도   : Harmony Postfix 패치로 바닐라의 "플레이어 노예 배제" 로직을 Stage5에 한해 우회
+// 변경   : 2026-01-27 Stage5 조건 명시 — IsFreeColonist 기반(우연 통과) 제거, SlaveUtility.IsStage5Slave(p)로 고정
+// 주의   : __result가 false인 경우에만 true로 뒤집음(기존 성공 케이스는 건드리지 않음)
 
 using HarmonyLib;
 using RimWorld;
@@ -13,32 +12,33 @@ namespace SimpleSlaveryCollars.Patches
 {
     /// <summary>
     /// Precept_Role.ValidatePawn 후처리 패치.
-    /// - 옵션 활성화 시 노예 Pawn도 역할 배정 가능
-    /// - RequirementsMet 조건 만족 시 __result 강제 true
+    /// - 모드 옵션이 활성화되고 Pawn이 Stage5 노예일 경우, 바닐라의 제한을 우회하여 역할 후보로 인정한다.
     /// </summary>
     [HarmonyPatch(typeof(Precept_Role), "ValidatePawn")]
     public static class Patch_PreceptRole_ValidatePawn
     {
         /// <summary>
-        /// Postfix: 노예 Pawn도 조건 만족 시 역할 부여 허용.
+        /// Postfix: 바닐라에서 거부(__result==false)된 Pawn이라도 Stage5 노예면 RequirementsMet을 만족하는 경우 true로 승인.
         /// </summary>
         [HarmonyPostfix]
-        public static void ValidatePawn_Patch(ref bool __result, Pawn p, Precept_Role __instance)
+        public static void Postfix(Precept_Role __instance, Pawn p, ref bool __result)
         {
-            if (SimpleSlaveryCollarsSetting.SlavestageEnable == false ||
-                SimpleSlaveryCollarsSetting.RebelCycleChangeEnable == false ||
-                SimpleSlaveryCollarsSetting.AssignSlaveEnable == false)
+            if (__result) return; // 이미 통과면 손대지 않음
+
+            if (!SimpleSlaveryCollarsSetting.SlavestageEnable ||
+                !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable ||
+                !SimpleSlaveryCollarsSetting.Stage5SlaveWorkUnlockEnable)
                 return;
 
-            if (!__result &&
-                p.Faction != null &&
-                (!p.Faction.IsPlayer || p.IsFreeColonist) &&
-                !p.Destroyed &&
-                !p.Dead &&
-                __instance.RequirementsMet(p))
-            {
-                __result = true;
-            }
+            if (p == null) return;
+            if (p.DestroyedOrNull()) return;
+            if (p.Dead) return;
+
+            if (!SlaveUtility.IsStage5Slave(p)) return;
+
+            if (!__instance.RequirementsMet(p)) return;
+
+            __result = true;
         }
     }
 }

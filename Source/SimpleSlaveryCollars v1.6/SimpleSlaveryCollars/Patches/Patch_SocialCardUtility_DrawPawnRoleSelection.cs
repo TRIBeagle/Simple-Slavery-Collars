@@ -38,7 +38,7 @@ namespace SimpleSlaveryCollars.Patches
             // [Safety] 모드 설정 및 노예 조건 확인
             if (!SimpleSlaveryCollarsSetting.SlavestageEnable
                 || !SimpleSlaveryCollarsSetting.AssignSlaveEnable
-                || !(pawn.IsFreeColonist && pawn.IsSlave))
+                || !pawn.IsSlaveOfColony)
                 return;
 
             var currentRole = pawn.Ideo?.GetRole(pawn);

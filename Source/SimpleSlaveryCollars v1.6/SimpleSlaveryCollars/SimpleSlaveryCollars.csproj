@@ -73,6 +73,8 @@
     <Compile Include="Comps\CompTarget_SetSlaveCollar.cs" />
     <Compile Include="DefOf.cs" />
     <Compile Include="HarmonyInit.cs" />
+    <Compile Include="Patches\Patch_Pawn_GuestTracker_SetGuestStatus_RemoveEnslavedHediff.cs" />
+    <Compile Include="Patches\Patch_Pawn_GuestTracker_SetGuestStatus_EnsureEnslavedHediff.cs" />
     <Compile Include="Patches\Patch_WorkGiver_Warden_ExecuteSlave_JobOnThing.cs" />
     <Compile Include="Patches\Patch_WorkGiver_Warden_ImprisonSlave_JobOnThing.cs" />
     <Compile Include="Patches\Patch_WorkGiver_Warden_EmancipateSlave_JobOnThing.cs" />
@@ -82,7 +84,7 @@
     <Compile Include="Patches\Patch_RestraintUtility_ShouldShowRestraintsInfo.cs" />
     <Compile Include="Patches\Patch_RestraintUtility_InRestraints.cs" />
     <Compile Include="Patches\Patch_Pawn_PreTraded.cs" />
-    <Compile Include="Patches\Patch_GenGuest_EnslavePrisoner.cs" />
+    <Compile Include="Patches\Patch_GenGuest_TryEnslavePrisoner.cs" />
     <Compile Include="Patches\Patch_GenGuest_EmancipateSlave.cs" />
     <Compile Include="Patches\Patch_Pawn_Strip.cs" />
     <Compile Include="Patches\Patch_SlaveRebellionUtility_GetSlaveRebellionMtbCalculationExplanation.cs" />

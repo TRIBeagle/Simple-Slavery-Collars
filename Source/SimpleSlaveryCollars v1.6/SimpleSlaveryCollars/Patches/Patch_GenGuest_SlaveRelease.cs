@@ -25,13 +25,17 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void SlaveRelease_Patch(Pawn p)
         {
+            if (p == null) return;
+            if (p.Faction != Faction.OfPlayer) return;
+
+            var mood = p.needs?.mood;
+            if (mood == null) return;
+
             if (SlaveUtility.TimeAsSlave(p) >= SlaveUtility.SlaveStage4 &&
-                !SlaveUtility.IsSteadfast(p) &&
-                p.Faction == Faction.OfPlayer &&
-                p.needs.mood != null)
+                !SlaveUtility.IsSteadfast(p))
             {
-                p.needs.mood.thoughts.memories.RemoveMemoriesOfDef(ThoughtDefOf.WasEnslaved);
-                p.needs.mood.thoughts.memories.TryGainMemory(SSC_ThoughtDefOf.WasEnslaved_Assimilation);
+                mood.thoughts.memories.RemoveMemoriesOfDef(ThoughtDefOf.WasEnslaved);
+                mood.thoughts.memories.TryGainMemory(SSC_ThoughtDefOf.WasEnslaved_Assimilation);
             }
         }
     }

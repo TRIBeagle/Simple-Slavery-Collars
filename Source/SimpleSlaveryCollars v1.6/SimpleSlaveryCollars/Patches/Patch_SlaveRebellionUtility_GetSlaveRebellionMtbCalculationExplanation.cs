@@ -65,7 +65,12 @@ namespace SimpleSlaveryCollars.Patches
             stringBuilder.AppendLine(string.Format("{0}: {1}", (object)"SuppressionFinalInterval".Translate(), (object)((int)((double)SlaveRebellionUtility.InitiateSlaveRebellionMtbDays(pawn) * 60000.0)).ToStringTicksToPeriod()));
 
             // 마지막 개행 제거 후 합치기(원본 로직 유지)
-            __result = __result.Remove(__result.LastIndexOf(Environment.NewLine));
+            if (__result == null) __result = string.Empty;
+
+            int lastNewLine = __result.LastIndexOf(Environment.NewLine);
+            if (lastNewLine >= 0)
+                __result = __result.Remove(lastNewLine);
+
             __result += stringBuilder.ToString();
         }
     }
