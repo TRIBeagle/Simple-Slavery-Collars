@@ -73,8 +73,6 @@
     <Compile Include="Comps\CompTarget_SetSlaveCollar.cs" />
     <Compile Include="DefOf.cs" />
     <Compile Include="HarmonyInit.cs" />
-    <Compile Include="Patches\Patch_Pawn_GuestTracker_SetGuestStatus_RemoveEnslavedHediff.cs" />
-    <Compile Include="Patches\Patch_Pawn_GuestTracker_SetGuestStatus_EnsureEnslavedHediff.cs" />
     <Compile Include="Patches\Patch_WorkGiver_Warden_ExecuteSlave_JobOnThing.cs" />
     <Compile Include="Patches\Patch_WorkGiver_Warden_ImprisonSlave_JobOnThing.cs" />
     <Compile Include="Patches\Patch_WorkGiver_Warden_EmancipateSlave_JobOnThing.cs" />
@@ -110,6 +108,7 @@
     <Compile Include="SimpleSlaveryCollars_Setting.cs" />
     <Compile Include="RemoteCollarTypes.cs" />
     <Compile Include="Debugs\SimpleSlaveryCollars_DebugActions.cs" />
+    <Compile Include="SSC_ReflectionCache.cs" />
     <Compile Include="SlaveUtility.cs" />
     <Compile Include="ThoughtWorkers\ThoughtWorker_Enslaved.cs" />
     <Compile Include="ThoughtWorkers\ThoughtWorker_ExplosiveCollar.cs" />

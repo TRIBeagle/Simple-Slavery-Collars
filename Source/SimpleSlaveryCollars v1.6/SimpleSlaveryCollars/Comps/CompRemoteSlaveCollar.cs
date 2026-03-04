@@ -1,7 +1,7 @@
 ﻿// SimpleSlaveryCollars | Comps | CompRemoteSlaveCollar.cs
 // 목적   : 원격 노예 칼라 제어(폭발/감전/크립토) 및 그룹/개별 예약·실행·UI 제공
 // 용도   : Remote 콘솔(Thing)에 부착되어 Pawn 대상 제어, FloatMenu·Gizmo 노출
-// 변경   : 2025-09-22 프로젝트 주석 규칙(v4.2) 적용 — 헤더/클래스/섹션·안전/성능 주석 재작성
+// 변경   : [FIX] PostExposeData() 추가 — remotearmed* 토글 상태 저장/로드. 기존 세이브에서는 기본값(false)으로 로드됨.
 // 주의   : 그룹 진행 중 중복 예약·실행을 막기 위해 Busy 플래그 사용(IsGroupBusy)
 // 성능   : CompGetGizmosExtra에서 Pawn 전체 스캔(옵션 분기). 스캔은 1회로 최소화
 
@@ -50,6 +50,21 @@ namespace SimpleSlaveryCollars
         private Dictionary<Pawn, RemoteCollarAction> reservedPawns = new Dictionary<Pawn, RemoteCollarAction>();
         public bool groupJobPending = false;
         public RemoteCollarAction groupJobActionType;
+        #endregion
+
+        #region [FIX] 저장/로드
+        /// <summary>
+        /// [FIX] remotearmed* 토글 상태를 저장/로드.
+        /// 기존 세이브에서는 이 키가 없으므로 기본값(false)으로 로드됨 — 기존과 동일한 동작.
+        /// reservedPawns/groupJobPending은 런타임 전용이므로 저장하지 않음.
+        /// </summary>
+        public override void PostExposeData()
+        {
+            base.PostExposeData();
+            Scribe_Values.Look(ref remotearmedExplosive, "remotearmedExplosive", false);
+            Scribe_Values.Look(ref remotearmedElectric, "remotearmedElectric", false);
+            Scribe_Values.Look(ref remotearmedCrypto, "remotearmedCrypto", false);
+        }
         #endregion
 
         #region 전원 확인
@@ -134,7 +149,6 @@ namespace SimpleSlaveryCollars
             int cancelled = 0;
             foreach (var pawn in targetPawns)
             {
-                // 해당 작업(ActionType)이 예약된 Pawn만 취소
                 if (reservedPawns.TryGetValue(pawn, out var reservedAction))
                 {
                     if (reservedAction == actionType)
@@ -156,18 +170,18 @@ namespace SimpleSlaveryCollars
         /// <summary>전 맵의 식민 Pawn들 중 폭발 칼라 상태를 콘솔 토글값에 맞춰 일괄 갱신.</summary>
         private void DoRemoteCollarExplosive()
         {
-            var explosives = this.parent.Map.mapPawns.AllPawnsSpawned
-                .Select(pawn => new { pawn, collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive })
-                .Where(x => SlaveUtility.IsColonyMember(x.pawn) && x.collar != null && x.collar.armed != remotearmedExplosive)
-                .ToList();
-
-            foreach (var x in explosives)
+            // [FIX] armed 토글만 수행, 컬렉션 변경 없음 → ToList 불필요
+            foreach (var pawn in this.parent.Map.mapPawns.AllPawnsSpawned)
             {
-                x.collar.armed = remotearmedExplosive;
-                if (x.collar.armed && x.collar.arm_cooldown == 0)
+                if (!SlaveUtility.IsColonyMember(pawn)) continue;
+                var collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive;
+                if (collar == null || collar.armed == remotearmedExplosive) continue;
+
+                collar.armed = remotearmedExplosive;
+                if (collar.armed && collar.arm_cooldown == 0)
                 {
-                    SlaveUtility.TryInstantBreak(x.pawn, Rand.Range(0.25f, 0.33f));
-                    x.collar.arm_cooldown = 2500;
+                    SlaveUtility.TryInstantBreak(pawn, Rand.Range(0.25f, 0.33f));
+                    collar.arm_cooldown = 2500;
                 }
             }
         }
@@ -175,31 +189,31 @@ namespace SimpleSlaveryCollars
         /// <summary>전 맵 대상 감전 칼라 Armed 상태를 콘솔 토글값에 맞춰 일괄 갱신.</summary>
         private void DoRemoteCollarElectric()
         {
-            var electrics = this.parent.Map.mapPawns.AllPawnsSpawned
-                .Select(pawn => new { pawn, collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Electric })
-                .Where(x => SlaveUtility.IsColonyMember(x.pawn) && x.collar != null && x.collar.armed != remotearmedElectric)
-                .ToList();
-
-            foreach (var x in electrics)
+            // [FIX] armed 토글만 수행, 컬렉션 변경 없음 → ToList 불필요
+            foreach (var pawn in this.parent.Map.mapPawns.AllPawnsSpawned)
             {
-                x.collar.armed = remotearmedElectric;
+                if (!SlaveUtility.IsColonyMember(pawn)) continue;
+                var collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Electric;
+                if (collar == null || collar.armed == remotearmedElectric) continue;
+
+                collar.armed = remotearmedElectric;
             }
         }
 
         /// <summary>전 맵 대상 크립토 칼라 Armed 상태를 콘솔 토글값에 맞춰 일괄 갱신(해제 시 정신상태 복원).</summary>
         private void DoRemoteCollarCrypto()
         {
-            var cryptos = this.parent.Map.mapPawns.AllPawnsSpawned
-                .Select(pawn => new { pawn, collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Crypto })
-                .Where(x => SlaveUtility.IsColonyMember(x.pawn) && x.collar != null && x.collar.armed != remotearmedCrypto)
-                .ToList();
-
-            foreach (var x in cryptos)
+            // [FIX] armed 토글 + RevertMentalState만 수행, AllPawnsSpawned 컬렉션 불변 → ToList 불필요
+            foreach (var pawn in this.parent.Map.mapPawns.AllPawnsSpawned)
             {
-                x.collar.armed = remotearmedCrypto;
-                if (!x.collar.armed)
+                if (!SlaveUtility.IsColonyMember(pawn)) continue;
+                var collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Crypto;
+                if (collar == null || collar.armed == remotearmedCrypto) continue;
+
+                collar.armed = remotearmedCrypto;
+                if (!collar.armed)
                 {
-                    x.collar.RevertMentalState();
+                    collar.RevertMentalState();
                 }
             }
         }
@@ -207,14 +221,20 @@ namespace SimpleSlaveryCollars
         /// <summary>전 맵 대상 폭발 칼라가 Armed 상태인 Pawn을 폭발시킴.</summary>
         private void DoRemoteCollarGoBoom()
         {
-            var explosives = this.parent.Map.mapPawns.AllPawnsSpawned
-                .Select(pawn => new { pawn, collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive })
-                .Where(x => SlaveUtility.IsColonyMember(x.pawn) && x.collar != null && x.collar.armed)
-                .ToList();
-
-            foreach (var x in explosives)
+            // [NOTE] GoBoom()에서 Pawn 사망 → AllPawnsSpawned 컬렉션 변경 가능 → 스냅샷 필수
+            var allPawns = this.parent.Map.mapPawns.AllPawnsSpawned;
+            var targets = new List<SlaveCollar_Explosive>(allPawns.Count);
+            for (int i = 0; i < allPawns.Count; i++)
             {
-                x.collar.GoBoom();
+                var pawn = allPawns[i];
+                if (!SlaveUtility.IsColonyMember(pawn)) continue;
+                var collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive;
+                if (collar != null && collar.armed)
+                    targets.Add(collar);
+            }
+            for (int i = 0; i < targets.Count; i++)
+            {
+                targets[i].GoBoom();
             }
         }
         #endregion
@@ -312,7 +332,7 @@ namespace SimpleSlaveryCollars
                 if (IsPawnReserved(pawn))
                 {
                     label += " " + "RemoteCollar_AlreadyReservedShort".Translate();
-                    options.Add(new FloatMenuOption(label, null));  // 비활성화
+                    options.Add(new FloatMenuOption(label, null));
                 }
                 else
                 {
@@ -334,11 +354,11 @@ namespace SimpleSlaveryCollars
 
             string coloredName;
             if (pawn.IsColonist)
-                coloredName = $"<color=#a2c8ff>{name}</color>";   // 식민자(하늘색)
+                coloredName = $"<color=#a2c8ff>{name}</color>";
             else if (pawn.IsSlaveOfColony)
-                coloredName = $"<color=#ffd700>{name}</color>";   // 노예(노랑)
+                coloredName = $"<color=#ffd700>{name}</color>";
             else if (pawn.IsPrisonerOfColony)
-                coloredName = $"<color=#ff9090>{name}</color>";   // 죄수(빨강)
+                coloredName = $"<color=#ff9090>{name}</color>";
             else
                 coloredName = name;
 
@@ -440,10 +460,13 @@ namespace SimpleSlaveryCollars
                 var eligibleArmCrypto = new List<Pawn>();
                 var eligibleDisarmCrypto = new List<Pawn>();
 
+                // [FIX] GetSlaveCollar를 Pawn당 1회만 호출 (기존 3회 → 1회)
                 foreach (var p in pawns)
                 {
-                    var explosive = SlaveUtility.GetSlaveCollar(p) as SlaveCollar_Explosive;
-                    if (explosive != null)
+                    var collar = SlaveUtility.GetSlaveCollar(p);
+                    if (collar == null) continue;
+
+                    if (collar is SlaveCollar_Explosive explosive)
                     {
                         if (!explosive.armed)
                             eligibleArmExplosive.Add(p);
@@ -453,18 +476,14 @@ namespace SimpleSlaveryCollars
                             eligibleDetonateExplosive.Add(p);
                         }
                     }
-
-                    var electric = SlaveUtility.GetSlaveCollar(p) as SlaveCollar_Electric;
-                    if (electric != null)
+                    else if (collar is SlaveCollar_Electric electric)
                     {
                         if (!electric.armed)
                             eligibleArmElectric.Add(p);
                         else
                             eligibleDisarmElectric.Add(p);
                     }
-
-                    var crypto = SlaveUtility.GetSlaveCollar(p) as SlaveCollar_Crypto;
-                    if (crypto != null)
+                    else if (collar is SlaveCollar_Crypto crypto)
                     {
                         if (!crypto.armed)
                             eligibleArmCrypto.Add(p);

@@ -416,3 +416,16 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# Build artifacts
+**/bin/
+**/obj/
+*.user
+*.suo
+*.cache
+*.pdb
+*.mdb
+
+# Rider/VS
+.idea/
+.vs/

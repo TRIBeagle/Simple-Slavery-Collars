@@ -1,8 +1,7 @@
 ﻿// SimpleSlaveryCollars | Core | Hediffs.cs
 // 목적   : 노예 칼라 및 상태에 연계된 전용 Hediff 정의
 // 용도   : Enslaved(노예화), CryptoStasis(구속 정신상태) 관리
-// 변경   : 2025-09-22 주석 규칙(v4.2) 적용
-// 주의   : 각 필드는 저장/로드 시 ExposeData로 처리
+// 변경   : [FIX] Hediff_CryptoStasis.SaveMemory()에 pawn.mindState null 체크 추가
 // 저장   : assimilatedAtStage4, uiRefreshedAtStage4 등 Stage4 전환 관련 상태 포함
 
 using RimWorld;
@@ -52,11 +51,14 @@ namespace SimpleSlaveryCollars
 
         /// <summary>
         /// 현재 정신상태를 메모리에 저장.
-        /// - CryptoStasis 상태면 기본적으로 Berserk를 복원 대상으로 지정
-        /// - 아니면 현재 상태를 그대로 저장
+        /// [FIX] pawn.mindState/mentalStateHandler null 체크 추가
+        ///       — 로딩 중, 사망 직후 등에서 NRE 방지
         /// </summary>
         public void SaveMemory()
         {
+            if (pawn?.mindState?.mentalStateHandler == null)
+                return;
+
             if (pawn.mindState.mentalStateHandler.CurStateDef == SSC_MentalStateDefOf.CryptoStasis)
                 revertMentalStateDef = MentalStateDefOf.Berserk;
             else

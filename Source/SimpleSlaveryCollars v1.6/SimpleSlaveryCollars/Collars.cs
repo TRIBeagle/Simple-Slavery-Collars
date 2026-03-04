@@ -23,21 +23,20 @@ namespace SimpleSlaveryCollars
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {
                 var status = armed ? "CollarState_Armed".Translate() : "CollarState_Unarmed".Translate();
-                // 상태별 아이콘 경로 지정
                 var iconPath = armed
-                    ? "UI/Commands/DetonateCollar_Explosive"    // 활성화(장전됨)일 때 아이콘
-                    : "UI/Commands/ArmCollar_Explosive";  // 비활성화(비장전)일 때 아이콘
+                    ? "UI/Commands/DetonateCollar_Explosive"
+                    : "UI/Commands/ArmCollar_Explosive";
                 var disabled = new Command_Action
                 {
-                    defaultLabel = status, // 라벨엔 오직 상태만!
-                    defaultDesc = "Desc_CollarRemoteOnly".Translate(), // 기존 설명 그대로
+                    defaultLabel = status,
+                    defaultDesc = "Desc_CollarRemoteOnly".Translate(),
                     icon = ContentFinder<Texture2D>.Get(iconPath, true),
                     action = () =>
                     {
                         Messages.Message("Reason_CollarRemoteOnly".Translate(), MessageTypeDefOf.RejectInput);
                     }
                 };
-                disabled.Disable("Reason_CollarRemoteOnly".Translate()); // 비활성 사유도 그대로
+                disabled.Disable("Reason_CollarRemoteOnly".Translate());
 
                 yield return disabled;
                 yield break;
@@ -55,7 +54,6 @@ namespace SimpleSlaveryCollars
                 {
                     if (arm_cooldown == 0)
                     {
-                        // Doesn't matter if pawn is slave or not when armed
                         SlaveUtility.TryInstantBreak(Wearer, Rand.Range(0.25f, 0.33f));
                         arm_cooldown = 2500;
                     }
@@ -81,10 +79,31 @@ namespace SimpleSlaveryCollars
             }
         }
 
+        /// <summary>
+        /// [FIX] 폭발 실행.
+        /// - 폭발 전에 Position/Map을 캐시 (폭발로 Wearer가 사망하면 Map이 null이 됨)
+        /// - 폭발 후 Wearer.Dead 체크
+        /// - Neck이 없는 종족(기계족, 커스텀 외계인 등)에서 NRE 방지
+        /// </summary>
         public void GoBoom()
         {
-            GenExplosion.DoExplosion(Wearer.Position, Wearer.Map, 1.5f, DamageDefOf.Bomb, this, 50);
-            var destroyNeck = new DamageInfo(DamageDefOf.Bomb, 100f, 100f, -1f, this, Wearer.RaceProps.body.AllParts.Find(part => part.def == SSC_BodyPartDefOf.Neck));
+            // 폭발 전 위치/맵 캐시 — DoExplosion에서 Wearer가 사망할 수 있음
+            var pos = Wearer.Position;
+            var map = Wearer.Map;
+            GenExplosion.DoExplosion(pos, map, 1.5f, DamageDefOf.Bomb, this, 50);
+
+            // [FIX] 폭발로 이미 사망했으면 추가 데미지 불필요
+            if (Wearer.Dead) return;
+
+            // [FIX] Neck이 없는 종족 방어 — corePart(몸통)로 폴백
+            var neck = Wearer.RaceProps.body.AllParts.Find(part => part.def == SSC_BodyPartDefOf.Neck);
+            if (neck == null)
+            {
+                neck = Wearer.RaceProps.body.corePart;
+            }
+            if (neck == null) return;
+
+            var destroyNeck = new DamageInfo(DamageDefOf.Bomb, 100f, 100f, -1f, this, neck);
             Wearer.TakeDamage(destroyNeck);
         }
 
@@ -117,15 +136,15 @@ namespace SimpleSlaveryCollars
                 var status = armed ? "CollarState_Armed".Translate() : "CollarState_Unarmed".Translate();
                 var disabled = new Command_Action
                 {
-                    defaultLabel = status, // 라벨엔 오직 상태만!
-                    defaultDesc = "Desc_CollarRemoteOnly".Translate(), // 기존 설명 그대로
+                    defaultLabel = status,
+                    defaultDesc = "Desc_CollarRemoteOnly".Translate(),
                     icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Electric", true),
                     action = () =>
                     {
                         Messages.Message("Reason_CollarRemoteOnly".Translate(), MessageTypeDefOf.RejectInput);
                     }
                 };
-                disabled.Disable("Reason_CollarRemoteOnly".Translate()); // 비활성 사유도 그대로
+                disabled.Disable("Reason_CollarRemoteOnly".Translate());
 
                 yield return disabled;
                 yield break;
@@ -163,19 +182,56 @@ namespace SimpleSlaveryCollars
                 zap_cooldown = zap_period;
             }
         }
+        /// <summary>
+        /// [FIX] 감전 실행.
+        /// - Downed/Spawned 체크를 Neck 탐색보다 먼저 수행
+        /// - Neck이 없는 종족 방어 — corePart 폴백
+        /// - 각 TakeDamage 후 Dead/Downed 체크로 연쇄 크래시 방지
+        /// </summary>
         public void Zap()
         {
-            var zap = new DamageInfo(DamageDefOf.Burn, 1f, 100f, -1f, this, Wearer.RaceProps.body.AllParts.Find(part => part.def == SSC_BodyPartDefOf.Neck));
-            var zap2 = new DamageInfo(DamageDefOf.Stun, 1f, 100f, -1f, this, Wearer.RaceProps.body.AllParts.Find(part => part.def == SSC_BodyPartDefOf.Neck));
+            // [FIX] 상태 체크를 DamageInfo 생성보다 먼저 수행
             if (Wearer.Downed || !Wearer.Spawned)
             {
                 armed = false;
                 return;
             }
+
+            // [FIX] Neck이 없는 종족 방어 — corePart(몸통)로 폴백
+            var neck = Wearer.RaceProps.body.AllParts.Find(part => part.def == SSC_BodyPartDefOf.Neck);
+            if (neck == null)
+            {
+                neck = Wearer.RaceProps.body.corePart;
+            }
+            if (neck == null)
+            {
+                armed = false;
+                return;
+            }
+
             SoundInfo info = SoundInfo.InMap(new TargetInfo(Wearer.PositionHeld, Wearer.MapHeld));
             SoundDefOf.Power_OffSmall.PlayOneShot(info);
+
+            var zap = new DamageInfo(DamageDefOf.Burn, 1f, 100f, -1f, this, neck);
             Wearer.TakeDamage(zap);
+
+            // [FIX] 첫 데미지로 Dead/Downed 시 중단
+            if (Wearer.Dead || Wearer.Downed)
+            {
+                armed = false;
+                return;
+            }
+
+            var zap2 = new DamageInfo(DamageDefOf.Stun, 1f, 100f, -1f, this, neck);
             Wearer.TakeDamage(zap2);
+
+            // [FIX] 두 번째 데미지로 Dead 시 중단
+            if (Wearer.Dead)
+            {
+                armed = false;
+                return;
+            }
+
             Wearer.health.AddHediff(SSC_HediffDefOf.Electrocuted);
             SlaveUtility.TryHeartAttack(Wearer);
         }
@@ -193,15 +249,15 @@ namespace SimpleSlaveryCollars
                 var status = armed ? "CollarState_Armed".Translate() : "CollarState_Unarmed".Translate();
                 var disabled = new Command_Action
                 {
-                    defaultLabel = status, // 라벨엔 오직 상태만!
-                    defaultDesc = "Desc_CollarRemoteOnly".Translate(), // 기존 설명 그대로
+                    defaultLabel = status,
+                    defaultDesc = "Desc_CollarRemoteOnly".Translate(),
                     icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Crypto", true),
                     action = () =>
                     {
                         Messages.Message("Reason_CollarRemoteOnly".Translate(), MessageTypeDefOf.RejectInput);
                     }
                 };
-                disabled.Disable("Reason_CollarRemoteOnly".Translate()); // 비활성 사유도 그대로
+                disabled.Disable("Reason_CollarRemoteOnly".Translate());
 
                 yield return disabled;
                 yield break;
@@ -263,12 +319,15 @@ namespace SimpleSlaveryCollars
             }
             else
             {
-                // 만약 mindState가 null이면 hediff만 제거 (혹은 아무것도 안함)
                 Wearer.health.RemoveHediff(cryptoStasis);
             }
         }
 
 
+        /// <summary>
+        /// [FIX] 크립토 스테이시스 적용.
+        /// - Hediff 캐스트 실패(XML hediffClass 미설정 등) 시 NRE 방지
+        /// </summary>
         public void CryptoStasis()
         {
             Hediff_CryptoStasis revertMentalState = null;
@@ -276,7 +335,8 @@ namespace SimpleSlaveryCollars
             {
                 Wearer.health.AddHediff(SSC_HediffDefOf.Crypto_Stasis);
                 revertMentalState = Wearer.health.hediffSet.GetFirstHediffOfDef(SSC_HediffDefOf.Crypto_Stasis) as Hediff_CryptoStasis;
-                revertMentalState.SaveMemory();
+                // [FIX] 캐스트 실패 방어 — XML에서 hediffClass가 Hediff_CryptoStasis가 아니면 null
+                revertMentalState?.SaveMemory();
             }
             if (Wearer.InBed())
             {

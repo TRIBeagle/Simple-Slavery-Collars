@@ -1,16 +1,13 @@
 ﻿// SimpleSlaveryCollars | Debugs | SimpleSlaveryCollars_DebugActions.cs
 // 목적   : DevMode DebugAction으로 Pawn의 TimeAsSlaveTicks를 손쉽게 조정
 // 용도   : Debug 메뉴에서 Reset/Stage 경계점/직접입력 실행 → CompSlave 및 레코드 동기화
-// 변경   : 2025-09-22 주석 규칙(v4.2) 적용 — 헤더·클래스/메서드 주석 재작성
+// 변경   : [FIX] 리플렉션 코드를 SSC_ReflectionCache로 교체하여 CompSlave과의 중복 제거
 // 주의   : RecordType.Time은 AddTo 금지 → 반드시 DefMap.set_Item(절대값) 경로 사용
-// 성능   : 리플렉션 멤버 탐색은 최초 1회만, 이후 캐시 사용
 
 using LudeonTK;
 using RimWorld;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using Verse;
 
@@ -136,95 +133,15 @@ namespace SimpleSlaveryCollars.Debugs
             }
         }
 
-        // ===== Record 직접 세팅 (리플렉션) =====
-        private static FieldInfo _defMapFieldCached;
-        private static MethodInfo _defMapSetItemCached;
-        private static bool _defMapMembersSearched;
+        // ===== Record 직접 세팅 — SSC_ReflectionCache 사용 =====
 
-        private static bool TryResolveDefMapAndIndexer(Pawn_RecordsTracker tracker, out object defMap)
-        {
-            defMap = null;
-            if (tracker == null) return false;
-
-            try
-            {
-                if (!_defMapMembersSearched)
-                {
-                    _defMapMembersSearched = true;
-
-                    _defMapFieldCached = typeof(Pawn_RecordsTracker).GetField(
-                        "records",
-                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-
-                    if (_defMapFieldCached == null)
-                    {
-                        var dmType = typeof(DefMap<RecordDef, float>);
-                        _defMapFieldCached = typeof(Pawn_RecordsTracker)
-                            .GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                            .FirstOrDefault(f => f.FieldType == dmType);
-                    }
-
-                    if (_defMapFieldCached != null)
-                    {
-                        var mapType = _defMapFieldCached.FieldType;
-                        _defMapSetItemCached = mapType.GetMethod(
-                            "set_Item",
-                            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                            binder: null,
-                            types: new[] { typeof(RecordDef), typeof(float) },
-                            modifiers: null
-                        );
-
-                        if (_defMapSetItemCached == null)
-                        {
-                            _defMapSetItemCached = mapType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                                .FirstOrDefault(m =>
-                                {
-                                    if (m.Name != "set_Item") return false;
-                                    var ps = m.GetParameters();
-                                    return ps.Length == 2
-                                           && typeof(RecordDef).IsAssignableFrom(ps[0].ParameterType)
-                                           && ps[1].ParameterType == typeof(float);
-                                });
-                        }
-                    }
-                }
-
-                if (_defMapFieldCached == null || _defMapSetItemCached == null)
-                {
-                    Log.Error("[SSC] Pawn_RecordsTracker: DefMap field or set_Item not found");
-                    return false;
-                }
-
-                defMap = _defMapFieldCached.GetValue(tracker);
-                if (defMap == null)
-                {
-                    Log.Error("[SSC] Pawn_RecordsTracker: DefMap instance is null");
-                    return false;
-                }
-
-                return true;
-            }
-            catch (Exception e)
-            {
-                Log.Error($"[SSC] TryResolveDefMapAndIndexer failed: {e}");
-                return false;
-            }
-        }
-
-        /// <summary>Record(Time) 절대값 세팅. DefMap[rec] = ticks;</summary>
+        /// <summary>Record(Time) 절대값 세팅. SSC_ReflectionCache.TrySetRecord() 사용.</summary>
         private static void SetRecordTicks_Absolute(Pawn pawn, RecordDef rec, int targetTicks)
         {
             if (pawn?.records == null) return;
-            if (!TryResolveDefMapAndIndexer(pawn.records, out var defMap)) return;
-
-            try
+            if (!SSC_ReflectionCache.TrySetRecord(pawn.records, rec, (float)Mathf.Max(0, targetTicks)))
             {
-                _defMapSetItemCached.Invoke(defMap, new object[] { rec, (float)Mathf.Max(0, targetTicks) });
-            }
-            catch (Exception e)
-            {
-                Log.Error($"[SSC] SetRecordTicks_Absolute failed: {e}");
+                Log.Error("[SSC] SetRecordTicks_Absolute failed via SSC_ReflectionCache.");
             }
         }
 

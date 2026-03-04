@@ -1,9 +1,10 @@
 ﻿// SimpleSlaveryCollars | Thoughts | ThoughtWorker_Enslaved.cs
 // 목적   : Pawn이 Colony 소속 노예일 때 억제 단계(Slavery Stage)에 따른 정신 사상을 부여
 // 용도   : RimWorld ThoughtWorker 확장
-// 변경   : 2025-09-22 주석 규칙(v4.2) 적용 — Stage4/5 및 Steadfast 예외 명시
-// 주의   : Stage5 = (x ≥ SlaveStage4 && !Steadfast), Stage4 = (SlaveStage3 < x < SlaveStage4) 또는 (x ≥ SlaveStage4 && Steadfast)
-// 저장   : Stage4 동화(assimilation) 여부와 UI refresh 여부는 Hediff_Enslaved 내부 플래그에 저장됨
+// 변경   : [FIX] 부작용 로직(SetGuestStatus, Notify_DisabledWorkTypesChanged, assimilatedAtStage4 등)
+//           전부 CompSlave.CompTickRare()로 이동. ThoughtWorker는 순수 Stage 판정만 수행.
+// 주의   : CurrentStateInternal()은 UI 계산용으로 비동기·무작위로 수십~수백 회 호출됨.
+//           상태 변경(부작용)을 넣으면 틱 스파이크, 무한 루프, Harmony 패치 연쇄 발동 위험.
 
 using RimWorld;
 using Verse;
@@ -12,65 +13,40 @@ namespace SimpleSlaveryCollars
 {
     /// <summary>
     /// 노예 Pawn의 억제 단계(Slavery Stage)에 따라 적절한 ThoughtState를 반환한다.
-    /// - Stage1~3: 단계별 사상 부여
-    /// - Stage4: (x ≥ S3 && Steadfast) 또는 (S3 < x < S4) → Assimilation 처리 및 UI refresh
-    /// - Stage5: (x ≥ S4 && !Steadfast) → 최종 사상 단계
+    /// Stage 정의:
+    ///   Stage1 = x &lt; S1
+    ///   Stage2 = S1 ≤ x &lt; S2
+    ///   Stage3 = S2 ≤ x &lt; S3
+    ///   Stage4 = (S3 ≤ x &lt; S4) 또는 (x ≥ S4 &amp;&amp; Steadfast)
+    ///   Stage5 = x ≥ S4 &amp;&amp; !Steadfast
     /// </summary>
     public class ThoughtWorker_Enslaved : ThoughtWorker
     {
-        /// <summary>
-        /// Pawn의 현재 억제 단계 및 상태를 바탕으로 활성화할 사상을 결정한다.
-        /// </summary>
         protected override ThoughtState CurrentStateInternal(Pawn pawn)
         {
-            if (SimpleSlaveryCollarsSetting.SlavestageEnable == false)
+            if (!SimpleSlaveryCollarsSetting.SlavestageEnable)
                 return ThoughtState.Inactive;
 
-            if (pawn.IsSlaveOfColony)
-            {
-                if (SlaveUtility.TimeAsSlave(pawn) < SlaveUtility.SlaveStage1)
-                {
-                    return ThoughtState.ActiveAtStage(0);
-                }
-                else if (SlaveUtility.TimeAsSlave(pawn) < SlaveUtility.SlaveStage2)
-                {
-                    return ThoughtState.ActiveAtStage(1);
-                }
-                else if (SlaveUtility.TimeAsSlave(pawn) < SlaveUtility.SlaveStage3)
-                {
-                    return ThoughtState.ActiveAtStage(2);
-                }
-                else if (SlaveUtility.TimeAsSlave(pawn) < SlaveUtility.SlaveStage4
-                      || (SlaveUtility.TimeAsSlave(pawn) >= SlaveUtility.SlaveStage3 && SlaveUtility.IsSteadfast(pawn)))
-                {
-                    return ThoughtState.ActiveAtStage(3);
-                }
-                else if (SlaveUtility.TimeAsSlave(pawn) >= SlaveUtility.SlaveStage4)
-                {
-                    var enslavedHediff = pawn.health.hediffSet.GetFirstHediffOfDef(SSC_HediffDefOf.Enslaved) as Hediff_Enslaved;
-                    if (enslavedHediff != null)
-                    {
-                        // Stage4 동화 처리
-                        if (!enslavedHediff.assimilatedAtStage4 && SimpleSlaveryCollarsSetting.AssimilationSlaveEnable)
-                        {
-                            if (pawn.guest.SlaveFaction != Faction.OfPlayer)
-                                pawn.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave);
+            if (!pawn.IsSlaveOfColony)
+                return ThoughtState.Inactive;
 
-                            enslavedHediff.assimilatedAtStage4 = true;
-                        }
+            float time = SlaveUtility.TimeAsSlave(pawn);
 
-                        // UI refresh 처리
-                        if (!enslavedHediff.uiRefreshedAtStage4)
-                        {
-                            pawn.Notify_DisabledWorkTypesChanged();
-                            enslavedHediff.uiRefreshedAtStage4 = true;
-                        }
-                    }
+            if (time < SlaveUtility.SlaveStage1)
+                return ThoughtState.ActiveAtStage(0);
 
-                    return ThoughtState.ActiveAtStage(4);
-                }
-            }
-            return ThoughtState.Inactive;
+            if (time < SlaveUtility.SlaveStage2)
+                return ThoughtState.ActiveAtStage(1);
+
+            if (time < SlaveUtility.SlaveStage3)
+                return ThoughtState.ActiveAtStage(2);
+
+            if (time < SlaveUtility.SlaveStage4
+                || (time >= SlaveUtility.SlaveStage3 && SlaveUtility.IsSteadfast(pawn)))
+                return ThoughtState.ActiveAtStage(3);
+
+            // Stage5: x ≥ S4 && !Steadfast
+            return ThoughtState.ActiveAtStage(4);
         }
     }
 }

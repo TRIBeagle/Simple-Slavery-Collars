@@ -1,14 +1,13 @@
 ﻿// SimpleSlaveryCollars | Comps | CompSlave.cs
 // 목적   : Pawn의 "노예로 지낸 시간"을 Comp 단일 진실원천(SSOT)으로 관리하고, 저장/표시/마이그레이션/동기화를 담당
 // 용도   : Pawn에 부착되어 CompTickRare로 누적, 인스펙트에 노출, 저장 직전에 Record로 1회 동기화
-// 변경   : 2025-09-22 주석 규칙(v4.2) 적용 — 헤더/클래스/메서드 요약 및 저장·성능 의도 명시
-// 저장   : IExposable 필드 3종(_timeAsSlaveTicks/_lastGameTick/_migratedOnce). 기존 Record(TimeAsSlave)→Comp 1회 이전(BackCompat).
-// 성능   : per-tick 없음(rare-tick만). 저장 시 리플렉션 멤버 탐색은 1회 캐시. 박싱/LINQ 핫패스 없음.
+// 변경   : [FIX] ThoughtWorker_Enslaved에서 이동된 Stage5 동화(Assimilation)/UI갱신 로직을 CompTickRare에 추가.
+//           CompTickRare()는 250틱마다 1회 호출되므로 부작용 로직을 안전하게 수행 가능.
+// 저장   : IExposable 필드 3종(_timeAsSlaveTicks/_lastGameTick/_migratedOnce). 새 필드 추가 없음.
+// 성능   : per-tick 없음(rare-tick만). 저장 시 리플렉션 멤버 탐색은 1회 캐시.
 
 using RimWorld;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
 using UnityEngine;
 using Verse;
 
@@ -18,6 +17,7 @@ namespace SimpleSlaveryCollars
     /// Pawn의 노예 경과 시간을 Comp로 일원화(SSOT)하여 누적/표시/세이브 동기화를 처리.
     /// - 마이그레이션: 기존 Record 값을 1회만 Comp로 가져옴.
     /// - 저장 직전: Comp 값을 Record에 반영(DefMap set_Item 리플렉션).
+    /// - [FIX] Stage5 동화/UI갱신 로직을 ThoughtWorker에서 이곳으로 이동.
     /// </summary>
     public class CompSlave : ThingComp
     {
@@ -60,8 +60,9 @@ namespace SimpleSlaveryCollars
         }
 
         /// <summary>
-        /// Rare Tick(250틱)마다 호출. 노예 상태일 때만 경과 시간 누적.
-        /// 최초 진입 시 기준 Tick 설정 + 필요 시 1회 마이그레이션 수행.
+        /// Rare Tick(250틱)마다 호출.
+        /// - 노예 상태일 때만 경과 시간 누적.
+        /// - [FIX] Stage5 동화/UI갱신 처리 (ThoughtWorker에서 이동됨).
         /// </summary>
         public override void CompTickRare()
         {
@@ -92,6 +93,43 @@ namespace SimpleSlaveryCollars
             }
 
             _lastGameTick = current;
+
+            // [FIX] Stage5 동화 및 UI 갱신 (ThoughtWorker_Enslaved에서 이동됨)
+            TryProcessStage5Assimilation(pawn);
+        }
+
+        /// <summary>
+        /// [FIX] Stage5 도달 시 동화(Assimilation) 및 UI 갱신 처리.
+        /// 기존 ThoughtWorker_Enslaved.CurrentStateInternal()에 있던 부작용 로직을
+        /// 안전한 CompTickRare(250틱 주기)로 이동.
+        /// </summary>
+        private void TryProcessStage5Assimilation(Pawn pawn)
+        {
+            if (!pawn.IsSlaveOfColony) return;
+            if (_timeAsSlaveTicks < SlaveUtility.SlaveStage4) return;
+            if (SlaveUtility.IsSteadfast(pawn)) return;
+
+            // Hediff_Enslaved 안전 접근
+            if (pawn.health == null || pawn.health.hediffSet == null) return;
+            var enslavedHediff = pawn.health.hediffSet.GetFirstHediffOfDef(SSC_HediffDefOf.Enslaved) as Hediff_Enslaved;
+            if (enslavedHediff == null) return;
+
+            // 동화 처리: SlaveFaction을 플레이어로 전환
+            if (!enslavedHediff.assimilatedAtStage4 && SimpleSlaveryCollarsSetting.AssimilationSlaveEnable)
+            {
+                if (pawn.guest != null && pawn.guest.SlaveFaction != Faction.OfPlayer)
+                {
+                    pawn.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave);
+                }
+                enslavedHediff.assimilatedAtStage4 = true;
+            }
+
+            // UI refresh 처리: WorkType 변경 알림
+            if (!enslavedHediff.uiRefreshedAtStage4)
+            {
+                pawn.Notify_DisabledWorkTypesChanged();
+                enslavedHediff.uiRefreshedAtStage4 = true;
+            }
         }
 
         /// <summary>인스펙트 문자열. 노예 상태일 때만 경과 시간(가독 포맷) 표기.</summary>
@@ -106,7 +144,6 @@ namespace SimpleSlaveryCollars
 
         /// <summary>
         /// 기즈모: 족쇄 토글. 노예+Enslaved 헤디프가 있을 때만 노출.
-        /// [UI] LabelWordShackle / CommandDescriptionShackle / 아이콘 UI/Commands/Shackle
         /// </summary>
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
@@ -153,20 +190,15 @@ namespace SimpleSlaveryCollars
 
             if (migrated)
             {
-                // "{0}: 기록된 노예 기간을 Comp로 이전함"
                 Messages.Message("SimpleSlaveryCollars_MigrationDone".Translate(pawn.LabelShortCap),
                                  MessageTypeDefOf.TaskCompletion,
                                  historical: false);
             }
         }
 
-        // [성능] 저장 시 1회만 리플렉션 멤버 탐색 후 캐시
-        private static FieldInfo _defMapFieldCached;
-        private static MethodInfo _defMapSetItemCached;
-        private static bool _defMapMembersSearched;
 
         /// <summary>
-        /// 저장 직전 Comp→Record 동기화. Pawn_RecordsTracker의 DefMap<RecordDef,float>.set_Item 사용.
+        /// 저장 직전 Comp→Record 동기화. SSC_ReflectionCache 사용.
         /// 실패 시 경고 로그만 남기고 안전하게 무시.
         /// </summary>
         private void TrySyncRecordOnSave()
@@ -174,66 +206,13 @@ namespace SimpleSlaveryCollars
             var pawn = parent as Pawn;
             if (pawn?.records == null) return;
 
-            try
+            if (!SSC_ReflectionCache.IsAvailable)
             {
-                // 초기 1회: 리플렉션 멤버 탐색 및 캐시
-                if (!_defMapMembersSearched)
-                {
-                    _defMapMembersSearched = true;
-
-                    _defMapFieldCached = typeof(Pawn_RecordsTracker).GetField(
-                        "records",
-                        BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
-
-                    if (_defMapFieldCached == null)
-                    {
-                        var dmType = typeof(DefMap<RecordDef, float>);
-                        _defMapFieldCached = typeof(Pawn_RecordsTracker)
-                            .GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                            .FirstOrDefault(f => f.FieldType == dmType);
-                    }
-
-                    if (_defMapFieldCached != null)
-                    {
-                        var mapType = _defMapFieldCached.FieldType; // DefMap<RecordDef,float>
-                        _defMapSetItemCached = mapType.GetMethod(
-                            "set_Item",
-                            BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic,
-                            binder: null,
-                            types: new[] { typeof(RecordDef), typeof(float) },
-                            modifiers: null
-                        );
-
-                        if (_defMapSetItemCached == null)
-                        {
-                            _defMapSetItemCached = mapType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                                .FirstOrDefault(m =>
-                                {
-                                    if (m.Name != "set_Item") return false;
-                                    var ps = m.GetParameters();
-                                    return ps.Length == 2
-                                           && typeof(RecordDef).IsAssignableFrom(ps[0].ParameterType)
-                                           && ps[1].ParameterType == typeof(float);
-                                });
-                        }
-                    }
-                }
-
-                if (_defMapFieldCached == null || _defMapSetItemCached == null)
-                {
-                    Log.Warning("[SSC] Pawn_RecordsTracker DefMap not found; skipping save-time sync.");
-                    return;
-                }
-
-                var defMap = _defMapFieldCached.GetValue(pawn.records);
-                if (defMap == null) return;
-
-                _defMapSetItemCached.Invoke(defMap, new object[] { SSC_RecordDefOf.TimeAsSlave, TimeAsSlaveTicks });
+                Log.Warning("[SSC] Pawn_RecordsTracker DefMap not found; skipping save-time sync.");
+                return;
             }
-            catch (System.Exception e)
-            {
-                Log.Warning($"[SSC] Save-time record sync failed (safe to ignore): {e}");
-            }
+
+            SSC_ReflectionCache.TrySetRecord(pawn.records, SSC_RecordDefOf.TimeAsSlave, TimeAsSlaveTicks);
         }
     }
 }
