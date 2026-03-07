@@ -8,6 +8,7 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Patches
 {
@@ -31,12 +32,12 @@ namespace SimpleSlaveryCollars.Patches
             var hs = prisoner.health?.hediffSet;
             if (hs == null) return;
 
-            if (!hs.HasHediff(SSC_HediffDefOf.Enslaved))
-                prisoner.health.AddHediff(SSC_HediffDefOf.Enslaved);
+            if (!hs.HasHediff(SimpleSlaveryDefOf.Enslaved))
+                prisoner.health.AddHediff(SimpleSlaveryDefOf.Enslaved);
 
             if (SimpleSlaveryCollarsSetting.ShacklesDefault == false)
             {
-                var enslaved = SlaveUtility.GetEnslavedHediff(prisoner);
+                var enslaved = SimpleSlaveryUtility.GetEnslavedHediff(prisoner);
                 if (enslaved != null)
                     enslaved.shackledGoal = false;
             }

@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars
 {
@@ -173,14 +174,14 @@ namespace SimpleSlaveryCollars
             // [FIX] armed 토글만 수행, 컬렉션 변경 없음 → ToList 불필요
             foreach (var pawn in this.parent.Map.mapPawns.AllPawnsSpawned)
             {
-                if (!SlaveUtility.IsColonyMember(pawn)) continue;
-                var collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive;
+                if (!SimpleSlaveryUtility.IsColonyMember(pawn)) continue;
+                var collar = SimpleSlaveryUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive;
                 if (collar == null || collar.armed == remotearmedExplosive) continue;
 
                 collar.armed = remotearmedExplosive;
                 if (collar.armed && collar.arm_cooldown == 0)
                 {
-                    SlaveUtility.TryInstantBreak(pawn, Rand.Range(0.25f, 0.33f));
+                    SimpleSlaveryUtility.TryInstantBreak(pawn, Rand.Range(0.25f, 0.33f));
                     collar.arm_cooldown = 2500;
                 }
             }
@@ -192,8 +193,8 @@ namespace SimpleSlaveryCollars
             // [FIX] armed 토글만 수행, 컬렉션 변경 없음 → ToList 불필요
             foreach (var pawn in this.parent.Map.mapPawns.AllPawnsSpawned)
             {
-                if (!SlaveUtility.IsColonyMember(pawn)) continue;
-                var collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Electric;
+                if (!SimpleSlaveryUtility.IsColonyMember(pawn)) continue;
+                var collar = SimpleSlaveryUtility.GetSlaveCollar(pawn) as SlaveCollar_Electric;
                 if (collar == null || collar.armed == remotearmedElectric) continue;
 
                 collar.armed = remotearmedElectric;
@@ -206,8 +207,8 @@ namespace SimpleSlaveryCollars
             // [FIX] armed 토글 + RevertMentalState만 수행, AllPawnsSpawned 컬렉션 불변 → ToList 불필요
             foreach (var pawn in this.parent.Map.mapPawns.AllPawnsSpawned)
             {
-                if (!SlaveUtility.IsColonyMember(pawn)) continue;
-                var collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Crypto;
+                if (!SimpleSlaveryUtility.IsColonyMember(pawn)) continue;
+                var collar = SimpleSlaveryUtility.GetSlaveCollar(pawn) as SlaveCollar_Crypto;
                 if (collar == null || collar.armed == remotearmedCrypto) continue;
 
                 collar.armed = remotearmedCrypto;
@@ -227,8 +228,8 @@ namespace SimpleSlaveryCollars
             for (int i = 0; i < allPawns.Count; i++)
             {
                 var pawn = allPawns[i];
-                if (!SlaveUtility.IsColonyMember(pawn)) continue;
-                var collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive;
+                if (!SimpleSlaveryUtility.IsColonyMember(pawn)) continue;
+                var collar = SimpleSlaveryUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive;
                 if (collar != null && collar.armed)
                     targets.Add(collar);
             }
@@ -243,13 +244,13 @@ namespace SimpleSlaveryCollars
         /// <summary>지정 Pawn의 폭발 칼라 Armed 토글 및 초기 충격.</summary>
         public void DoRemoteCollarExplosive(bool active, Pawn targetPawn)
         {
-            var collar = SlaveUtility.GetSlaveCollar(targetPawn) as SlaveCollar_Explosive;
+            var collar = SimpleSlaveryUtility.GetSlaveCollar(targetPawn) as SlaveCollar_Explosive;
             if (collar == null) return;
 
             collar.armed = active;
             if (active && collar.arm_cooldown == 0)
             {
-                SlaveUtility.TryInstantBreak(targetPawn, Rand.Range(0.25f, 0.33f));
+                SimpleSlaveryUtility.TryInstantBreak(targetPawn, Rand.Range(0.25f, 0.33f));
                 collar.arm_cooldown = 2500;
             }
         }
@@ -257,7 +258,7 @@ namespace SimpleSlaveryCollars
         /// <summary>지정 Pawn의 감전 칼라 Armed 토글.</summary>
         public void DoRemoteCollarElectric(bool active, Pawn targetPawn)
         {
-            var collar = SlaveUtility.GetSlaveCollar(targetPawn) as SlaveCollar_Electric;
+            var collar = SimpleSlaveryUtility.GetSlaveCollar(targetPawn) as SlaveCollar_Electric;
             if (collar == null) return;
 
             collar.armed = active;
@@ -266,7 +267,7 @@ namespace SimpleSlaveryCollars
         /// <summary>지정 Pawn의 크립토 칼라 Armed 토글(해제 시 정신상태 복원).</summary>
         public void DoRemoteCollarCrypto(bool active, Pawn targetPawn)
         {
-            var collar = SlaveUtility.GetSlaveCollar(targetPawn) as SlaveCollar_Crypto;
+            var collar = SimpleSlaveryUtility.GetSlaveCollar(targetPawn) as SlaveCollar_Crypto;
             if (collar == null) return;
 
             collar.armed = active;
@@ -279,7 +280,7 @@ namespace SimpleSlaveryCollars
         /// <summary>지정 Pawn의 폭발 칼라가 Armed면 폭발.</summary>
         public void DoRemoteCollarGoBoom(Pawn targetPawn)
         {
-            var collar = SlaveUtility.GetSlaveCollar(targetPawn) as SlaveCollar_Explosive;
+            var collar = SimpleSlaveryUtility.GetSlaveCollar(targetPawn) as SlaveCollar_Explosive;
             if (collar == null || !collar.armed) return;
 
             collar.GoBoom();
@@ -388,43 +389,43 @@ namespace SimpleSlaveryCollars
                 case RemoteCollarAction.ArmExplosive:
                     return pawns.Where(p =>
                     {
-                        var collar = SlaveUtility.GetSlaveCollar(p) as SlaveCollar_Explosive;
+                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Explosive;
                         return collar != null && !collar.armed;
                     }).ToList();
                 case RemoteCollarAction.DisarmExplosive:
                     return pawns.Where(p =>
                     {
-                        var collar = SlaveUtility.GetSlaveCollar(p) as SlaveCollar_Explosive;
+                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Explosive;
                         return collar != null && collar.armed;
                     }).ToList();
                 case RemoteCollarAction.DetonateExplosive:
                     return pawns.Where(p =>
                     {
-                        var collar = SlaveUtility.GetSlaveCollar(p) as SlaveCollar_Explosive;
+                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Explosive;
                         return collar != null && collar.armed;
                     }).ToList();
                 case RemoteCollarAction.ArmElectric:
                     return pawns.Where(p =>
                     {
-                        var collar = SlaveUtility.GetSlaveCollar(p) as SlaveCollar_Electric;
+                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Electric;
                         return collar != null && !collar.armed;
                     }).ToList();
                 case RemoteCollarAction.DisarmElectric:
                     return pawns.Where(p =>
                     {
-                        var collar = SlaveUtility.GetSlaveCollar(p) as SlaveCollar_Electric;
+                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Electric;
                         return collar != null && collar.armed;
                     }).ToList();
                 case RemoteCollarAction.ArmCrypto:
                     return pawns.Where(p =>
                     {
-                        var collar = SlaveUtility.GetSlaveCollar(p) as SlaveCollar_Crypto;
+                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Crypto;
                         return collar != null && !collar.armed;
                     }).ToList();
                 case RemoteCollarAction.DisarmCrypto:
                     return pawns.Where(p =>
                     {
-                        var collar = SlaveUtility.GetSlaveCollar(p) as SlaveCollar_Crypto;
+                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Crypto;
                         return collar != null && collar.armed;
                     }).ToList();
                 default:
@@ -463,7 +464,7 @@ namespace SimpleSlaveryCollars
                 // [FIX] GetSlaveCollar를 Pawn당 1회만 호출 (기존 3회 → 1회)
                 foreach (var p in pawns)
                 {
-                    var collar = SlaveUtility.GetSlaveCollar(p);
+                    var collar = SimpleSlaveryUtility.GetSlaveCollar(p);
                     if (collar == null) continue;
 
                     if (collar is SlaveCollar_Explosive explosive)

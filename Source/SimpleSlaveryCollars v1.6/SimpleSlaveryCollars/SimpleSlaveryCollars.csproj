@@ -65,13 +65,14 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Collars.cs" />
+    <Compile Include="Hediffs\Hediff_Enslaved.cs" />
+    <Compile Include="Things\SlaveApparel.cs" />
     <Compile Include="Comps\CompProperties_RemoteSlaveCollar.cs" />
     <Compile Include="Comps\CompProperties_Slave.cs" />
     <Compile Include="Comps\CompRemoteSlaveCollar.cs" />
     <Compile Include="Comps\CompSlave.cs" />
     <Compile Include="Comps\CompTarget_SetSlaveCollar.cs" />
-    <Compile Include="DefOf.cs" />
+    <Compile Include="SimpleSlaveryDefOf.cs" />
     <Compile Include="HarmonyInit.cs" />
     <Compile Include="Patches\Patch_WorkGiver_Warden_ExecuteSlave_JobOnThing.cs" />
     <Compile Include="Patches\Patch_WorkGiver_Warden_ImprisonSlave_JobOnThing.cs" />
@@ -94,22 +95,25 @@
     <Compile Include="Patches\Patch_StatPartSlave_ActiveFor.cs" />
     <Compile Include="Patches\Patch_Pawn_GuestTracker_SetGuestStatus.cs" />
     <Compile Include="Patches\Patch_GenGuest_SlaveRelease.cs" />
-    <Compile Include="Hediffs.cs" />
+    <Compile Include="Hediffs\Hediff_CryptoStasis.cs" />
     <Compile Include="Jobs\JobDriver_ActivateRemoteCollar.cs" />
     <Compile Include="Jobs\JobDriver_ActivateRemoteCollarGroup.cs" />
     <Compile Include="Jobs\JobDriver_SetSlaveCollar.cs" />
     <Compile Include="Jobs\WorkGiver_ActivateRemoteCollar.cs" />
     <Compile Include="Jobs\WorkGiver_Warden_ShackleSlave.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="RecordWorker_TimeAsSlave.cs" />
-    <Compile Include="RoleRequirement_NotSlave.cs" />
-    <Compile Include="RoleRequirement_SlaveStage.cs" />
+    <Compile Include="Records\RecordWorker_TimeAsSlave.cs" />
+    <Compile Include="Precepts\RoleRequirement_NotSlave.cs" />
+    <Compile Include="Precepts\RoleRequirement_SlaveStage.cs" />
     <Compile Include="SimpleSlaveryCollars_Mod.cs" />
     <Compile Include="SimpleSlaveryCollars_Setting.cs" />
-    <Compile Include="RemoteCollarTypes.cs" />
-    <Compile Include="Debugs\SimpleSlaveryCollars_DebugActions.cs" />
-    <Compile Include="SSC_ReflectionCache.cs" />
-    <Compile Include="SlaveUtility.cs" />
+    <Compile Include="Enums\SimpleSlaveryCollarType.cs" />
+    <Compile Include="Debugs\SimpleSlaveryDebugActions.cs" />
+    <Compile Include="Things\SlaveCollar_Crypto.cs" />
+    <Compile Include="Things\SlaveCollar_Electric.cs" />
+    <Compile Include="Things\SlaveCollar_Explosive.cs" />
+    <Compile Include="Utilities\SimpleSlaveryReflectionUtility.cs" />
+    <Compile Include="Utilities\SimpleSlaveryUtility.cs" />
     <Compile Include="ThoughtWorkers\ThoughtWorker_Enslaved.cs" />
     <Compile Include="ThoughtWorkers\ThoughtWorker_ExplosiveCollar.cs" />
     <Compile Include="ThoughtWorkers\ThoughtWorker_SlaveCollar.cs" />

@@ -9,6 +9,7 @@ using RimWorld;
 using System.Collections.Generic;
 using Verse;
 using Verse.AI;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Jobs
 {
@@ -34,15 +35,15 @@ namespace SimpleSlaveryCollars.Jobs
 
             if (slave == null ||
                 !slave.IsSlaveOfColony ||
-                !slave.health.hediffSet.HasHediff(SSC_HediffDefOf.Enslaved) ||
+                !slave.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Enslaved) ||
                 !pawn.CanReserve(slave) ||
-                SlaveUtility.GetEnslavedHediff(slave).shackledGoal == SlaveUtility.GetEnslavedHediff(slave).shackled ||
+                SimpleSlaveryUtility.GetEnslavedHediff(slave).shackledGoal == SimpleSlaveryUtility.GetEnslavedHediff(slave).shackled ||
                 slave.InAggroMentalState)
             {
                 return null;
             }
 
-            return JobMaker.MakeJob(SSC_JobDefOf.ShackleSlave, slave);
+            return JobMaker.MakeJob(SimpleSlaveryDefOf.ShackleSlave, slave);
         }
     }
 
@@ -86,7 +87,7 @@ namespace SimpleSlaveryCollars.Jobs
             {
                 initAction = () =>
                 {
-                    var hediff = SlaveUtility.GetEnslavedHediff(Victim);
+                    var hediff = SimpleSlaveryUtility.GetEnslavedHediff(Victim);
                     hediff.shackled = hediff.shackledGoal;
                 },
                 defaultCompleteMode = ToilCompleteMode.Instant

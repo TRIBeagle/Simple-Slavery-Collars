@@ -13,6 +13,7 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Patches
 {
@@ -59,17 +60,17 @@ namespace SimpleSlaveryCollars.Patches
 
             var hs = pawn.health?.hediffSet;
             if (hs == null) return;
-            if (SSC_HediffDefOf.Enslaved == null) return;
+            if (SimpleSlaveryDefOf.Enslaved == null) return;
 
-            if (!hs.HasHediff(SSC_HediffDefOf.Enslaved))
+            if (!hs.HasHediff(SimpleSlaveryDefOf.Enslaved))
             {
-                pawn.health.AddHediff(SSC_HediffDefOf.Enslaved);
+                pawn.health.AddHediff(SimpleSlaveryDefOf.Enslaved);
             }
 
             // ShacklesDefault 옵션 반영
             if (!SimpleSlaveryCollarsSetting.ShacklesDefault)
             {
-                var enslaved = SlaveUtility.GetEnslavedHediff(pawn);
+                var enslaved = SimpleSlaveryUtility.GetEnslavedHediff(pawn);
                 if (enslaved != null)
                     enslaved.shackledGoal = false;
             }
@@ -87,8 +88,8 @@ namespace SimpleSlaveryCollars.Patches
             if (!SimpleSlaveryCollarsSetting.AssimilationSlaveEnable) return;
 
             if (!pawn.IsSlaveOfColony) return;
-            if (SlaveUtility.TimeAsSlave(pawn) < SlaveUtility.SlaveStage4) return;
-            if (SlaveUtility.IsSteadfast(pawn)) return;
+            if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage4) return;
+            if (SimpleSlaveryUtility.IsSteadfast(pawn)) return;
             if (guest.SlaveFaction == Faction.OfPlayer) return;
 
             slaveFactionInt = Faction.OfPlayer;
@@ -117,9 +118,9 @@ namespace SimpleSlaveryCollars.Patches
 
             var hs = pawn.health?.hediffSet;
             if (hs == null) return;
-            if (SSC_HediffDefOf.Enslaved == null) return;
+            if (SimpleSlaveryDefOf.Enslaved == null) return;
 
-            var enslaved = hs.GetFirstHediffOfDef(SSC_HediffDefOf.Enslaved);
+            var enslaved = hs.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved);
             if (enslaved != null)
                 pawn.health.RemoveHediff(enslaved);
         }

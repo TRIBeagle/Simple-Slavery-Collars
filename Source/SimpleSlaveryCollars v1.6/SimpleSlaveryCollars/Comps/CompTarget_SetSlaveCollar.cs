@@ -63,7 +63,7 @@ namespace SimpleSlaveryCollars
                 return;
 
             // Job(A=대상 Pawn, B=이 컴프가 붙은 아이템/장치) 1회 실행
-            Job job = JobMaker.MakeJob(SSC_JobDefOf.SetSlaveCollar, (LocalTargetInfo)target, (LocalTargetInfo)(Thing)this.parent);
+            Job job = JobMaker.MakeJob(SimpleSlaveryDefOf.SetSlaveCollar, (LocalTargetInfo)target, (LocalTargetInfo)(Thing)this.parent);
             job.count = 1;
             user.jobs.TryTakeOrderedJob(job);
         }

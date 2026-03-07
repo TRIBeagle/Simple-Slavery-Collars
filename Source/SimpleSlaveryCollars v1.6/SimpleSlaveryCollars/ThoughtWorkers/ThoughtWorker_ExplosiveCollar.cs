@@ -7,6 +7,7 @@
 
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars
 {
@@ -24,10 +25,10 @@ namespace SimpleSlaveryCollars
         /// </summary>
         protected override ThoughtState CurrentStateInternal(Pawn pawn)
         {
-            if (SlaveUtility.HasSlaveCollar(pawn)
-                && SlaveUtility.GetSlaveCollar(pawn).def.thingClass == typeof(SlaveCollar_Explosive))
+            if (SimpleSlaveryUtility.HasSlaveCollar(pawn)
+                && SimpleSlaveryUtility.GetSlaveCollar(pawn).def.thingClass == typeof(SlaveCollar_Explosive))
             {
-                var collar = SlaveUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive;
+                var collar = SimpleSlaveryUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive;
                 if (collar.armed)
                     return ThoughtState.ActiveAtStage(1); // armed 상태
                 return pawn.IsSlaveOfColony

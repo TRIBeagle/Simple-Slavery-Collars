@@ -8,6 +8,7 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Patches
 {
@@ -29,8 +30,8 @@ namespace SimpleSlaveryCollars.Patches
                 !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable)
                 return;
 
-            if (SlaveUtility.TimeAsSlave(pawn) >= SlaveUtility.SlaveStage4 &&
-                !SlaveUtility.IsSteadfast(pawn))
+            if (SimpleSlaveryUtility.TimeAsSlave(pawn) >= SimpleSlaveryUtility.SlaveStage4 &&
+                !SimpleSlaveryUtility.IsSteadfast(pawn))
             {
                 __result = false;
             }

@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Debugs
 {
@@ -17,7 +18,7 @@ namespace SimpleSlaveryCollars.Debugs
     /// Debug 탭 "Simple Slavery Collars" 항목.
     /// Pawn TimeAsSlaveTicks 값을 CompSlave(SSOT)에 직접 조정, 필요 시 Record도 동기화.
     /// </summary>
-    public static class SimpleSlaveryCollars_DebugActions
+    public static class SimpleSlaveryDebugActions
     {
         private const int TicksPerDay = 60000;
 
@@ -41,7 +42,7 @@ namespace SimpleSlaveryCollars.Debugs
 
             var rec = DefDatabase<RecordDef>.GetNamed("TimeAsSlave", errorOnFail: false);
             int curTicks = GetCompTicks(pawn);
-            bool isSteadfast = SlaveUtility.IsSteadfast(pawn);
+            bool isSteadfast = SimpleSlaveryUtility.IsSteadfast(pawn);
 
             // [Step] 모드 옵션으로 Stage 기간 읽기
             float s1 = SimpleSlaveryCollarsSetting.Slavestage1Period;
@@ -139,7 +140,7 @@ namespace SimpleSlaveryCollars.Debugs
         private static void SetRecordTicks_Absolute(Pawn pawn, RecordDef rec, int targetTicks)
         {
             if (pawn?.records == null) return;
-            if (!SSC_ReflectionCache.TrySetRecord(pawn.records, rec, (float)Mathf.Max(0, targetTicks)))
+            if (!SimpleSlaveryReflectionUtility.TrySetRecord(pawn.records, rec, (float)Mathf.Max(0, targetTicks)))
             {
                 Log.Error("[SSC] SetRecordTicks_Absolute failed via SSC_ReflectionCache.");
             }

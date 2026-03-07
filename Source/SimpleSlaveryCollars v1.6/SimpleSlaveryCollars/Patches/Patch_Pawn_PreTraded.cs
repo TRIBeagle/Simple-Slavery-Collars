@@ -25,17 +25,17 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void PreTraded_Patch(ref Pawn __instance, ref TradeAction action)
         {
-            Hediff enslaved = __instance.health.hediffSet.GetFirstHediffOfDef(SSC_HediffDefOf.Enslaved);
+            Hediff enslaved = __instance.health.hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved);
 
             if (action == TradeAction.PlayerBuys &&
                 __instance.RaceProps.Humanlike &&
-                !__instance.health.hediffSet.HasHediff(SSC_HediffDefOf.Enslaved) &&
+                !__instance.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Enslaved) &&
                 __instance.IsSlaveOfColony)
             {
-                __instance.health.AddHediff(SSC_HediffDefOf.Enslaved);
+                __instance.health.AddHediff(SimpleSlaveryDefOf.Enslaved);
             }
             else if (action == TradeAction.PlayerSells &&
-                     __instance.health.hediffSet.HasHediff(SSC_HediffDefOf.Enslaved))
+                     __instance.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Enslaved))
             {
                 __instance.health.RemoveHediff(enslaved);
             }

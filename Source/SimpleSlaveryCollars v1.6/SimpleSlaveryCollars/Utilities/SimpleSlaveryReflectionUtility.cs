@@ -9,14 +9,14 @@ using System.Reflection;
 using RimWorld;
 using Verse;
 
-namespace SimpleSlaveryCollars
+namespace SimpleSlaveryCollars.Utilities
 {
     /// <summary>
     /// Pawn_RecordsTracker 내부 DefMap에 대한 리플렉션 접근 캐시.
     /// - DefMap 필드(FieldInfo)와 set_Item 메서드(MethodInfo)를 1회 탐색 후 캐시.
     /// - 탐색 실패 시 경고 로그 1회, 이후 재탐색 없음.
     /// </summary>
-    internal static class SSC_ReflectionCache
+    internal static class SimpleSlaveryReflectionUtility
     {
         private static FieldInfo _defMapField;
         private static MethodInfo _defMapSetItem;

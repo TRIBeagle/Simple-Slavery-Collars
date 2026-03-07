@@ -8,6 +8,7 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Patches
 {
@@ -25,9 +26,9 @@ namespace SimpleSlaveryCollars.Patches
         public static void InRestraints_Patch(ref Pawn pawn, ref bool __result)
         {
             if (pawn.IsSlaveOfColony &&
-                pawn.health.hediffSet.HasHediff(SSC_HediffDefOf.Enslaved))
+                pawn.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Enslaved))
             {
-                __result = SlaveUtility.GetEnslavedHediff(pawn).shackled;
+                __result = SimpleSlaveryUtility.GetEnslavedHediff(pawn).shackled;
             }
         }
     }

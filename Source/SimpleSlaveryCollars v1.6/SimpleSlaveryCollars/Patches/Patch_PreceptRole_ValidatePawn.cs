@@ -7,6 +7,7 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Patches
 {
@@ -34,7 +35,7 @@ namespace SimpleSlaveryCollars.Patches
             if (p.DestroyedOrNull()) return;
             if (p.Dead) return;
 
-            if (!SlaveUtility.IsStage5Slave(p)) return;
+            if (!SimpleSlaveryUtility.IsStage5Slave(p)) return;
 
             if (!__instance.RequirementsMet(p)) return;
 

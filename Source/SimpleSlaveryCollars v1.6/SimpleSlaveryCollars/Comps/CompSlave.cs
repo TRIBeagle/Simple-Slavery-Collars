@@ -10,6 +10,7 @@ using RimWorld;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars
 {
@@ -106,12 +107,12 @@ namespace SimpleSlaveryCollars
         private void TryProcessStage5Assimilation(Pawn pawn)
         {
             if (!pawn.IsSlaveOfColony) return;
-            if (_timeAsSlaveTicks < SlaveUtility.SlaveStage4) return;
-            if (SlaveUtility.IsSteadfast(pawn)) return;
+            if (_timeAsSlaveTicks < SimpleSlaveryUtility.SlaveStage4) return;
+            if (SimpleSlaveryUtility.IsSteadfast(pawn)) return;
 
             // Hediff_Enslaved 안전 접근
             if (pawn.health == null || pawn.health.hediffSet == null) return;
-            var enslavedHediff = pawn.health.hediffSet.GetFirstHediffOfDef(SSC_HediffDefOf.Enslaved) as Hediff_Enslaved;
+            var enslavedHediff = pawn.health.hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved) as Hediff_Enslaved;
             if (enslavedHediff == null) return;
 
             // 동화 처리: SlaveFaction을 플레이어로 전환
@@ -137,7 +138,7 @@ namespace SimpleSlaveryCollars
         {
             if (parent is Pawn pawn && pawn.IsSlaveOfColony)
             {
-                return SlaveUtility.FormatEnslaveDurationReadable(pawn, TimeAsSlaveTicks);
+                return SimpleSlaveryUtility.FormatEnslaveDurationReadable(pawn, TimeAsSlaveTicks);
             }
             return null;
         }
@@ -153,9 +154,9 @@ namespace SimpleSlaveryCollars
             }
             var pawn = parent as Pawn;
 
-            if (pawn.IsSlaveOfColony && pawn.health.hediffSet.HasHediff(SSC_HediffDefOf.Enslaved))
+            if (pawn.IsSlaveOfColony && pawn.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Enslaved))
             {
-                var hediff = SlaveUtility.GetEnslavedHediff(pawn);
+                var hediff = SimpleSlaveryUtility.GetEnslavedHediff(pawn);
 
                 var shackleSlave = new Command_Toggle();
                 shackleSlave.isActive = () => hediff.shackledGoal;
@@ -177,7 +178,7 @@ namespace SimpleSlaveryCollars
         {
             if (_migratedOnce) return;
 
-            float legacy = pawn.records?.GetValue(SSC_RecordDefOf.TimeAsSlave) ?? 0f;
+            float legacy = pawn.records?.GetValue(SimpleSlaveryDefOf.TimeAsSlave) ?? 0f;
             bool migrated = false;
 
             if (_timeAsSlaveTicks < 0f && legacy > 0f)
@@ -206,13 +207,13 @@ namespace SimpleSlaveryCollars
             var pawn = parent as Pawn;
             if (pawn?.records == null) return;
 
-            if (!SSC_ReflectionCache.IsAvailable)
+            if (!SimpleSlaveryReflectionUtility.IsAvailable)
             {
                 Log.Warning("[SSC] Pawn_RecordsTracker DefMap not found; skipping save-time sync.");
                 return;
             }
 
-            SSC_ReflectionCache.TrySetRecord(pawn.records, SSC_RecordDefOf.TimeAsSlave, TimeAsSlaveTicks);
+            SimpleSlaveryReflectionUtility.TrySetRecord(pawn.records, SimpleSlaveryDefOf.TimeAsSlave, TimeAsSlaveTicks);
         }
     }
 }

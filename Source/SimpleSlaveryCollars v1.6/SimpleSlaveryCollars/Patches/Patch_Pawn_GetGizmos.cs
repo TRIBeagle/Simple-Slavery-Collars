@@ -9,6 +9,7 @@ using HarmonyLib;
 using System.Collections.Generic;
 using System.Linq;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Patches
 {
@@ -36,7 +37,7 @@ namespace SimpleSlaveryCollars.Patches
         /// </summary>
         internal static IEnumerable<Gizmo> SlaveGizmos(Pawn pawn)
         {
-            if (!SlaveUtility.IsColonyMember(pawn))
+            if (!SimpleSlaveryUtility.IsColonyMember(pawn))
                 yield break;
 
             if (pawn.apparel != null)

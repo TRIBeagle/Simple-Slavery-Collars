@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Verse;
 using Verse.AI;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Jobs
 {
@@ -52,7 +53,7 @@ namespace SimpleSlaveryCollars.Jobs
             if (comp == null || !comp.PowerOn) return false;
 
             // [조건] 수행 Pawn 자격: Colonist 또는 Stage5 노예
-            if (!pawn.IsColonist && !SlaveUtility.IsStage5Slave(pawn))
+            if (!pawn.IsColonist && !SimpleSlaveryUtility.IsStage5Slave(pawn))
                 return false;
 
             // [Safety] 콘솔 접근/예약 불가 시 false
@@ -102,7 +103,7 @@ namespace SimpleSlaveryCollars.Jobs
                     return null;
                 if (reservedList.Count > 0)
                 {
-                    var groupJob = JobMaker.MakeJob(SSC_JobDefOf.ActivateRemoteCollarGroup, t);
+                    var groupJob = JobMaker.MakeJob(SimpleSlaveryDefOf.ActivateRemoteCollarGroup, t);
                     groupJob.targetQueueA = new List<LocalTargetInfo>(reservedList.Select(p => new LocalTargetInfo(p)));
                     groupJob.count = (int)comp.groupJobActionType;
 
@@ -123,7 +124,7 @@ namespace SimpleSlaveryCollars.Jobs
                 return null;
 
             int actionType = (int)comp.GetReservedAction(targetPawn);
-            var job = JobMaker.MakeJob(SSC_JobDefOf.ActivateRemoteCollar, t, targetPawn);
+            var job = JobMaker.MakeJob(SimpleSlaveryDefOf.ActivateRemoteCollar, t, targetPawn);
             job.count = actionType;
             job.expiryInterval = 3000;
             job.checkOverrideOnExpire = true;

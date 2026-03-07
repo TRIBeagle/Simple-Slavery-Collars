@@ -8,6 +8,7 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Patches
 {
@@ -31,11 +32,11 @@ namespace SimpleSlaveryCollars.Patches
             var mood = p.needs?.mood;
             if (mood == null) return;
 
-            if (SlaveUtility.TimeAsSlave(p) >= SlaveUtility.SlaveStage4 &&
-                !SlaveUtility.IsSteadfast(p))
+            if (SimpleSlaveryUtility.TimeAsSlave(p) >= SimpleSlaveryUtility.SlaveStage4 &&
+                !SimpleSlaveryUtility.IsSteadfast(p))
             {
                 mood.thoughts.memories.RemoveMemoriesOfDef(ThoughtDefOf.WasEnslaved);
-                mood.thoughts.memories.TryGainMemory(SSC_ThoughtDefOf.WasEnslaved_Assimilation);
+                mood.thoughts.memories.TryGainMemory(SimpleSlaveryDefOf.WasEnslaved_Assimilation);
             }
         }
     }

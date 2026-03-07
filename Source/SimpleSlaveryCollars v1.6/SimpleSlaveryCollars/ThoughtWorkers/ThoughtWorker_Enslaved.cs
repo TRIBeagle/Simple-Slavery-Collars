@@ -8,6 +8,7 @@
 
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars
 {
@@ -30,19 +31,19 @@ namespace SimpleSlaveryCollars
             if (!pawn.IsSlaveOfColony)
                 return ThoughtState.Inactive;
 
-            float time = SlaveUtility.TimeAsSlave(pawn);
+            float time = SimpleSlaveryUtility.TimeAsSlave(pawn);
 
-            if (time < SlaveUtility.SlaveStage1)
+            if (time < SimpleSlaveryUtility.SlaveStage1)
                 return ThoughtState.ActiveAtStage(0);
 
-            if (time < SlaveUtility.SlaveStage2)
+            if (time < SimpleSlaveryUtility.SlaveStage2)
                 return ThoughtState.ActiveAtStage(1);
 
-            if (time < SlaveUtility.SlaveStage3)
+            if (time < SimpleSlaveryUtility.SlaveStage3)
                 return ThoughtState.ActiveAtStage(2);
 
-            if (time < SlaveUtility.SlaveStage4
-                || (time >= SlaveUtility.SlaveStage3 && SlaveUtility.IsSteadfast(pawn)))
+            if (time < SimpleSlaveryUtility.SlaveStage4
+                || (time >= SimpleSlaveryUtility.SlaveStage3 && SimpleSlaveryUtility.IsSteadfast(pawn)))
                 return ThoughtState.ActiveAtStage(3);
 
             // Stage5: x ≥ S4 && !Steadfast

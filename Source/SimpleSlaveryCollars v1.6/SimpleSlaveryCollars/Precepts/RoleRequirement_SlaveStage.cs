@@ -6,6 +6,7 @@
 
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars
 {
@@ -20,9 +21,14 @@ namespace SimpleSlaveryCollars
 
         public override bool Met(Pawn pawn, Precept_Role role)
         {
-            if (pawn.IsSlaveOfColony &&
-                (SlaveUtility.TimeAsSlave(pawn) < SlaveUtility.SlaveStage4 || SlaveUtility.IsSteadfast(pawn)))
+            // 1. 노예가 아니면 해당 역할(Slave Stage 전용)을 맡을 수 없음
+            if (!pawn.IsSlaveOfColony)
                 return false;
+
+            // 2. Stage 5 조건 (Stage 4 미만이거나 Steadfast 특성이 있으면 불가)
+            if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage4 || SimpleSlaveryUtility.IsSteadfast(pawn))
+                return false;
+
             return true;
         }
     }

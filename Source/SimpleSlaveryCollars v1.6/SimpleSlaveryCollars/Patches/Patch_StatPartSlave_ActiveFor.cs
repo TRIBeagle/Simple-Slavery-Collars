@@ -7,6 +7,7 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Patches
 {
@@ -26,8 +27,8 @@ namespace SimpleSlaveryCollars.Patches
                 return;
 
             if (t is Pawn pawn
-                && SlaveUtility.TimeAsSlave(pawn) >= SlaveUtility.SlaveStage4
-                && !SlaveUtility.IsSteadfast(pawn))
+                && SimpleSlaveryUtility.TimeAsSlave(pawn) >= SimpleSlaveryUtility.SlaveStage4
+                && !SimpleSlaveryUtility.IsSteadfast(pawn))
             {
                 __result = false;
             }

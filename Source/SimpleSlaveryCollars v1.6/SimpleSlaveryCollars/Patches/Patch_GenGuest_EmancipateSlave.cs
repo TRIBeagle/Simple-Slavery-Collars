@@ -28,7 +28,7 @@ namespace SimpleSlaveryCollars.Patches
             var hs = slave.health?.hediffSet;
             if (hs == null) return;
 
-            var enslaved = hs.GetFirstHediffOfDef(SSC_HediffDefOf.Enslaved);
+            var enslaved = hs.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved);
             if (enslaved != null)
                 slave.health.RemoveHediff(enslaved);
         }

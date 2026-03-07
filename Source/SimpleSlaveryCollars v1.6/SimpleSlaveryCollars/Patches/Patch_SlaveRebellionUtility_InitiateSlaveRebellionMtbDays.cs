@@ -7,6 +7,7 @@
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Patches
 {
@@ -25,20 +26,20 @@ namespace SimpleSlaveryCollars.Patches
                 || __result == -1f)
                 return;
 
-            if (SlaveUtility.TimeAsSlave(pawn) < SlaveUtility.SlaveStage1)
+            if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage1)
             {
                 __result *= 1f;
             }
-            else if (SlaveUtility.TimeAsSlave(pawn) < SlaveUtility.SlaveStage2)
+            else if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage2)
             {
                 __result *= 1.5f;
             }
-            else if (SlaveUtility.TimeAsSlave(pawn) < SlaveUtility.SlaveStage3)
+            else if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage3)
             {
                 __result *= 1.75f;
             }
-            else if (SlaveUtility.TimeAsSlave(pawn) < SlaveUtility.SlaveStage4
-                  || (SlaveUtility.TimeAsSlave(pawn) >= SlaveUtility.SlaveStage3 && SlaveUtility.IsSteadfast(pawn)))
+            else if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage4
+                  || (SimpleSlaveryUtility.TimeAsSlave(pawn) >= SimpleSlaveryUtility.SlaveStage3 && SimpleSlaveryUtility.IsSteadfast(pawn)))
             {
                 __result *= 2f;
             }

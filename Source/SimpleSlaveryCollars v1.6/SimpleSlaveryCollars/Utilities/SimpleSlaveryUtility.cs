@@ -7,17 +7,16 @@
 
 using RimWorld;
 using System;
-using System.Reflection;
 using UnityEngine;
 using Verse;
 
-namespace SimpleSlaveryCollars
+namespace SimpleSlaveryCollars.Utilities
 {
     /// <summary>
     /// 노예 제어/판정/표시 관련 유틸리티 모음.
     /// Stage 정의: Stage4 = (S3 < x < S4) 또는 (x ≥ S4 && Steadfast), Stage5 = (x ≥ S4 && !Steadfast).
     /// </summary>
-    public static class SlaveUtility
+    public static class SimpleSlaveryUtility
     {
         /// <summary>
         /// Pawn이 Colony 구성원(Colonist/PrisonerOfColony/SlaveOfColony)인지 판정합니다.
@@ -38,10 +37,10 @@ namespace SimpleSlaveryCollars
 
             if (!pawn.IsSlaveOfColony) return false;
 
-            float timeAsSlave = SlaveUtility.TimeAsSlave(pawn);
-            bool steadfast = SlaveUtility.IsSteadfast(pawn);
+            float timeAsSlave = SimpleSlaveryUtility.TimeAsSlave(pawn);
+            bool steadfast = SimpleSlaveryUtility.IsSteadfast(pawn);
 
-            if (timeAsSlave >= SlaveUtility.SlaveStage4 && !steadfast)
+            if (timeAsSlave >= SimpleSlaveryUtility.SlaveStage4 && !steadfast)
                 return true;
 
             return false;
@@ -118,7 +117,7 @@ namespace SimpleSlaveryCollars
         /// </summary>
         public static Hediff_Enslaved GetEnslavedHediff(Pawn pawn)
         {
-            return pawn.health.hediffSet.GetFirstHediffOfDef(SSC_HediffDefOf.Enslaved) as Hediff_Enslaved;
+            return pawn.health.hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved) as Hediff_Enslaved;
         }
 
         /// <summary>
@@ -179,9 +178,9 @@ namespace SimpleSlaveryCollars
                 return false;
             }
 
-            if (pawn.story.traits.HasTrait(SSC_TraitDefOf.Nerves))
+            if (pawn.story.traits.HasTrait(SimpleSlaveryDefOf.Nerves))
             {
-                if (pawn.story.traits.GetTrait(SSC_TraitDefOf.Nerves).Degree > 0)
+                if (pawn.story.traits.GetTrait(SimpleSlaveryDefOf.Nerves).Degree > 0)
                 {
                     return true;
                 }
@@ -202,7 +201,7 @@ namespace SimpleSlaveryCollars
                 if (comp.TimeAsSlaveTicks > 0f) return true;
             }
 
-            if (pawn?.records.GetAsInt(SSC_RecordDefOf.TimeAsSlave) > 0)
+            if (pawn?.records.GetAsInt(SimpleSlaveryDefOf.TimeAsSlave) > 0)
             {
                 return true;
             }
@@ -221,15 +220,9 @@ namespace SimpleSlaveryCollars
             {
                 return comp.TimeAsSlaveTicks;
             }
-            else
-            {
-                if (pawn?.records.GetValue(SSC_RecordDefOf.TimeAsSlave) != null)
-                {
-                    return pawn.records.GetValue(SSC_RecordDefOf.TimeAsSlave);
-                }
-            }
 
-            return 0f;
+            // GetValue는 float(값 타입)를 반환하므로 널 병합 연산자(??)로 깔끔하게 처리
+            return pawn?.records?.GetValue(SimpleSlaveryDefOf.TimeAsSlave) ?? 0f;
         }
 
         /// <summary>
@@ -247,22 +240,12 @@ namespace SimpleSlaveryCollars
                 return;
             }
 
+            // 길고 복잡했던 리플렉션 코드를 SSC_ReflectionCache 호출 한 줄로 대체
             if (pawn.records != null)
             {
-                try
+                if (!SimpleSlaveryReflectionUtility.TrySetRecord(pawn.records, SimpleSlaveryDefOf.TimeAsSlave, Mathf.Max(0f, ticks)))
                 {
-                    FieldInfo fi = HarmonyLib.AccessTools.Field(typeof(RimWorld.Pawn_RecordsTracker), "records");
-                    object defMap = fi?.GetValue(pawn.records);
-
-                    MethodInfo setItem = defMap?.GetType().GetMethod(
-                        "set_Item", BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, null,
-                        new Type[] { typeof(RimWorld.RecordDef), typeof(float) }, null);
-
-                    setItem?.Invoke(defMap, new object[] { SSC_RecordDefOf.TimeAsSlave, Mathf.Max(0f, ticks) });
-                }
-                catch (Exception e)
-                {
-                    Log.Warning("[SSC] SetTimeAsSlave fallback failed (safe to ignore): " + e.ToString());
+                    Log.Warning("[SSC] SetTimeAsSlave fallback failed (safe to ignore).");
                 }
             }
         }

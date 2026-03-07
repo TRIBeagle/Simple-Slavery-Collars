@@ -9,6 +9,7 @@ using RimWorld;
 using System.Collections.Generic;
 using Verse;
 using Verse.AI;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Jobs
 {
@@ -92,8 +93,8 @@ namespace SimpleSlaveryCollars.Jobs
                         !Victim.InMentalState &&
                         !Victim.Downed)
                     {
-                        if ((Victim.story.traits.HasTrait(SSC_TraitDefOf.Nerves) &&
-                             Victim.story.traits.GetTrait(SSC_TraitDefOf.Nerves).Degree == -2 &&
+                        if ((Victim.story.traits.HasTrait(SimpleSlaveryDefOf.Nerves) &&
+                             Victim.story.traits.GetTrait(SimpleSlaveryDefOf.Nerves).Degree == -2 &&
                              Rand.Value > 0.66f)
                             || Victim.needs.mood.CurInstantLevelPercentage < Rand.Range(0f, 0.33f))
                         {
@@ -103,7 +104,7 @@ namespace SimpleSlaveryCollars.Jobs
 
                     if (success)
                     {
-                        SlaveUtility.GiveSlaveCollar(Victim, collar);
+                        SimpleSlaveryUtility.GiveSlaveCollar(Victim, collar);
                         Messages.Message(
                             "TargetSetSlaveCollar".Translate(pawn.Name.ToStringShort, Victim.Name.ToStringShort),
                             MessageTypeDefOf.PositiveEvent);

@@ -7,6 +7,7 @@
 
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars
 {
@@ -25,13 +26,13 @@ namespace SimpleSlaveryCollars
         /// </summary>
         protected override ThoughtState CurrentStateInternal(Pawn pawn)
         {
-            float num = SlaveUtility.TimeAsSlave(pawn);
+            float num = SimpleSlaveryUtility.TimeAsSlave(pawn);
             float stage1 = 60000f * SimpleSlaveryCollarsSetting.Slavestage1Period;
             float stage2 = 60000f * SimpleSlaveryCollarsSetting.Slavestage2Period;
             float stage3 = 60000f * SimpleSlaveryCollarsSetting.Slavestage3Period;
 
-            if (SlaveUtility.HasSlaveCollar(pawn)
-                && !(SlaveUtility.GetSlaveCollar(pawn).def.thingClass == typeof(SlaveCollar_Explosive)))
+            if (SimpleSlaveryUtility.HasSlaveCollar(pawn)
+                && !(SimpleSlaveryUtility.GetSlaveCollar(pawn).def.thingClass == typeof(SlaveCollar_Explosive)))
             {
                 // Masochist 특성 보유 → Stage2
                 if (pawn.story.traits.HasTrait(TraitDef.Named("Masochist")))
