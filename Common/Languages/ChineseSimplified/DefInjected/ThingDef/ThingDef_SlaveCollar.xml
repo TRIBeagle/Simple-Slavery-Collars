@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+  <Apparel_SlaveCollar_Explosive.label>爆炸项圈</Apparel_SlaveCollar_Explosive.label>
+  <Apparel_SlaveCollar_Explosive.description>***爆炸危险***
+
+戴在奴隶脖子上的金属项圈。一旦武装并激活，就会产生小而强烈的爆炸，将奴隶的头颅炸飞。
+
+***爆炸危险***</Apparel_SlaveCollar_Explosive.description>
+  <Apparel_SlaveCollar_Explosive.comps.CompUsable.useLabel>佩戴爆炸项圈</Apparel_SlaveCollar_Explosive.comps.CompUsable.useLabel>
+
+  <Apparel_SlaveCollar_Electric.label>电击项圈</Apparel_SlaveCollar_Electric.label>
+  <Apparel_SlaveCollar_Electric.description>戴在奴隶脖子上的金属项圈。激活后会使佩戴者电击至失去意识。</Apparel_SlaveCollar_Electric.description>
+  <Apparel_SlaveCollar_Electric.comps.CompUsable.useLabel>佩戴电击项圈</Apparel_SlaveCollar_Electric.comps.CompUsable.useLabel>
+
+  <Apparel_SlaveCollar_Crypto.label>冷冻项圈</Apparel_SlaveCollar_Crypto.label>
+  <Apparel_SlaveCollar_Crypto.description>戴在奴隶脖子上的金属项圈。激活后会使佩戴者原地冻结，完全无法移动并处于无防备状态。用于非暴力镇压奴隶。</Apparel_SlaveCollar_Crypto.description>
+  <Apparel_SlaveCollar_Crypto.comps.CompUsable.useLabel>佩戴冷冻项圈</Apparel_SlaveCollar_Crypto.comps.CompUsable.useLabel>
+  
+  <Apparel_SlaveCollar_Heavy.label>重型奴隶项圈</Apparel_SlaveCollar_Heavy.label>
+  <Apparel_SlaveCollar_Heavy.description>戴在奴隶脖子上的金属项圈。</Apparel_SlaveCollar_Heavy.description>
+  <Apparel_SlaveCollar_Heavy.comps.CompUsable.useLabel>佩戴重型奴隶项圈</Apparel_SlaveCollar_Heavy.comps.CompUsable.useLabel>
+
+  <Apparel_SlaveCollar_Tribal.label>部落奴隶项圈</Apparel_SlaveCollar_Tribal.label>
+  <Apparel_SlaveCollar_Tribal.description>戴在奴隶脖子上的皮革项圈。</Apparel_SlaveCollar_Tribal.description>
+  <Apparel_SlaveCollar_Tribal.comps.CompUsable.useLabel>佩戴部落奴隶项圈</Apparel_SlaveCollar_Tribal.comps.CompUsable.useLabel>
+
+  <Apparel_BodyStrap.comps.CompUsable.useLabel>佩戴奴隶束缚带</Apparel_BodyStrap.comps.CompUsable.useLabel>
+  <Apparel_Collar.comps.CompUsable.useLabel>佩戴奴隶锁链</Apparel_Collar.comps.CompUsable.useLabel>
+</LanguageData>

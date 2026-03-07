@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+  <SetSlaveCollar.reportString>正在为TargetA调整奴隶项圈。</SetSlaveCollar.reportString>
+  <ShackleSlave.reportString>正在为TargetA调整脚镣。</ShackleSlave.reportString>
+  <ActivateRemoteCollar.reportString>正在对TargetA激活远程奴隶项圈。</ActivateRemoteCollar.reportString>
+  <ActivateRemoteCollar.reportString>正在对指定人员激活远程奴隶项圈。</ActivateRemoteCollar.reportString>
+
+
+</LanguageData>

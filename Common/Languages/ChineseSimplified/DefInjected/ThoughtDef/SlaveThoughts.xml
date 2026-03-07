@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+  <EnslavedThought.stages.0.label>被奴役（1/5）</EnslavedThought.stages.0.label>
+  <EnslavedThought.stages.0.description>我刚刚变成了他们的奴隶。简直不敢相信。</EnslavedThought.stages.0.description>
+  <EnslavedThought.stages.1.label>被奴役（2/5）</EnslavedThought.stages.1.label>
+  <EnslavedThought.stages.1.description>我被俘虏成为了奴隶。我只是想获得自由。</EnslavedThought.stages.1.description>
+  <EnslavedThought.stages.2.label>被奴役（3/5）</EnslavedThought.stages.2.label>
+  <EnslavedThought.stages.2.description>这个狗项圈永远也不会被摘掉。</EnslavedThought.stages.2.description>
+  <EnslavedThought.stages.3.label>被奴役（4/5）</EnslavedThought.stages.3.label>
+  <EnslavedThought.stages.3.description>我已经不记得自由是什么了。</EnslavedThought.stages.3.description>
+  <EnslavedThought.stages.4.label>斯德哥尔摩综合征（5/5）</EnslavedThought.stages.4.label>
+  <EnslavedThought.stages.4.description>这些家伙好像也没那么坏。</EnslavedThought.stages.4.description>
+  <ExplosiveCollar.stages.0.label>爆炸项圈</ExplosiveCollar.stages.0.label>
+  <ExplosiveCollar.stages.0.description>他们在我的脖子上戴了个爆炸项圈！为了活命我最好老实点。</ExplosiveCollar.stages.0.description>
+  <ExplosiveCollar.stages.1.label>武装的爆炸项圈</ExplosiveCollar.stages.1.label>
+  <ExplosiveCollar.stages.1.description>那些混蛋要炸飞我的脑袋了！！！</ExplosiveCollar.stages.1.description>
+  <ExplosiveCollar.stages.2.label>爆炸性奴隶项圈</ExplosiveCollar.stages.2.label>
+  <ExplosiveCollar.stages.2.description>这可不是什么好想法。</ExplosiveCollar.stages.2.description>
+  <SlaveCollar.stages.0.label>奴隶项圈</SlaveCollar.stages.0.label>
+  <SlaveCollar.stages.0.description>他们在我的脖子上戴了个奴隶项圈。</SlaveCollar.stages.0.description>
+  <SlaveCollar.stages.1.label>奴隶项圈</SlaveCollar.stages.1.label>
+  <SlaveCollar.stages.1.description>现在我已经习惯了这个项圈。</SlaveCollar.stages.1.description>
+  <SlaveCollar.stages.2.label>奴隶项圈（受虐）</SlaveCollar.stages.2.label>
+  <SlaveCollar.stages.2.description>佩戴感真不错。</SlaveCollar.stages.2.description>
+  <SlaveCollar.stages.3.label>奴隶项圈（殖民者）</SlaveCollar.stages.3.label>
+  <SlaveCollar.stages.3.description>我不是奴隶！</SlaveCollar.stages.3.description>
+  <WasEnslaved_Assimilation.stages.0.label>成为殖民者</WasEnslaved_Assimilation.stages.0.label>
+  <WasEnslaved_Assimilation.stages.0.description>现在我也是定居点的一员了。</WasEnslaved_Assimilation.stages.0.description>
+
+</LanguageData>

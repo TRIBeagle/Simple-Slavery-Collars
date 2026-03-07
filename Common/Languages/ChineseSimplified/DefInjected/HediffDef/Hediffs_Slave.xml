@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<LanguageData>
+
+  <Enslaved.label>被奴役（隐藏）</Enslaved.label>
+  <Enslaved.description>被奴役（隐藏）</Enslaved.description>
+
+  <Crypto_Stasis.label>冷冻停滞状态</Crypto_Stasis.label>
+  <Crypto_Stasis.description>冷冻停滞状态</Crypto_Stasis.description>
+
+  <Electrocuted.label>被电击</Electrocuted.label>
+  <Electrocuted.description>被电击</Electrocuted.description>
+
+
+</LanguageData>
