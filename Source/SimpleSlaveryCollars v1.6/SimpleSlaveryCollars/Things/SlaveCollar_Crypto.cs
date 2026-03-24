@@ -19,8 +19,6 @@ namespace SimpleSlaveryCollars
 
         public override bool IsArmed => armed;
 
-        // 상시 동결 필드 유지 → 모드옵션 배율 (기본 5배)
-        protected override float ActiveChargeMultiplier => SimpleSlaveryCollarsSetting.CollarCryptoDrainMultiplier;
 
         public override IEnumerable<Gizmo> SlaveGizmos()
         {

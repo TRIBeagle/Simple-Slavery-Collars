@@ -20,8 +20,6 @@ namespace SimpleSlaveryCollars
 
         public override bool IsArmed => armed;
 
-        // Explosive는 armed 해도 신호 대기뿐 → 대기와 소모 동일
-        protected override float ActiveChargeMultiplier => 1f;
 
         public override IEnumerable<Gizmo> SlaveGizmos()
         {

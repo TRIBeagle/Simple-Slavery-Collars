@@ -71,6 +71,7 @@
     <Compile Include="Comps\CompProperties_Slave.cs" />
     <Compile Include="Comps\CompRemoteSlaveCollar.cs" />
     <Compile Include="Comps\CompSlave.cs" />
+    <Compile Include="Comps\CollarBatteryExtension.cs" />
     <Compile Include="Comps\CompTarget_SetSlaveCollar.cs" />
     <Compile Include="SimpleSlaveryDefOf.cs" />
     <Compile Include="HarmonyInit.cs" />

@@ -21,8 +21,6 @@ namespace SimpleSlaveryCollars
 
         public override bool IsArmed => armed;
 
-        // 간헐적 전기 충격 → 모드옵션 배율 (기본 3배)
-        protected override float ActiveChargeMultiplier => SimpleSlaveryCollarsSetting.CollarElectricDrainMultiplier;
 
         public override IEnumerable<Gizmo> SlaveGizmos()
         {

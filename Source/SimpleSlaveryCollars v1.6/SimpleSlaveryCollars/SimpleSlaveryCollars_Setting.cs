@@ -28,20 +28,14 @@ namespace SimpleSlaveryCollars
         public static bool RemoteOnlyOnConsoleEnable = true;
         public static bool CollarChargeEnable = true;
         public static bool CollarEmpEnable = true;
-        public static float CollarDailyDrain = 20f;   // 대기 일당 소모량 (%/일)
-        public static float CollarRechargeCost = 50f;  // 0→만충 전력 비용 (Wd)
-        public static float CollarElectricDrainMultiplier = 3f;
-        public static float CollarCryptoDrainMultiplier = 5f;
+        public static float CollarDrainMultiplier = 1f;  // 글로벌 소모 배율 (XML 값 × 이 배율)
 
         public static float Slavestage1Period = 15f;
         public static float Slavestage2Period = 15f;
         public static float Slavestage3Period = 15f;
         public static float Slavestage4Period = 15f;
 
-        private string CollarDailyDrainBuffer;
-        private string CollarRechargeCostBuffer;
-        private string CollarElectricDrainMultiplierBuffer;
-        private string CollarCryptoDrainMultiplierBuffer;
+        private string CollarDrainMultiplierBuffer;
         private string Slavestage1PeriodBuffer;
         private string Slavestage2PeriodBuffer;
         private string Slavestage3PeriodBuffer;
@@ -60,10 +54,7 @@ namespace SimpleSlaveryCollars
             Scribe_Values.Look(ref RemoteOnlyOnConsoleEnable, "RemoteOnlyOnConsoleEnable", true);
             Scribe_Values.Look(ref CollarChargeEnable, "CollarChargeEnable", true);
             Scribe_Values.Look(ref CollarEmpEnable, "CollarEmpEnable", true);
-            Scribe_Values.Look(ref CollarDailyDrain, "CollarDailyDrain", 20f);
-            Scribe_Values.Look(ref CollarRechargeCost, "CollarRechargeCost", 50f);
-            Scribe_Values.Look(ref CollarElectricDrainMultiplier, "CollarElectricDrainMultiplier", 3f);
-            Scribe_Values.Look(ref CollarCryptoDrainMultiplier, "CollarCryptoDrainMultiplier", 5f);
+            Scribe_Values.Look(ref CollarDrainMultiplier, "CollarDrainMultiplier", 1f);
             Scribe_Values.Look(ref Slavestage1Period, "Slavestage1Period", 15f);
             Scribe_Values.Look(ref Slavestage2Period, "Slavestage2Period", 15f);
             Scribe_Values.Look(ref Slavestage3Period, "Slavestage3Period", 15f);
@@ -91,14 +82,8 @@ namespace SimpleSlaveryCollars
 
             if (CollarChargeEnable)
             {
-                listingStandard.Label("collarDailyDrain_title".Translate(), -1f, "collarDailyDrain_desc".Translate());
-                listingStandard.TextFieldNumeric(ref CollarDailyDrain, ref CollarDailyDrainBuffer, 1f, 100f);
-                listingStandard.Label("collarRechargeCost_title".Translate(), -1f, "collarRechargeCost_desc".Translate());
-                listingStandard.TextFieldNumeric(ref CollarRechargeCost, ref CollarRechargeCostBuffer, 1f, 500f);
-                listingStandard.Label("collarElectricDrain_title".Translate(), -1f, "collarElectricDrain_desc".Translate());
-                listingStandard.TextFieldNumeric(ref CollarElectricDrainMultiplier, ref CollarElectricDrainMultiplierBuffer, 1f, 20f);
-                listingStandard.Label("collarCryptoDrain_title".Translate(), -1f, "collarCryptoDrain_desc".Translate());
-                listingStandard.TextFieldNumeric(ref CollarCryptoDrainMultiplier, ref CollarCryptoDrainMultiplierBuffer, 1f, 20f);
+                listingStandard.Label("collarDrainMultiplier_title".Translate(), -1f, "collarDrainMultiplier_desc".Translate());
+                listingStandard.TextFieldNumeric(ref CollarDrainMultiplier, ref CollarDrainMultiplierBuffer, 0.1f, 10f);
             }
 
             listingStandard.Label("slavestage1Period_title".Translate(), -1f, "slavestage1Period_desc".Translate());
@@ -125,10 +110,7 @@ namespace SimpleSlaveryCollars
                 RemoteOnlyOnConsoleEnable = true;
                 CollarChargeEnable = true;
                 CollarEmpEnable = true;
-                CollarDailyDrain = 20f;
-                CollarRechargeCost = 50f;
-                CollarElectricDrainMultiplier = 3f;
-                CollarCryptoDrainMultiplier = 5f;
+                CollarDrainMultiplier = 1f;
 
                 Slavestage1Period = 15f;
                 Slavestage2Period = 15f;

@@ -1,8 +1,10 @@
 // SimpleSlaveryCollars | Things | SlaveApparel.cs
 // 목적 : 모든 노예 칼라의 추상 기반 클래스
 // 용도 : SlaveGizmos() 인터페이스 + 충전/EMP 공용 로직
-// 주의 : 충전 필드는 ExposeData로 저장. 기존 세이브에서 키 없으면 만충(1f)으로 로드
+// 주의 : 충전은 Wd 단위. charge(0~1)은 내부 비율, 실제 용량은 Extension+품질로 결정
+//        기존 세이브에서 ssc_charge 키 없으면 만충(1f)으로 로드
 
+using RimWorld;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
@@ -13,24 +15,103 @@ namespace SimpleSlaveryCollars
     public abstract class SlaveApparel : Apparel
     {
         // ── 충전 ──
-        /// <summary>현재 충전량 (0~1). 1 = 만충, 0 = 방전.</summary>
+        /// <summary>현재 충전 비율 (0~1). 1 = 만충, 0 = 방전.</summary>
         public float charge = 1f;
-
-        /// <summary>대기 소모율 (틱당). 모드옵션 일당 소모% 기반.</summary>
-        private float IdleChargePerTick =>
-            (SimpleSlaveryCollarsSetting.CollarDailyDrain / 100f) / 60000f;
-
-        /// <summary>작동(armed) 소모 배율. 서브클래스에서 오버라이드.</summary>
-        protected virtual float ActiveChargeMultiplier => 1f;
 
         /// <summary>충전 임계값. 이 이하면 armed 불가.</summary>
         public const float ChargeThreshold = 0.05f;
 
-        /// <summary>자가충전 허용 여부. Stage5 노예 또는 식민자가 직접 콘솔에서 충전.</summary>
+        /// <summary>자가충전 허용 여부. Stage5 노예 또는 식민자가 직접 충전소에서 충전.</summary>
         public bool selfRechargeAllowed = false;
 
         /// <summary>자동 충전 임계값. 이 이하면 자가충전/Warden 충전 트리거.</summary>
         public const float RechargeThreshold = 0.5f;
+
+        // ── Extension 캐시 ──
+        private CollarBatteryExtension _extCache;
+        private bool _extSearched;
+
+        /// <summary>이 칼라의 배터리 Extension. 없으면 기본값 사용.</summary>
+        public CollarBatteryExtension BatteryExt
+        {
+            get
+            {
+                if (!_extSearched)
+                {
+                    _extCache = def.GetModExtension<CollarBatteryExtension>();
+                    _extSearched = true;
+                }
+                return _extCache;
+            }
+        }
+
+        // ── 품질 배율 캐시 ──
+        private float _qualityMultiplier = -1f;
+
+        /// <summary>품질에 따른 배터리 용량 배율 (0.5~2.5).</summary>
+        public float QualityMultiplier
+        {
+            get
+            {
+                if (_qualityMultiplier < 0f)
+                {
+                    if (this.TryGetQuality(out QualityCategory qc))
+                    {
+                        switch (qc)
+                        {
+                            case QualityCategory.Awful:       _qualityMultiplier = 0.5f; break;
+                            case QualityCategory.Poor:        _qualityMultiplier = 0.7f; break;
+                            case QualityCategory.Normal:      _qualityMultiplier = 1.0f; break;
+                            case QualityCategory.Good:        _qualityMultiplier = 1.3f; break;
+                            case QualityCategory.Excellent:   _qualityMultiplier = 1.6f; break;
+                            case QualityCategory.Masterwork:  _qualityMultiplier = 2.0f; break;
+                            case QualityCategory.Legendary:   _qualityMultiplier = 2.5f; break;
+                            default:                          _qualityMultiplier = 1.0f; break;
+                        }
+                    }
+                    else
+                    {
+                        _qualityMultiplier = 1.0f;
+                    }
+                }
+                return _qualityMultiplier;
+            }
+        }
+
+        // ── Wd 기반 계산 ──
+
+        /// <summary>이 칼라의 실제 배터리 용량 (Wd). Extension 기본값 × 품질 배율.</summary>
+        public float BatteryCapacityWd
+        {
+            get
+            {
+                float baseCapacity = BatteryExt?.batteryCapacity ?? 50f;
+                return baseCapacity * QualityMultiplier;
+            }
+        }
+
+        /// <summary>대기 소모량 (Wd/틱).</summary>
+        private float IdleDrainPerTick
+        {
+            get
+            {
+                float wdPerDay = BatteryExt?.idleDrain ?? 10f;
+                return wdPerDay / 60000f;
+            }
+        }
+
+        /// <summary>작동(armed) 소모량 (Wd/틱).</summary>
+        private float ActiveDrainPerTick
+        {
+            get
+            {
+                float wdPerDay = BatteryExt?.activeDrain ?? 30f;
+                return wdPerDay / 60000f;
+            }
+        }
+
+        /// <summary>현재 충전량 (Wd).</summary>
+        public float ChargeWd => charge * BatteryCapacityWd;
 
         /// <summary>충전이 충분한지 여부.</summary>
         public bool HasCharge => !SimpleSlaveryCollarsSetting.CollarChargeEnable || charge > ChargeThreshold;
@@ -68,17 +149,19 @@ namespace SimpleSlaveryCollars
         {
             // EMP 쿨다운 감소
             if (empDisabledTicks > 0)
-            {
                 empDisabledTicks = Mathf.Max(0, empDisabledTicks - delta);
-            }
 
             // 충전 소모 (충전 옵션 ON일 때)
             if (SimpleSlaveryCollarsSetting.CollarChargeEnable && charge > 0f)
             {
-                float drain = IdleChargePerTick * delta;
-                if (IsArmed)
-                    drain *= ActiveChargeMultiplier;
-                charge = Mathf.Max(0f, charge - drain);
+                // Wd/틱 → charge 비율로 변환 (drainWd / capacityWd)
+                float capacity = BatteryCapacityWd;
+                if (capacity <= 0f) return;
+
+                float drainPerTick = IsArmed ? ActiveDrainPerTick : IdleDrainPerTick;
+                drainPerTick *= SimpleSlaveryCollarsSetting.CollarDrainMultiplier;
+                float drainRatio = (drainPerTick * delta) / capacity;
+                charge = Mathf.Max(0f, charge - drainRatio);
             }
         }
 
@@ -89,10 +172,16 @@ namespace SimpleSlaveryCollars
             empDisabledTicks = Mathf.Max(empDisabledTicks, durationTicks);
         }
 
-        /// <summary>콘솔에서 충전. amount만큼 충전량 회복.</summary>
-        public void Recharge(float amount)
+        /// <summary>Wd 단위로 충전. 부분 충전 가능. 실제 충전된 Wd를 반환.</summary>
+        public float RechargeWd(float availableWd)
         {
-            charge = Mathf.Clamp01(charge + amount);
+            float capacity = BatteryCapacityWd;
+            if (capacity <= 0f) return 0f;
+
+            float neededWd = (1f - charge) * capacity;
+            float actualWd = Mathf.Min(neededWd, availableWd);
+            charge = Mathf.Clamp01(charge + actualWd / capacity);
+            return actualWd;
         }
 
         /// <summary>충전량 퍼센트 (0~100).</summary>

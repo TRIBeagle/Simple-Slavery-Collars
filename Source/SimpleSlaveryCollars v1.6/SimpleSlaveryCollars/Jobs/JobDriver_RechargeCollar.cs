@@ -16,7 +16,6 @@ namespace SimpleSlaveryCollars.Jobs
     internal class JobDriver_RechargeCollar : JobDriver
     {
         private const int RechargeDuration = 300; // 충전 시간 (틱). 족쇄 작업과 동일
-        private const float RechargeAmount = 1f;  // 1회 충전으로 만충
 
         private Pawn Slave => (Pawn)job.GetTarget(TargetIndex.A).Thing;
         private Thing Console => job.GetTarget(TargetIndex.B).Thing;
@@ -66,7 +65,22 @@ namespace SimpleSlaveryCollars.Jobs
                     var collar = SimpleSlaveryCollars.Utilities.SimpleSlaveryUtility.GetSlaveCollar(Slave) as SlaveApparel;
                     if (collar != null)
                     {
-                        collar.Recharge(RechargeAmount);
+                        float neededWd = (1f - collar.charge) * collar.BatteryCapacityWd;
+                        if (neededWd <= 0f) return;
+
+                        // 배터리에서 전력 차감 (부분 충전 가능)
+                        var battery = Console.TryGetComp<CompPowerBattery>();
+                        if (battery != null && battery.StoredEnergy > 0f)
+                        {
+                            float availableWd = battery.StoredEnergy;
+                            float usedWd = collar.RechargeWd(availableWd);
+                            battery.DrawPower(Mathf.Min(usedWd, battery.StoredEnergy));
+                        }
+                        else
+                        {
+                            // 콘솔 (전력망에서 소모 — 충전 비용은 칼라 용량만큼)
+                            collar.RechargeWd(neededWd);
+                        }
                     }
                 },
                 defaultCompleteMode = ToilCompleteMode.Instant
