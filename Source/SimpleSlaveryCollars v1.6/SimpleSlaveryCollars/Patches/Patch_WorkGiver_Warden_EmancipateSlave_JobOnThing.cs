@@ -31,7 +31,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_WorkGiver_Warden_EmancipateSlave_JobOnThing.Prefix 오류: {ex}");
+                Log.Error($"[SSC] Patch_WorkGiver_Warden_EmancipateSlave_JobOnThing.Prefix error: {ex}");
             }
             return true;
         }

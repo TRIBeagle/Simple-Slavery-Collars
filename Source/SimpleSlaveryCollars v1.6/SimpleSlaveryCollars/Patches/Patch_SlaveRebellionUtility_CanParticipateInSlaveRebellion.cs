@@ -41,7 +41,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_SlaveRebellionUtility_CanParticipateInSlaveRebellion.CanParticipateInSlaveRebellion_Patch 오류: {ex}");
+                Log.Error($"[SSC] Patch_SlaveRebellionUtility_CanParticipateInSlaveRebellion.CanParticipateInSlaveRebellion_Patch error: {ex}");
             }
         }
     }

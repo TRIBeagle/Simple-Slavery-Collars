@@ -48,7 +48,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_Pawn_Strip.Strip_Patch 오류: {ex}");
+                Log.Error($"[SSC] Patch_Pawn_Strip.Strip_Patch error: {ex}");
             }
         }
     }

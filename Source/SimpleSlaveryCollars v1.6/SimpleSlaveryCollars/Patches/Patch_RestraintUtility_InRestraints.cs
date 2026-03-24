@@ -37,7 +37,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_RestraintUtility_InRestraints.InRestraints_Patch 오류: {ex}");
+                Log.Error($"[SSC] Patch_RestraintUtility_InRestraints.InRestraints_Patch error: {ex}");
             }
         }
     }

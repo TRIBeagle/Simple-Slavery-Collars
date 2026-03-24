@@ -34,7 +34,7 @@ namespace SimpleSlaveryCollars.Patches
 
             List<Gizmo> extras = null;
             try { extras = GetSlaveGizmosSafe(__instance); }
-            catch (Exception ex) { Log.Error($"[SSC] Patch_Pawn_GetGizmos 오류: {ex}"); }
+            catch (Exception ex) { Log.Error($"[SSC] Patch_Pawn_GetGizmos error: {ex}"); }
 
             if (extras != null)
             {

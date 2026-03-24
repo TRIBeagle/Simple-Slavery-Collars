@@ -37,7 +37,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_GenGuest_EmancipateSlave.EmancipateSlave_Postfix 오류: {ex}");
+                Log.Error($"[SSC] Patch_GenGuest_EmancipateSlave.EmancipateSlave_Postfix error: {ex}");
             }
         }
     }

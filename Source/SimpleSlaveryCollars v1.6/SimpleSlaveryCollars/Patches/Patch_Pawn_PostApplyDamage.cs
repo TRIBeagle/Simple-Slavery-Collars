@@ -35,7 +35,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_Pawn_PostApplyDamage.Postfix 오류: {ex}");
+                Log.Error($"[SSC] Patch_Pawn_PostApplyDamage.Postfix error: {ex}");
             }
         }
     }

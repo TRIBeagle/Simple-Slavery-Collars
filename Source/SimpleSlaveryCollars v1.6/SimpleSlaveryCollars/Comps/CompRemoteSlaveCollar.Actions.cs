@@ -34,7 +34,7 @@ namespace SimpleSlaveryCollars
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"[SSC] DoRemoteCollarExplosive 오류 ({pawn?.LabelShort}): {ex}");
+                    Log.Error($"[SSC] DoRemoteCollarExplosive error ({pawn?.LabelShort}): {ex}");
                 }
             }
         }
@@ -55,7 +55,7 @@ namespace SimpleSlaveryCollars
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"[SSC] DoRemoteCollarElectric 오류 ({pawn?.LabelShort}): {ex}");
+                    Log.Error($"[SSC] DoRemoteCollarElectric error ({pawn?.LabelShort}): {ex}");
                 }
             }
         }
@@ -80,7 +80,7 @@ namespace SimpleSlaveryCollars
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"[SSC] DoRemoteCollarCrypto 오류 ({pawn?.LabelShort}): {ex}");
+                    Log.Error($"[SSC] DoRemoteCollarCrypto error ({pawn?.LabelShort}): {ex}");
                 }
             }
         }
@@ -107,7 +107,7 @@ namespace SimpleSlaveryCollars
                 }
                 catch (Exception ex)
                 {
-                    Log.Error($"[SSC] DoRemoteCollarGoBoom 오류: {ex}");
+                    Log.Error($"[SSC] DoRemoteCollarGoBoom error: {ex}");
                 }
             }
         }

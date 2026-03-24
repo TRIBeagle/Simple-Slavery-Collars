@@ -33,7 +33,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_RestraintUtility_ShouldShowRestraintsInfo.ShouldShowRestraintsInfo_Patch 오류: {ex}");
+                Log.Error($"[SSC] Patch_RestraintUtility_ShouldShowRestraintsInfo.ShouldShowRestraintsInfo_Patch error: {ex}");
             }
         }
     }

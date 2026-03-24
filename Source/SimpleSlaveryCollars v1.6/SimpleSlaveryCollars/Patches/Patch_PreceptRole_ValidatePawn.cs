@@ -46,7 +46,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_PreceptRole_ValidatePawn.Postfix 오류: {ex}");
+                Log.Error($"[SSC] Patch_PreceptRole_ValidatePawn.Postfix error: {ex}");
             }
         }
     }

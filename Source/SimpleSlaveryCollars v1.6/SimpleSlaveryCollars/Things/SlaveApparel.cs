@@ -171,7 +171,7 @@ namespace SimpleSlaveryCollars
             {
                 _chargeMigrated = true;
                 if (Wearer != null)
-                    Log.Message($"[SSC] {Wearer.LabelShort}: 충전 시스템 첫 적용. 만충 상태로 시작.");
+                    Log.Message($"[SSC] {Wearer.LabelShort}: Charge system first applied. Starting fully charged.");
             }
 
             // EMP 쿨다운 감소

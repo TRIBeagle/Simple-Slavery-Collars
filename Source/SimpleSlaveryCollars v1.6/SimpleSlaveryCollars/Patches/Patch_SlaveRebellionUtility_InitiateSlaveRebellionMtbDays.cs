@@ -51,7 +51,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_SlaveRebellionUtility_InitiateSlaveRebellionMtbDays.InitiateSlaveRebellionMtbDays_Patch 오류: {ex}");
+                Log.Error($"[SSC] Patch_SlaveRebellionUtility_InitiateSlaveRebellionMtbDays.InitiateSlaveRebellionMtbDays_Patch error: {ex}");
             }
         }
     }

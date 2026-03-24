@@ -72,7 +72,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_SlaveRebellionUtility.Postfix 오류: {ex}");
+                Log.Error($"[SSC] Patch_SlaveRebellionUtility.Postfix error: {ex}");
             }
         }
     }

@@ -33,7 +33,7 @@ namespace SimpleSlaveryCollars.Patches
 
             if (target == null)
             {
-                Log.Warning("[SSC] Transpiler: Pawn.IsFreeNonSlaveColonist getter를 찾을 수 없음. 패치 건너뜀.");
+                Log.Warning("[SSC] Transpiler: Pawn.IsFreeNonSlaveColonist getter not found. Skipping patch.");
                 foreach (var inst in instructions)
                     yield return inst;
                 yield break;
@@ -54,7 +54,7 @@ namespace SimpleSlaveryCollars.Patches
             }
 
             if (!patched)
-                Log.Warning("[SSC] Transpiler: AppliesToPawn에서 IsFreeNonSlaveColonist 호출을 찾지 못함.");
+                Log.Warning("[SSC] Transpiler: IsFreeNonSlaveColonist call not found in AppliesToPawn.");
         }
 
         /// <summary>

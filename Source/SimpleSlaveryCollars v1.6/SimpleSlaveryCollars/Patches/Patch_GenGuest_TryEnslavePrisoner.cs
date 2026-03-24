@@ -35,7 +35,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_GenGuest_TryEnslavePrisoner 오류: {ex}");
+                Log.Error($"[SSC] Patch_GenGuest_TryEnslavePrisoner error: {ex}");
             }
         }
     }

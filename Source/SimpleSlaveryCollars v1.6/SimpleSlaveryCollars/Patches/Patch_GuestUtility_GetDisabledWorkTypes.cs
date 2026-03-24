@@ -39,7 +39,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_GuestUtility_GetDisabledWorkTypes.Postfix 오류: {ex}");
+                Log.Error($"[SSC] Patch_GuestUtility_GetDisabledWorkTypes.Postfix error: {ex}");
             }
         }
     }

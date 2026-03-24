@@ -44,7 +44,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_GenGuest_SlaveRelease.SlaveRelease_Patch 오류: {ex}");
+                Log.Error($"[SSC] Patch_GenGuest_SlaveRelease.SlaveRelease_Patch error: {ex}");
             }
         }
     }

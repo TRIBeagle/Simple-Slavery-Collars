@@ -33,7 +33,7 @@ namespace SimpleSlaveryCollars.Patches
             }
             catch (Exception ex)
             {
-                Log.Error($"[SSC] Patch_Pawn_PreTraded 오류: {ex}");
+                Log.Error($"[SSC] Patch_Pawn_PreTraded error: {ex}");
             }
         }
     }

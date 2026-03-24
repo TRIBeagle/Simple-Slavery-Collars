@@ -148,7 +148,7 @@ namespace SimpleSlaveryCollars
                     && Wearer.health?.hediffSet != null
                     && !Wearer.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Crypto_Stasis))
                 {
-                    Log.Warning($"[SSC] {Wearer.LabelShort}: armed=true이나 CryptoStasis Hediff 누락. 다음 틱에서 재적용됨.");
+                    Log.Warning($"[SSC] {Wearer.LabelShort}: armed=true but CryptoStasis Hediff missing. Will be reapplied next tick.");
                 }
             }
 
