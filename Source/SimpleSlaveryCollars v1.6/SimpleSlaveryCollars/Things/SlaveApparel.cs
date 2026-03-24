@@ -145,7 +145,7 @@ namespace SimpleSlaveryCollars
         /// 틱 처리: 충전 소모 + EMP 쿨다운.
         /// 서브클래스는 base.TickInterval(delta)를 반드시 호출해야 함.
         /// </summary>
-        protected virtual void TickInterval(int delta)
+        protected override void TickInterval(int delta)
         {
             // EMP 쿨다운 감소
             if (empDisabledTicks > 0)

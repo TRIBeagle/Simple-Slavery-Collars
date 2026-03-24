@@ -72,9 +72,8 @@ namespace SimpleSlaveryCollars.Jobs
                         var battery = Console.TryGetComp<CompPowerBattery>();
                         if (battery != null && battery.StoredEnergy > 0f)
                         {
-                            float availableWd = battery.StoredEnergy;
-                            float usedWd = collar.RechargeWd(availableWd);
-                            battery.DrawPower(Mathf.Min(usedWd, battery.StoredEnergy));
+                            float usedWd = collar.RechargeWd(battery.StoredEnergy);
+                            battery.DrawPower(usedWd);
                         }
                         else
                         {
