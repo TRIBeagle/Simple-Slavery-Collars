@@ -113,7 +113,7 @@
 	<SSC_Collar_SelfRechargeOff>자가 충전: 금지</SSC_Collar_SelfRechargeOff>
 	<SSC_Collar_NotOperational>칼라가 작동하지 않습니다 (충전 부족 또는 EMP)</SSC_Collar_NotOperational>
 	<collarBatteryDays_title>칼라 배터리 지속 시간 (대기, 일)</collarBatteryDays_title>
-	<collarBatteryDays_desc>대기 상태에서 만충 칼라가 완전 방전되기까지의 일수. 기본: 3일</collarBatteryDays_desc>
+	<collarBatteryDays_desc>대기 상태에서 만충 칼라가 완전 방전되기까지의 일수. 기본: 5일</collarBatteryDays_desc>
 	<collarElectricDrain_title>전기 칼라 작동 소모 배율</collarElectricDrain_title>
 	<collarElectricDrain_desc>전기 칼라가 작동(감전) 중일 때 대기 대비 소모 배율. 기본: 3배</collarElectricDrain_desc>
 	<collarCryptoDrain_title>동결 칼라 작동 소모 배율</collarCryptoDrain_title>

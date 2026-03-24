@@ -113,7 +113,7 @@
 	<SSC_Collar_SelfRechargeOff>Self-recharge: Disabled</SSC_Collar_SelfRechargeOff>
 	<SSC_Collar_NotOperational>Collar not operational (low charge or EMP)</SSC_Collar_NotOperational>
 	<collarBatteryDays_title>Collar battery life (idle, days)</collarBatteryDays_title>
-	<collarBatteryDays_desc>Days until a fully charged collar depletes in idle mode. Default: 3 days</collarBatteryDays_desc>
+	<collarBatteryDays_desc>Days until a fully charged collar depletes in idle mode. Default: 5 days</collarBatteryDays_desc>
 	<collarElectricDrain_title>Electric collar active drain multiplier</collarElectricDrain_title>
 	<collarElectricDrain_desc>Drain multiplier when electric collar is actively shocking. Default: 3x</collarElectricDrain_desc>
 	<collarCryptoDrain_title>Crypto collar active drain multiplier</collarCryptoDrain_title>

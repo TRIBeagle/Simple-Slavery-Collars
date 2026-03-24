@@ -28,7 +28,7 @@ namespace SimpleSlaveryCollars
         public static bool RemoteOnlyOnConsoleEnable = true;
         public static bool CollarChargeEnable = true;
         public static bool CollarEmpEnable = true;
-        public static float CollarBatteryDays = 3f; // 대기 상태 만충 지속 일수
+        public static float CollarBatteryDays = 5f; // 대기 상태 만충 지속 일수
         public static float CollarElectricDrainMultiplier = 3f;
         public static float CollarCryptoDrainMultiplier = 5f;
 
@@ -120,7 +120,7 @@ namespace SimpleSlaveryCollars
                 RemoteOnlyOnConsoleEnable = true;
                 CollarChargeEnable = true;
                 CollarEmpEnable = true;
-                CollarBatteryDays = 3f;
+                CollarBatteryDays = 5f;
                 CollarElectricDrainMultiplier = 3f;
                 CollarCryptoDrainMultiplier = 5f;
 
