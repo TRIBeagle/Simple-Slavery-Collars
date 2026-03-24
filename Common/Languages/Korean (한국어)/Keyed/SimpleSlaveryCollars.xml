@@ -108,4 +108,8 @@
 	<SSC_Collar_EmpTooltip>EMP로 비활성화 중 (남은 시간: {0})</SSC_Collar_EmpTooltip>
 	<SSC_Collar_UnlimitedTooltip>충전 시스템 꺼짐 — 무제한 작동</SSC_Collar_UnlimitedTooltip>
 	<SSC_Collar_ChargeTooltip>충전량: {0}%</SSC_Collar_ChargeTooltip>
+	<SSC_Collar_SelfRechargeToggle>자가 충전 허용 토글 (Stage5 노예/식민자만 가능)</SSC_Collar_SelfRechargeToggle>
+	<SSC_Collar_SelfRechargeOn>자가 충전: 허용</SSC_Collar_SelfRechargeOn>
+	<SSC_Collar_SelfRechargeOff>자가 충전: 금지</SSC_Collar_SelfRechargeOff>
+	<SSC_Collar_NotOperational>칼라가 작동하지 않습니다 (충전 부족 또는 EMP)</SSC_Collar_NotOperational>
 </LanguageData>

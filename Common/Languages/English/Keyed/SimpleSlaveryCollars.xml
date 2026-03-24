@@ -108,4 +108,8 @@
 	<SSC_Collar_EmpTooltip>Disabled by EMP (remaining: {0})</SSC_Collar_EmpTooltip>
 	<SSC_Collar_UnlimitedTooltip>Charging system disabled — unlimited operation</SSC_Collar_UnlimitedTooltip>
 	<SSC_Collar_ChargeTooltip>Charge: {0}%</SSC_Collar_ChargeTooltip>
+	<SSC_Collar_SelfRechargeToggle>Toggle self-recharge (Stage5 slaves/colonists only)</SSC_Collar_SelfRechargeToggle>
+	<SSC_Collar_SelfRechargeOn>Self-recharge: Allowed</SSC_Collar_SelfRechargeOn>
+	<SSC_Collar_SelfRechargeOff>Self-recharge: Disabled</SSC_Collar_SelfRechargeOff>
+	<SSC_Collar_NotOperational>Collar not operational (low charge or EMP)</SSC_Collar_NotOperational>
 </LanguageData>

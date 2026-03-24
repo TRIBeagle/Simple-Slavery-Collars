@@ -21,12 +21,9 @@ namespace SimpleSlaveryCollars
 
         public override IEnumerable<Gizmo> SlaveGizmos()
         {
-            // 충전 ON → 통합 기즈모
+            // 충전 기즈모 (충전 ON일 때만)
             if (SimpleSlaveryCollarsSetting.CollarChargeEnable)
-            {
                 yield return new SimpleSlaveryCollars.Gizmos.Gizmo_SlaveCollarStatus { collar = this };
-                yield break;
-            }
 
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {
@@ -60,6 +57,8 @@ namespace SimpleSlaveryCollars
             };
             armCollar.activateSound = SoundDefOf.Click;
             armCollar.icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Crypto", true);
+            if (!IsOperational)
+                armCollar.Disable("SSC_Collar_NotOperational".Translate());
             yield return armCollar;
 
         }
