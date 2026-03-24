@@ -331,30 +331,30 @@ namespace SimpleSlaveryCollars.Gizmos
 
         #region 하단 버튼
 
-        /// <summary>하단: 일괄 무장/해제 + 전체 취소 + Warden 경고.</summary>
+        /// <summary>하단: 일괄 무장/해제(드롭다운) + 예약 취소 + Warden 경고.</summary>
         private void DrawBottomButtons(Rect rect)
         {
-            float btnW = 90f;
+            float btnW = 100f;
             float gap = 4f;
             float x = rect.x;
 
-            // [일괄 무장]
+            // [일괄 무장 ▾] — 드롭다운
             if (Widgets.ButtonText(new Rect(x, rect.y, btnW, rect.height),
-                "SSC_Console_ArmAll".Translate()))
+                "SSC_Console_ArmAll".Translate() + " \u25BE"))
             {
-                BulkReserve(armed: false);
+                OpenBulkMenu(arm: true);
             }
             x += btnW + gap;
 
-            // [일괄 해제]
+            // [일괄 해제 ▾] — 드롭다운
             if (Widgets.ButtonText(new Rect(x, rect.y, btnW, rect.height),
-                "SSC_Console_DisarmAll".Translate()))
+                "SSC_Console_DisarmAll".Translate() + " \u25BE"))
             {
-                BulkReserve(armed: true);
+                OpenBulkMenu(arm: false);
             }
             x += btnW + gap;
 
-            // [전체 취소]
+            // [예약 취소]
             if (Widgets.ButtonText(new Rect(x, rect.y, btnW, rect.height),
                 "SSC_Console_CancelAllReservations".Translate()))
             {
@@ -377,38 +377,69 @@ namespace SimpleSlaveryCollars.Gizmos
             }
         }
 
-        /// <summary>현재 필터 내 미예약 폰에 대해 일괄 무장 또는 해제 예약.</summary>
-        private void BulkReserve(bool armed)
+        /// <summary>일괄 무장/해제 드롭다운 메뉴. 칼라 종류별 항목 + 대상 수 표시.</summary>
+        private void OpenBulkMenu(bool arm)
         {
             var pawns = GetFilteredPawns();
-            int count = 0;
-            for (int i = 0; i < pawns.Count; i++)
-            {
-                var info = pawns[i];
-                if (comp.IsPawnReserved(info.pawn)) continue;
-                if (info.collar.IsArmed != armed) continue;
+            var options = new List<FloatMenuOption>();
 
-                // armed=true인 폰 → 해제 액션, armed=false인 폰 → 무장 액션
-                RemoteCollarAction? action = armed ? GetDisarmAction(info.collar) : GetArmAction(info.collar);
-                if (!action.HasValue) continue;
+            // 칼라 종류별 집계 및 메뉴 항목 생성
+            var collarTypes = new (System.Type type, string labelKey, System.Func<SlaveApparel, RemoteCollarAction?> getAction)[]
+            {
+                (typeof(SlaveCollar_Explosive), "SSC_Console_CollarExplosive", arm ? (System.Func<SlaveApparel, RemoteCollarAction?>)GetArmAction : GetDisarmAction),
+                (typeof(SlaveCollar_Electric),  "SSC_Console_CollarElectric",  arm ? (System.Func<SlaveApparel, RemoteCollarAction?>)GetArmAction : GetDisarmAction),
+                (typeof(SlaveCollar_Crypto),    "SSC_Console_CollarCrypto",    arm ? (System.Func<SlaveApparel, RemoteCollarAction?>)GetArmAction : GetDisarmAction),
+            };
 
-                comp.ReserveJobForPawn(info.pawn, action.Value);
-                count++;
-            }
-            if (count > 0)
+            for (int t = 0; t < collarTypes.Length; t++)
             {
-                string actionLabel = armed
-                    ? "SSC_Collar_Disarm".Translate().ToString()
-                    : "SSC_Collar_Arm".Translate().ToString();
-                Messages.Message(
-                    "SSC_Remote_GroupReserved".Translate(count, actionLabel),
-                    MessageTypeDefOf.TaskCompletion);
+                var ct = collarTypes[t];
+                // 대상 폰 집계
+                var eligible = new List<PawnCollarInfo>();
+                for (int i = 0; i < pawns.Count; i++)
+                {
+                    var info = pawns[i];
+                    if (comp.IsPawnReserved(info.pawn)) continue;
+                    if (!ct.type.IsInstanceOfType(info.collar)) continue;
+                    if (arm && info.collar.IsArmed) continue;     // 무장: 비무장만
+                    if (!arm && !info.collar.IsArmed) continue;   // 해제: 무장만
+                    eligible.Add(info);
+                }
+
+                string label = ct.labelKey.Translate() + $" ({eligible.Count})";
+                if (eligible.Count == 0)
+                {
+                    options.Add(new FloatMenuOption(label, null)); // 비활성
+                }
+                else
+                {
+                    var captured = eligible;
+                    var getAction = ct.getAction;
+                    options.Add(new FloatMenuOption(label, () =>
+                    {
+                        int count = 0;
+                        for (int i = 0; i < captured.Count; i++)
+                        {
+                            var action = getAction(captured[i].collar);
+                            if (!action.HasValue) continue;
+                            comp.ReserveJobForPawn(captured[i].pawn, action.Value);
+                            count++;
+                        }
+                        if (count > 0)
+                        {
+                            string actionLabel = arm
+                                ? "SSC_Collar_Arm".Translate().ToString()
+                                : "SSC_Collar_Disarm".Translate().ToString();
+                            Messages.Message(
+                                "SSC_Remote_GroupReserved".Translate(count, actionLabel),
+                                MessageTypeDefOf.TaskCompletion);
+                        }
+                        InvalidateCache();
+                    }));
+                }
             }
-            else
-            {
-                Messages.Message("SSC_Remote_NoEligiblePawn".Translate(), MessageTypeDefOf.RejectInput);
-            }
-            InvalidateCache();
+
+            Find.WindowStack.Add(new FloatMenu(options));
         }
 
         /// <summary>모든 예약을 해제 (필터 무관).</summary>

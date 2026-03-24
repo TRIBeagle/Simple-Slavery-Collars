@@ -57,7 +57,7 @@
 	<SSC_Console_CollarCrypto>Crypto</SSC_Console_CollarCrypto>
 	<SSC_Console_ArmAll>Arm All</SSC_Console_ArmAll>
 	<SSC_Console_DisarmAll>Disarm All</SSC_Console_DisarmAll>
-	<SSC_Console_CancelAllReservations>Cancel All</SSC_Console_CancelAllReservations>
+	<SSC_Console_CancelAllReservations>Cancel Scheduled</SSC_Console_CancelAllReservations>
 	<SSC_Console_AllCancelledCount>All scheduled operations for {0} pawn(s) have been cancelled.</SSC_Console_AllCancelledCount>
 	<SSC_Console_NoWardenWarning>No colonist has Warden work enabled. Scheduled operations will not be executed until a Warden is assigned.</SSC_Console_NoWardenWarning>
 	<SSC_Console_PawnType_Colonist>Colonist</SSC_Console_PawnType_Colonist>
