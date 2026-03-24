@@ -25,9 +25,20 @@ namespace SimpleSlaveryCollars.Gizmos
         private const int CacheInterval = 30;
 
         // 레이아웃 상수
-        private const float RowHeight = 30f;
+        private const float RowHeight = 36f;
         private const float HeaderHeight = 24f;
         private const float BtnH = 24f;
+        private const float PortraitSize = 32f;
+
+        // 컬럼 오프셋 (초상화 뒤)
+        private const float ColPortrait = 2f;
+        private const float ColName = 36f;       // ColPortrait + PortraitSize + 2
+        private const float NameWidth = 148f;
+        private const float ColCollar = 188f;     // ColName + NameWidth + 4
+        private const float CollarWidth = 70f;
+        private const float ColStatus = 262f;     // ColCollar + CollarWidth + 4
+        private const float StatusWidth = 56f;
+        private const float ColAction = 322f;     // ColStatus + StatusWidth + 4
 
         public override Vector2 InitialSize => new Vector2(620f, 460f);
 
@@ -145,12 +156,10 @@ namespace SimpleSlaveryCollars.Gizmos
             Text.Font = GameFont.Tiny;
             Text.Anchor = TextAnchor.LowerLeft;
 
-            float x = rect.x + 4f;
-            Widgets.Label(new Rect(x, rect.y, 170f, rect.height), "SSC_Console_Header_Name".Translate());
-            x += 174f;
-            Widgets.Label(new Rect(x, rect.y, 80f, rect.height), "SSC_Console_Header_Collar".Translate());
-            x += 84f;
-            Widgets.Label(new Rect(x, rect.y, 60f, rect.height), "SSC_Console_Header_Status".Translate());
+            float x = rect.x;
+            Widgets.Label(new Rect(x + ColName, rect.y, NameWidth, rect.height), "SSC_Console_Header_Name".Translate());
+            Widgets.Label(new Rect(x + ColCollar, rect.y, CollarWidth, rect.height), "SSC_Console_Header_Collar".Translate());
+            Widgets.Label(new Rect(x + ColStatus, rect.y, StatusWidth, rect.height), "SSC_Console_Header_Status".Translate());
 
             Text.Anchor = TextAnchor.UpperLeft;
             Text.Font = GameFont.Small;
@@ -160,45 +169,62 @@ namespace SimpleSlaveryCollars.Gizmos
             GUI.color = Color.white;
         }
 
-        /// <summary>개별 폰 행: 이름 | 칼라 종류 | 상태 | 액션 버튼.</summary>
+        /// <summary>개별 폰 행: 초상화 | 이름 | 칼라 종류 | 상태 | 액션 버튼.</summary>
         private void DrawPawnRow(Rect rowRect, PawnCollarInfo info)
         {
-            float x = rowRect.x + 4f;
+            float baseX = rowRect.x;
             float btnY = rowRect.y + (rowRect.height - BtnH) / 2f;
+
+            // ── 초상화 ──
+            Rect portraitRect = new Rect(baseX + ColPortrait,
+                rowRect.y + (rowRect.height - PortraitSize) / 2f,
+                PortraitSize, PortraitSize);
+            DrawPawnPortrait(portraitRect, info.pawn);
 
             Text.Anchor = TextAnchor.MiddleLeft;
 
             // 이름 (컬러)
-            Widgets.Label(new Rect(x, rowRect.y, 170f, rowRect.height), GetColoredLabel(info.pawn));
-            x += 174f;
+            Widgets.Label(new Rect(baseX + ColName, rowRect.y, NameWidth, rowRect.height),
+                GetColoredLabel(info.pawn));
 
             // 칼라 종류
-            Widgets.Label(new Rect(x, rowRect.y, 80f, rowRect.height), GetCollarTypeLabel(info.collar));
-            x += 84f;
+            Widgets.Label(new Rect(baseX + ColCollar, rowRect.y, CollarWidth, rowRect.height),
+                GetCollarTypeLabel(info.collar));
 
             // 상태
             string status = info.collar.IsArmed
                 ? "SSC_Collar_Arm".Translate().ToString()
                 : "SSC_Collar_Disarm".Translate().ToString();
-            Widgets.Label(new Rect(x, rowRect.y, 60f, rowRect.height), status);
-            x += 64f;
+            Widgets.Label(new Rect(baseX + ColStatus, rowRect.y, StatusWidth, rowRect.height), status);
 
             Text.Anchor = TextAnchor.UpperLeft;
 
             // 액션 버튼
+            float actionX = baseX + ColAction;
             if (comp.IsPawnReserved(info.pawn))
             {
                 GUI.color = Color.gray;
                 Text.Anchor = TextAnchor.MiddleLeft;
-                Widgets.Label(new Rect(x, rowRect.y, 100f, rowRect.height),
+                Widgets.Label(new Rect(actionX, rowRect.y, 100f, rowRect.height),
                     "SSC_Remote_AlreadyReservedShort".Translate());
                 Text.Anchor = TextAnchor.UpperLeft;
                 GUI.color = Color.white;
             }
             else
             {
-                DrawActionButtons(x, btnY, info);
+                DrawActionButtons(actionX, btnY, info);
             }
+        }
+
+        /// <summary>폰 초상화(상반신) 렌더링.</summary>
+        private static void DrawPawnPortrait(Rect rect, Pawn pawn)
+        {
+            // 50x50으로 렌더 후 rect 크기로 축소 표시 — 자연스러운 상반신 아이콘
+            var portrait = PortraitsCache.Get(
+                pawn, new Vector2(50f, 50f), Rot4.South,
+                cameraOffset: new Vector3(0f, 0f, 0.12f),
+                cameraZoom: 1.8f);
+            GUI.DrawTexture(rect, portrait);
         }
 
         /// <summary>칼라 종류/상태에 따른 액션 버튼.</summary>
