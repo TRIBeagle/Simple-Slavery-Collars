@@ -434,53 +434,45 @@ namespace SimpleSlaveryCollars
             // 옵션 ON: Pawn 리스트 팝업 기반의 그룹 실행만 제공(토글/일괄 버튼 숨김)
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {
-                // [스캔] Pawn 전체 1회 스캔 후 액션별 대상 분류
-                var pawns = this.parent.Map.mapPawns.AllPawnsSpawned
-                    .Where(p => !p.Dead && p.Spawned)
-                    .ToList();
+                // [스캔] Pawn 전체 1회 스캔 — bool 플래그만 사용 (List 할당 제거)
+                // 버튼 표시 여부만 판정. 클릭 시 FindEligiblePawnsForAction이 실제 필터링 수행
+                bool hasArmExplosive = false, hasDisarmExplosive = false;
+                bool hasArmElectric = false, hasDisarmElectric = false;
+                bool hasArmCrypto = false, hasDisarmCrypto = false;
 
-                var eligibleArmExplosive = new List<Pawn>();
-                var eligibleDisarmExplosive = new List<Pawn>();
-                var eligibleDetonateExplosive = new List<Pawn>();
-                var eligibleArmElectric = new List<Pawn>();
-                var eligibleDisarmElectric = new List<Pawn>();
-                var eligibleArmCrypto = new List<Pawn>();
-                var eligibleDisarmCrypto = new List<Pawn>();
-
-                // [FIX] GetSlaveCollar를 Pawn당 1회만 호출 (기존 3회 → 1회)
-                foreach (var p in pawns)
+                var allPawns = this.parent.Map.mapPawns.AllPawnsSpawned;
+                for (int i = 0; i < allPawns.Count; i++)
                 {
+                    var p = allPawns[i];
+                    if (p.Dead || !p.Spawned) continue;
+
                     var collar = SimpleSlaveryUtility.GetSlaveCollar(p);
                     if (collar == null) continue;
 
                     if (collar is SlaveCollar_Explosive explosive)
                     {
-                        if (!explosive.armed)
-                            eligibleArmExplosive.Add(p);
-                        else
-                        {
-                            eligibleDisarmExplosive.Add(p);
-                            eligibleDetonateExplosive.Add(p);
-                        }
+                        if (!explosive.armed) hasArmExplosive = true;
+                        else hasDisarmExplosive = true;
                     }
                     else if (collar is SlaveCollar_Electric electric)
                     {
-                        if (!electric.armed)
-                            eligibleArmElectric.Add(p);
-                        else
-                            eligibleDisarmElectric.Add(p);
+                        if (!electric.armed) hasArmElectric = true;
+                        else hasDisarmElectric = true;
                     }
                     else if (collar is SlaveCollar_Crypto crypto)
                     {
-                        if (!crypto.armed)
-                            eligibleArmCrypto.Add(p);
-                        else
-                            eligibleDisarmCrypto.Add(p);
+                        if (!crypto.armed) hasArmCrypto = true;
+                        else hasDisarmCrypto = true;
                     }
+
+                    // 모든 플래그가 true면 추가 스캔 불필요
+                    if (hasArmExplosive && hasDisarmExplosive &&
+                        hasArmElectric && hasDisarmElectric &&
+                        hasArmCrypto && hasDisarmCrypto)
+                        break;
                 }
 
-                // [UI] 폭발 목걸이 장전
-                if (eligibleArmExplosive.Any())
+                if (hasArmExplosive)
                 {
                     yield return new Command_Action
                     {
@@ -491,8 +483,7 @@ namespace SimpleSlaveryCollars
                     };
                 }
 
-                // [UI] 폭발 목걸이 해제
-                if (eligibleDisarmExplosive.Any())
+                if (hasDisarmExplosive)
                 {
                     yield return new Command_Action
                     {
@@ -501,11 +492,7 @@ namespace SimpleSlaveryCollars
                         icon = ContentFinder<Texture2D>.Get("UI/Commands/ArmCollar_Explosive", true),
                         action = () => { OpenPawnGroupMenu(RemoteCollarAction.DisarmExplosive); }
                     };
-                }
 
-                // [UI] 폭발 목걸이 폭발
-                if (eligibleDetonateExplosive.Any())
-                {
                     yield return new Command_Action
                     {
                         defaultLabel = "Label_CollarExplosive_Detonate_Console".Translate(),
@@ -515,8 +502,7 @@ namespace SimpleSlaveryCollars
                     };
                 }
 
-                // [UI] 감전 목걸이 장전
-                if (eligibleArmElectric.Any())
+                if (hasArmElectric)
                 {
                     yield return new Command_Action
                     {
@@ -527,8 +513,7 @@ namespace SimpleSlaveryCollars
                     };
                 }
 
-                // [UI] 감전 목걸이 해제
-                if (eligibleDisarmElectric.Any())
+                if (hasDisarmElectric)
                 {
                     yield return new Command_Action
                     {
@@ -539,8 +524,7 @@ namespace SimpleSlaveryCollars
                     };
                 }
 
-                // [UI] 크립토(동결) 목걸이 장전
-                if (eligibleArmCrypto.Any())
+                if (hasArmCrypto)
                 {
                     yield return new Command_Action
                     {
@@ -551,8 +535,7 @@ namespace SimpleSlaveryCollars
                     };
                 }
 
-                // [UI] 크립토(동결) 목걸이 해제
-                if (eligibleDisarmCrypto.Any())
+                if (hasDisarmCrypto)
                 {
                     yield return new Command_Action
                     {

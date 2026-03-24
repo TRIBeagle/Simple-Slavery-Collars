@@ -173,7 +173,7 @@ namespace SimpleSlaveryCollars.Utilities
         /// </summary>
         // TraitDef.Named 반복 호출 방지 — 1회 캐싱. volatile로 스레드 안전성 보장
         private static volatile TraitDef _wimpTraitDef;
-        private static TraitDef WimpTrait => _wimpTraitDef ?? (_wimpTraitDef = TraitDef.Named("Wimp"));
+        internal static TraitDef WimpTrait => _wimpTraitDef ?? (_wimpTraitDef = TraitDef.Named("Wimp"));
 
         public static bool IsSteadfast(Pawn pawn)
         {

@@ -106,7 +106,10 @@ namespace SimpleSlaveryCollars.Jobs
                 if (reservedList.Count > 0)
                 {
                     var groupJob = JobMaker.MakeJob(SimpleSlaveryDefOf.ActivateRemoteCollarGroup, t);
-                    groupJob.targetQueueA = new List<LocalTargetInfo>(reservedList.Select(p => new LocalTargetInfo(p)));
+                    var targets = new List<LocalTargetInfo>(reservedList.Count);
+                    for (int i = 0; i < reservedList.Count; i++)
+                        targets.Add(new LocalTargetInfo(reservedList[i]));
+                    groupJob.targetQueueA = targets;
                     groupJob.count = (int)comp.groupJobActionType;
 
                     comp.groupJobPending = false;
