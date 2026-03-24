@@ -28,8 +28,8 @@ namespace SimpleSlaveryCollars
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref shackledGoal, "shackledGoal", false);
-            Scribe_Values.Look(ref shackled, "shackled", false);
+            Scribe_Values.Look(ref shackledGoal, "shackledGoal", true);
+            Scribe_Values.Look(ref shackled, "shackled", true);
             Scribe_Values.Look(ref assimilatedAtStage4, "assimilatedAtStage4", false);
             Scribe_Values.Look(ref uiRefreshedAtStage4, "uiRefreshedAtStage4", false);
         }

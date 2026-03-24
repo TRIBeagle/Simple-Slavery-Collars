@@ -9,6 +9,8 @@ namespace SimpleSlaveryCollars
     public class SlaveCollar_Crypto : SlaveApparel
     {
         public bool armed = false;
+        // 이펙트 쿨다운 — 저장 불필요 (시각 효과 전용)
+        private int _fleckCooldown;
 
         public override IEnumerable<Gizmo> SlaveGizmos()
         {
@@ -112,11 +114,19 @@ namespace SimpleSlaveryCollars
                 RevertMentalState();
                 return;
             }
+            // mindState/mentalStateHandler null 방어 — 로딩 중, 디스폰 직후 등
+            if (Wearer.mindState?.mentalStateHandler == null) return;
             if (Wearer.mindState.mentalStateHandler.CurStateDef != SimpleSlaveryDefOf.CryptoStasis)
                 Wearer.mindState.mentalStateHandler.TryStartMentalState(SimpleSlaveryDefOf.CryptoStasis, reason: null, forceWake: true, causedByMood: false, otherPawn: null, transitionSilently: true);
-            if (Rand.Value < 0.33f)
+            // 이펙트 빈도 조절: 매 틱 33% → 10틱 간격 (성능 개선, 시각 차이 미미)
+            if (_fleckCooldown <= 0)
             {
                 FleckMaker.ThrowTornadoDustPuff(Wearer.TrueCenter() + Vector3Utility.RandomHorizontalOffset(0.5f), Wearer.Map, Rand.Range(0.25f, 1f), new Color(0.65f, 0.9f, 0.93f));
+                _fleckCooldown = 10;
+            }
+            else
+            {
+                _fleckCooldown--;
             }
         }
 

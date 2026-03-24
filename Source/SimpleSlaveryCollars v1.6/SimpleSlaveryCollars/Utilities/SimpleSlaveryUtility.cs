@@ -84,9 +84,11 @@ namespace SimpleSlaveryCollars.Utilities
         /// </summary>
         public static Apparel GetSlaveCollar(Pawn pawn)
         {
-            if (HasSlaveCollar(pawn))
+            if (pawn?.apparel == null) return null;
+            var worn = pawn.apparel.WornApparel;
+            for (int i = 0; i < worn.Count; i++)
             {
-                return pawn.apparel.WornApparel.Find(IsSlaveCollar);
+                if (IsSlaveCollar(worn[i])) return worn[i];
             }
             return null;
         }
@@ -126,7 +128,7 @@ namespace SimpleSlaveryCollars.Utilities
         public static void TryInstantBreak(Pawn pawn, float chance, MentalStateDef breakDef)
         {
             if (pawn.Downed) return;
-            if (pawn.jobs.curDriver.asleep) return;
+            if (pawn.jobs?.curDriver?.asleep == true) return;
             if (pawn.InMentalState) return;
 
             if (Rand.Chance(chance))
@@ -171,9 +173,13 @@ namespace SimpleSlaveryCollars.Utilities
         /// <summary>
         /// Pawn이 Steadfast(의지 강함)인지 판정합니다. Wimp면 false, Nerves의 Degree>0이면 true.
         /// </summary>
+        // TraitDef.Named 반복 호출 방지 — 1회 캐싱
+        private static TraitDef _wimpTraitDef;
+        private static TraitDef WimpTrait => _wimpTraitDef ?? (_wimpTraitDef = TraitDef.Named("Wimp"));
+
         public static bool IsSteadfast(Pawn pawn)
         {
-            if (pawn.story.traits.HasTrait(TraitDef.Named("Wimp")))
+            if (pawn.story.traits.HasTrait(WimpTrait))
             {
                 return false;
             }

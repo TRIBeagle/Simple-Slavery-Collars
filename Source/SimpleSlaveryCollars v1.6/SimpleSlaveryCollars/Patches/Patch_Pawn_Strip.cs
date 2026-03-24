@@ -26,22 +26,21 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPrefix]
         public static void Strip_Patch(ref Pawn __instance)
         {
-            if (SimpleSlaveryUtility.HasSlaveCollar(__instance) &&
-                SimpleSlaveryUtility.GetSlaveCollar(__instance).def.thingClass == typeof(SlaveCollar_Crypto))
+            // GetSlaveCollar 1회만 호출 + is 패턴매칭으로 타입 분기
+            var collar = SimpleSlaveryUtility.GetSlaveCollar(__instance);
+            if (collar == null) return;
+
+            if (collar is SlaveCollar_Crypto crypto)
             {
-                var collar = SimpleSlaveryUtility.GetSlaveCollar(__instance) as SlaveCollar_Crypto;
-                collar.armed = false;
+                crypto.armed = false;
                 if (!__instance.Dead)
                 {
-                    collar.RevertMentalState();
+                    crypto.RevertMentalState();
                 }
             }
-
-            if (SimpleSlaveryUtility.HasSlaveCollar(__instance) &&
-                SimpleSlaveryUtility.GetSlaveCollar(__instance).def.thingClass == typeof(SlaveCollar_Electric))
+            else if (collar is SlaveCollar_Electric electric)
             {
-                var collar = SimpleSlaveryUtility.GetSlaveCollar(__instance) as SlaveCollar_Electric;
-                collar.armed = false;
+                electric.armed = false;
             }
         }
     }

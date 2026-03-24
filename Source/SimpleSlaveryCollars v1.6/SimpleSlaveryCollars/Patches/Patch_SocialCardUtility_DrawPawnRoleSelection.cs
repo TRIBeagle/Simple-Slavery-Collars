@@ -35,6 +35,10 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void Postfix_DrawPawnRoleSelection(Pawn pawn, Rect rect)
         {
+            // [Safety] 리플렉션 필드가 null이면 패치 무효화 (RimWorld 버전 변경 대응)
+            if (_cachedRolesField == null || _buttonSizeField == null)
+                return;
+
             // [Safety] 모드 설정 및 노예 조건 확인
             if (!SimpleSlaveryCollarsSetting.SlavestageEnable
                 || !SimpleSlaveryCollarsSetting.AssignSlaveEnable

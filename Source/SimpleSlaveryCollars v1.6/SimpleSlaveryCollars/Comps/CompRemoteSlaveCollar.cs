@@ -371,66 +371,52 @@ namespace SimpleSlaveryCollars
         /// <summary>액션/그룹 조건에 맞는 Pawn 필터링.</summary>
         private List<Pawn> FindEligiblePawnsForAction(RemoteCollarAction actionType, RemoteCollarPawnGroup group)
         {
-            var pawns = this.parent.Map.mapPawns.AllPawnsSpawned
-                .Where(p =>
-                    !p.Dead &&
-                    p.Spawned &&
-                    (
-                        (group == RemoteCollarPawnGroup.All) ||
-                        (group == RemoteCollarPawnGroup.Slaves && p.IsSlaveOfColony) ||
-                        (group == RemoteCollarPawnGroup.Prisoners && p.IsPrisonerOfColony) ||
-                        (group == RemoteCollarPawnGroup.Colonists && p.IsColonist) ||
-                        (group == RemoteCollarPawnGroup.SlavesAndPrisoners && (p.IsSlaveOfColony || p.IsPrisonerOfColony))
-                    )
-                ).ToList();
+            // LINQ 7회 ToList() → 단일 for 루프 + switch (GetSlaveCollar 1회/Pawn)
+            var allPawns = this.parent.Map.mapPawns.AllPawnsSpawned;
+            var result = new List<Pawn>();
 
-            switch (actionType)
+            for (int i = 0; i < allPawns.Count; i++)
             {
-                case RemoteCollarAction.ArmExplosive:
-                    return pawns.Where(p =>
-                    {
-                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Explosive;
-                        return collar != null && !collar.armed;
-                    }).ToList();
-                case RemoteCollarAction.DisarmExplosive:
-                    return pawns.Where(p =>
-                    {
-                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Explosive;
-                        return collar != null && collar.armed;
-                    }).ToList();
-                case RemoteCollarAction.DetonateExplosive:
-                    return pawns.Where(p =>
-                    {
-                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Explosive;
-                        return collar != null && collar.armed;
-                    }).ToList();
-                case RemoteCollarAction.ArmElectric:
-                    return pawns.Where(p =>
-                    {
-                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Electric;
-                        return collar != null && !collar.armed;
-                    }).ToList();
-                case RemoteCollarAction.DisarmElectric:
-                    return pawns.Where(p =>
-                    {
-                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Electric;
-                        return collar != null && collar.armed;
-                    }).ToList();
-                case RemoteCollarAction.ArmCrypto:
-                    return pawns.Where(p =>
-                    {
-                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Crypto;
-                        return collar != null && !collar.armed;
-                    }).ToList();
-                case RemoteCollarAction.DisarmCrypto:
-                    return pawns.Where(p =>
-                    {
-                        var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveCollar_Crypto;
-                        return collar != null && collar.armed;
-                    }).ToList();
-                default:
-                    return new List<Pawn>();
+                var p = allPawns[i];
+                if (p.Dead || !p.Spawned) continue;
+
+                // 그룹 필터
+                switch (group)
+                {
+                    case RemoteCollarPawnGroup.Slaves:
+                        if (!p.IsSlaveOfColony) continue; break;
+                    case RemoteCollarPawnGroup.Prisoners:
+                        if (!p.IsPrisonerOfColony) continue; break;
+                    case RemoteCollarPawnGroup.Colonists:
+                        if (!p.IsColonist) continue; break;
+                    case RemoteCollarPawnGroup.SlavesAndPrisoners:
+                        if (!p.IsSlaveOfColony && !p.IsPrisonerOfColony) continue; break;
+                    // RemoteCollarPawnGroup.All — 필터 없음
+                }
+
+                var collar = SimpleSlaveryUtility.GetSlaveCollar(p);
+                if (collar == null) continue;
+
+                // 액션 타입별 칼라 종류 + armed 상태 매칭
+                switch (actionType)
+                {
+                    case RemoteCollarAction.ArmExplosive:
+                        if (collar is SlaveCollar_Explosive e1 && !e1.armed) result.Add(p); break;
+                    case RemoteCollarAction.DisarmExplosive:
+                    case RemoteCollarAction.DetonateExplosive:
+                        if (collar is SlaveCollar_Explosive e2 && e2.armed) result.Add(p); break;
+                    case RemoteCollarAction.ArmElectric:
+                        if (collar is SlaveCollar_Electric el1 && !el1.armed) result.Add(p); break;
+                    case RemoteCollarAction.DisarmElectric:
+                        if (collar is SlaveCollar_Electric el2 && el2.armed) result.Add(p); break;
+                    case RemoteCollarAction.ArmCrypto:
+                        if (collar is SlaveCollar_Crypto c1 && !c1.armed) result.Add(p); break;
+                    case RemoteCollarAction.DisarmCrypto:
+                        if (collar is SlaveCollar_Crypto c2 && c2.armed) result.Add(p); break;
+                }
             }
+
+            return result;
         }
         #endregion
 

@@ -88,7 +88,7 @@ namespace SimpleSlaveryCollars.Jobs
                     bool success = true;
 
                     // [조건] Victim이 깨어있고, Wimp 아님, 정신이상/다운 아님일 때만 저항 발생
-                    if (!Victim.jobs.curDriver.asleep &&
+                    if (Victim.jobs?.curDriver?.asleep != true &&
                         !Victim.story.traits.HasTrait(TraitDef.Named("Wimp")) &&
                         !Victim.InMentalState &&
                         !Victim.Downed)
@@ -96,7 +96,7 @@ namespace SimpleSlaveryCollars.Jobs
                         if ((Victim.story.traits.HasTrait(SimpleSlaveryDefOf.Nerves) &&
                              Victim.story.traits.GetTrait(SimpleSlaveryDefOf.Nerves).Degree == -2 &&
                              Rand.Value > 0.66f)
-                            || Victim.needs.mood.CurInstantLevelPercentage < Rand.Range(0f, 0.33f))
+                            || (Victim.needs.mood.CurInstantLevelPercentage < Rand.Range(0f, 0.33f)))
                         {
                             success = false;
                         }

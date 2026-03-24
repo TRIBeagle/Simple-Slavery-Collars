@@ -148,11 +148,10 @@ namespace SimpleSlaveryCollars
         /// </summary>
         public override IEnumerable<Gizmo> CompGetGizmosExtra()
         {
-            if (parent == null)
+            if (!(parent is Pawn pawn))
             {
                 yield break;
             }
-            var pawn = parent as Pawn;
 
             if (pawn.IsSlaveOfColony && pawn.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Enslaved))
             {
