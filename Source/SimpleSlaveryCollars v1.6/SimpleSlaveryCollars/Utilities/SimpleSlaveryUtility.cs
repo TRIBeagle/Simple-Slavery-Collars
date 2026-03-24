@@ -134,7 +134,7 @@ namespace SimpleSlaveryCollars.Utilities
 
             if (Rand.Chance(chance))
             {
-                pawn.mindState.mentalStateHandler.TryStartMentalState(breakDef, "ReasonArmedExplosiveCollar".Translate(pawn.Name.ToStringShort));
+                pawn.mindState.mentalStateHandler.TryStartMentalState(breakDef, "SSC_Explosive_Armed_Reason".Translate(pawn.Name.ToStringShort));
             }
         }
 
@@ -166,8 +166,8 @@ namespace SimpleSlaveryCollars.Utilities
             {
                 pawn.health.AddHediff(HediffDef.Named("HeartAttack"), heart);
 
-                string text = "LetterIncidentECHeartAttack".Translate(pawn.Name.ToString());
-                Find.LetterStack.ReceiveLetter("LetterLabelECHeartAttack".Translate(), text, LetterDefOf.NegativeEvent);
+                string text = "SSC_Letter_HeartAttack".Translate(pawn.Name.ToString());
+                Find.LetterStack.ReceiveLetter("SSC_Letter_HeartAttackLabel".Translate(), text, LetterDefOf.NegativeEvent);
             }
         }
 
@@ -252,19 +252,19 @@ namespace SimpleSlaveryCollars.Utilities
             if (totalDays < 1)
             {
                 int hours = Mathf.FloorToInt(ticks / (float)TicksPerHour);
-                return AddSlaveStageSuffix(pawn, "SimpleSlaveryCollars_SlaveTime_HoursOnly".Translate(hours), ticks);
+                return AddSlaveStageSuffix(pawn, "SSC_SlaveTime_Hours".Translate(hours), ticks);
             }
 
             if (totalDays < 15)
             {
-                return AddSlaveStageSuffix(pawn, "SimpleSlaveryCollars_SlaveTime_DaysOnly".Translate(totalDays), ticks);
+                return AddSlaveStageSuffix(pawn, "SSC_SlaveTime_Days".Translate(totalDays), ticks);
             }
 
             if (totalDays < 60)
             {
                 int quadrum = totalDays / 15;
                 int dayInQuadrum = totalDays % 15;
-                return AddSlaveStageSuffix(pawn, "SimpleSlaveryCollars_SlaveTime_QuadrumDays".Translate(quadrum, dayInQuadrum), ticks);
+                return AddSlaveStageSuffix(pawn, "SSC_SlaveTime_QuadrumDays".Translate(quadrum, dayInQuadrum), ticks);
             }
 
             int years = totalDays / 60;
@@ -272,7 +272,7 @@ namespace SimpleSlaveryCollars.Utilities
             int quadrumY = remainder / 15;
             int dayInQuadrumY = remainder % 15;
 
-            return AddSlaveStageSuffix(pawn, "SimpleSlaveryCollars_SlaveTime_YearQuadrumDays".Translate(years, quadrumY, dayInQuadrumY), ticks);
+            return AddSlaveStageSuffix(pawn, "SSC_SlaveTime_YearQuadrumDays".Translate(years, quadrumY, dayInQuadrumY), ticks);
         }
 
         /// <summary>
@@ -299,7 +299,7 @@ namespace SimpleSlaveryCollars.Utilities
 
             if (stage >= 5 && pawn != null && IsSteadfast(pawn)) stage = 4;
 
-            string tail = "SimpleSlaveryCollars_SlaveStageSuffix".Translate(stage);
+            string tail = "SSC_Stage_Suffix".Translate(stage);
             return $"{baseText} {tail}";
         }
 

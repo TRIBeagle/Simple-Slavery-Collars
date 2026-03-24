@@ -88,7 +88,7 @@ namespace SimpleSlaveryCollars.Gizmos
                 if (Mouse.IsOver(toggleRect))
                 {
                     Widgets.DrawHighlight(toggleRect);
-                    TooltipHandler.TipRegion(toggleRect, "SSC_Collar_SelfRechargeToggle".Translate());
+                    TooltipHandler.TipRegion(toggleRect, "SSC_Collar_SelfRecharge_Toggle".Translate());
                     mouseOverBtn = true;
                 }
             }
@@ -156,16 +156,16 @@ namespace SimpleSlaveryCollars.Gizmos
         private string GetTooltip(bool empDisabled, bool chargeEnabled)
         {
             if (empDisabled)
-                return "SSC_Collar_EmpTooltip".Translate(collar.empDisabledTicks.ToStringTicksToPeriod());
+                return "SSC_Collar_Emp_Tooltip".Translate(collar.empDisabledTicks.ToStringTicksToPeriod());
 
             if (!chargeEnabled)
-                return "SSC_Collar_UnlimitedTooltip".Translate();
+                return "SSC_Collar_Unlimited_Tooltip".Translate();
 
             int thresholdPct = Mathf.RoundToInt(collar.rechargeThreshold * 100f);
             string selfStatus = collar.selfRechargeAllowed
-                ? "SSC_Collar_SelfRechargeOn".Translate()
-                : "SSC_Collar_SelfRechargeOff".Translate();
-            return $"{"SSC_Collar_ChargeTooltip".Translate(collar.ChargePercent)}\n{"SSC_Collar_RechargeThreshold".Translate()}: {thresholdPct}%\n{selfStatus}";
+                ? "SSC_Collar_SelfRecharge_On".Translate()
+                : "SSC_Collar_SelfRecharge_Off".Translate();
+            return $"{"SSC_Collar_Charge_Tooltip".Translate(collar.ChargePercent)}\n{"SSC_Collar_RechargeThreshold".Translate()}: {thresholdPct}%\n{selfStatus}";
         }
     }
 }

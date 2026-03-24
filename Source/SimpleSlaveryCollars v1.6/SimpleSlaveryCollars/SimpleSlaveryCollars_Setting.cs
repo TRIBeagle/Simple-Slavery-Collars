@@ -69,36 +69,36 @@ namespace SimpleSlaveryCollars
             Listing_Standard listingStandard = new Listing_Standard();
             listingStandard.Begin(inRect);
 
-            listingStandard.CheckboxLabeled("shacklesDefaultSetting_title".Translate(), ref ShacklesDefault, "shacklesDefaultSetting_desc".Translate());
-            listingStandard.CheckboxLabeled("slavestageEnableSetting_title".Translate(), ref SlavestageEnable, "slavestageEnableSetting_desc".Translate());
-            listingStandard.CheckboxLabeled("rebelcyclechangeEnableSetting_title".Translate(), ref RebelCycleChangeEnable, "rebelcyclechangeEnableSetting_desc".Translate());
-            listingStandard.CheckboxLabeled("removeworkspeeddebuffEnableSetting_title".Translate(), ref RemoveWorkspeedDebuffEnable, "removeworkspeeddebuffEnableSetting_desc".Translate());
-            listingStandard.CheckboxLabeled("assignslaveEnableSetting_title".Translate(), ref AssignSlaveEnable, "assignslaveEnableSetting_desc".Translate());
-            listingStandard.CheckboxLabeled("stage5SlaveWorkUnlockEnableSetting_title".Translate(), ref Stage5SlaveWorkUnlockEnable, "stage5SlaveWorkUnlockEnableSetting_desc".Translate());
-            listingStandard.CheckboxLabeled("assimilationslaveEnableSetting_title".Translate(), ref AssimilationSlaveEnable, "assimilationslaveEnableSetting_desc".Translate());
-            listingStandard.CheckboxLabeled("remoteOnlyOnConsoleEnableSetting_title".Translate(), ref RemoteOnlyOnConsoleEnable, "remoteOnlyOnConsoleEnableSetting_desc".Translate());
-            listingStandard.CheckboxLabeled("collarChargeEnableSetting_title".Translate(), ref CollarChargeEnable, "collarChargeEnableSetting_desc".Translate());
-            listingStandard.CheckboxLabeled("collarEmpEnableSetting_title".Translate(), ref CollarEmpEnable, "collarEmpEnableSetting_desc".Translate());
+            listingStandard.CheckboxLabeled("SSC_Setting_ShacklesDefault_Title".Translate(), ref ShacklesDefault, "SSC_Setting_ShacklesDefault_Desc".Translate());
+            listingStandard.CheckboxLabeled("SSC_Setting_SlaveStage_Title".Translate(), ref SlavestageEnable, "SSC_Setting_SlaveStage_Desc".Translate());
+            listingStandard.CheckboxLabeled("SSC_Setting_RebelCycle_Title".Translate(), ref RebelCycleChangeEnable, "SSC_Setting_RebelCycle_Desc".Translate());
+            listingStandard.CheckboxLabeled("SSC_Setting_RemoveWorkDebuff_Title".Translate(), ref RemoveWorkspeedDebuffEnable, "SSC_Setting_RemoveWorkDebuff_Desc".Translate());
+            listingStandard.CheckboxLabeled("SSC_Setting_AssignSlave_Title".Translate(), ref AssignSlaveEnable, "SSC_Setting_AssignSlave_Desc".Translate());
+            listingStandard.CheckboxLabeled("SSC_Setting_Stage5WorkUnlock_Title".Translate(), ref Stage5SlaveWorkUnlockEnable, "SSC_Setting_Stage5WorkUnlock_Desc".Translate());
+            listingStandard.CheckboxLabeled("SSC_Setting_Assimilation_Title".Translate(), ref AssimilationSlaveEnable, "SSC_Setting_Assimilation_Desc".Translate());
+            listingStandard.CheckboxLabeled("SSC_Setting_RemoteOnlyConsole_Title".Translate(), ref RemoteOnlyOnConsoleEnable, "SSC_Setting_RemoteOnlyConsole_Desc".Translate());
+            listingStandard.CheckboxLabeled("SSC_Setting_CollarCharge_Title".Translate(), ref CollarChargeEnable, "SSC_Setting_CollarCharge_Desc".Translate());
+            listingStandard.CheckboxLabeled("SSC_Setting_CollarEmp_Title".Translate(), ref CollarEmpEnable, "SSC_Setting_CollarEmp_Desc".Translate());
 
             if (CollarChargeEnable)
             {
-                listingStandard.Label("collarDrainMultiplier_title".Translate(), -1f, "collarDrainMultiplier_desc".Translate());
+                listingStandard.Label("SSC_Setting_DrainMultiplier_Title".Translate(), -1f, "SSC_Setting_DrainMultiplier_Desc".Translate());
                 listingStandard.TextFieldNumeric(ref CollarDrainMultiplier, ref CollarDrainMultiplierBuffer, 0.1f, 10f);
             }
 
-            listingStandard.Label("slavestage1Period_title".Translate(), -1f, "slavestage1Period_desc".Translate());
+            listingStandard.Label("SSC_Setting_Stage1Period_Title".Translate(), -1f, "SSC_Setting_Stage1Period_Desc".Translate());
             listingStandard.TextFieldNumeric(ref Slavestage1Period, ref Slavestage1PeriodBuffer);
 
-            listingStandard.Label("slavestage2Period_title".Translate(), -1f, "slavestage2Period_desc".Translate());
+            listingStandard.Label("SSC_Setting_Stage2Period_Title".Translate(), -1f, "SSC_Setting_Stage2Period_Desc".Translate());
             listingStandard.TextFieldNumeric(ref Slavestage2Period, ref Slavestage2PeriodBuffer);
 
-            listingStandard.Label("slavestage3Period_title".Translate(), -1f, "slavestage3Period_desc".Translate());
+            listingStandard.Label("SSC_Setting_Stage3Period_Title".Translate(), -1f, "SSC_Setting_Stage3Period_Desc".Translate());
             listingStandard.TextFieldNumeric(ref Slavestage3Period, ref Slavestage3PeriodBuffer);
 
-            listingStandard.Label("slavestage4Period_title".Translate(), -1f, "slavestage4Period_desc".Translate());
+            listingStandard.Label("SSC_Setting_Stage4Period_Title".Translate(), -1f, "SSC_Setting_Stage4Period_Desc".Translate());
             listingStandard.TextFieldNumeric(ref Slavestage4Period, ref Slavestage4PeriodBuffer);
 
-            if (listingStandard.ButtonText("resetAllSetting_title".Translate()))
+            if (listingStandard.ButtonText("SSC_Setting_ResetAll_Title".Translate()))
             {
                 ShacklesDefault = true;
                 SlavestageEnable = true;

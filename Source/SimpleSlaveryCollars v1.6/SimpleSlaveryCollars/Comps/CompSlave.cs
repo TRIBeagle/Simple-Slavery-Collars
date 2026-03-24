@@ -159,8 +159,8 @@ namespace SimpleSlaveryCollars
 
                 var shackleSlave = new Command_Toggle();
                 shackleSlave.isActive = () => hediff.shackledGoal;
-                shackleSlave.defaultLabel = "LabelWordShackle".Translate();
-                shackleSlave.defaultDesc = "CommandDescriptionShackle".Translate(pawn.Name.ToStringShort);
+                shackleSlave.defaultLabel = "SSC_Shackle_Label".Translate();
+                shackleSlave.defaultDesc = "SSC_Shackle_Desc".Translate(pawn.Name.ToStringShort);
                 shackleSlave.toggleAction = () => hediff.shackledGoal = !hediff.shackledGoal;
                 shackleSlave.alsoClickIfOtherInGroupClicked = true;
                 shackleSlave.activateSound = SoundDefOf.Click;
@@ -190,7 +190,7 @@ namespace SimpleSlaveryCollars
 
             if (migrated)
             {
-                Messages.Message("SimpleSlaveryCollars_MigrationDone".Translate(pawn.LabelShortCap),
+                Messages.Message("SSC_Migration_Done".Translate(pawn.LabelShortCap),
                                  MessageTypeDefOf.TaskCompletion,
                                  historical: false);
             }

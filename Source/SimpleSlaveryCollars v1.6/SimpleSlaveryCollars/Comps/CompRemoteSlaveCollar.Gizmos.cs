@@ -20,11 +20,11 @@ namespace SimpleSlaveryCollars
         {
             List<FloatMenuOption> groupOptions = new List<FloatMenuOption>
             {
-                new FloatMenuOption("RemoteCollar_Group_All".Translate(),           () => ShowPawnList(actionType, RemoteCollarPawnGroup.All)),
-                new FloatMenuOption("RemoteCollar_Group_Slaves".Translate(),        () => ShowPawnList(actionType, RemoteCollarPawnGroup.Slaves)),
-                new FloatMenuOption("RemoteCollar_Group_Prisoners".Translate(),     () => ShowPawnList(actionType, RemoteCollarPawnGroup.Prisoners)),
-                new FloatMenuOption("RemoteCollar_Group_Colonists".Translate(),     () => ShowPawnList(actionType, RemoteCollarPawnGroup.Colonists)),
-                new FloatMenuOption("RemoteCollar_Group_SlavesAndPrisoners".Translate(), () => ShowPawnList(actionType, RemoteCollarPawnGroup.SlavesAndPrisoners))
+                new FloatMenuOption("SSC_Remote_GroupAll".Translate(),           () => ShowPawnList(actionType, RemoteCollarPawnGroup.All)),
+                new FloatMenuOption("SSC_Remote_GroupSlaves".Translate(),        () => ShowPawnList(actionType, RemoteCollarPawnGroup.Slaves)),
+                new FloatMenuOption("SSC_Remote_GroupPrisoners".Translate(),     () => ShowPawnList(actionType, RemoteCollarPawnGroup.Prisoners)),
+                new FloatMenuOption("SSC_Remote_GroupColonists".Translate(),     () => ShowPawnList(actionType, RemoteCollarPawnGroup.Colonists)),
+                new FloatMenuOption("SSC_Remote_GroupSlavesAndPrisoners".Translate(), () => ShowPawnList(actionType, RemoteCollarPawnGroup.SlavesAndPrisoners))
             };
             Find.WindowStack.Add(new FloatMenu(groupOptions));
         }
@@ -35,20 +35,20 @@ namespace SimpleSlaveryCollars
             var eligiblePawns = FindEligiblePawnsForAction(actionType, group);
             if (eligiblePawns.NullOrEmpty())
             {
-                Messages.Message("RemoteCollar_NoEligiblePawn".Translate(), MessageTypeDefOf.RejectInput);
+                Messages.Message("SSC_Remote_NoEligiblePawn".Translate(), MessageTypeDefOf.RejectInput);
                 return;
             }
 
             var options = new List<FloatMenuOption>();
 
             // [그룹 실행]
-            options.Add(new FloatMenuOption("RemoteCollar_ExecuteForGroup".Translate(), () =>
+            options.Add(new FloatMenuOption("SSC_Remote_ExecuteForGroup".Translate(), () =>
             {
                 ReserveJobForGroup(eligiblePawns, actionType);
             }));
 
             // [그룹 전체 취소]
-            options.Add(new FloatMenuOption("RemoteCollar_CancelAllReservations".Translate(), () =>
+            options.Add(new FloatMenuOption("SSC_Remote_CancelAll".Translate(), () =>
             {
                 CancelReservationsForGroup(eligiblePawns, actionType);
             }));
@@ -59,7 +59,7 @@ namespace SimpleSlaveryCollars
                 string label = GetColoredPawnLabel(pawn);
                 if (IsPawnReserved(pawn))
                 {
-                    label += " " + "RemoteCollar_AlreadyReservedShort".Translate();
+                    label += " " + "SSC_Remote_AlreadyReservedShort".Translate();
                     options.Add(new FloatMenuOption(label, null));
                 }
                 else
@@ -203,8 +203,8 @@ namespace SimpleSlaveryCollars
                 {
                     yield return new Command_Action
                     {
-                        defaultLabel = "Label_CollarExplosive_Arm_Console".Translate(),
-                        defaultDesc = "Desc_CollarExplosive_Arm_Console".Translate(),
+                        defaultLabel = "SSC_Console_ExplosiveArm".Translate(),
+                        defaultDesc = "SSC_Console_ExplosiveArm_Desc".Translate(),
                         icon = ContentFinder<Texture2D>.Get("UI/Commands/ArmCollar_Explosive", true),
                         action = () => { OpenPawnGroupMenu(RemoteCollarAction.ArmExplosive); }
                     };
@@ -214,16 +214,16 @@ namespace SimpleSlaveryCollars
                 {
                     yield return new Command_Action
                     {
-                        defaultLabel = "Label_CollarExplosive_Disarm_Console".Translate(),
-                        defaultDesc = "Desc_CollarExplosive_Disarm_Console".Translate(),
+                        defaultLabel = "SSC_Console_ExplosiveDisarm".Translate(),
+                        defaultDesc = "SSC_Console_ExplosiveDisarm_Desc".Translate(),
                         icon = ContentFinder<Texture2D>.Get("UI/Commands/ArmCollar_Explosive", true),
                         action = () => { OpenPawnGroupMenu(RemoteCollarAction.DisarmExplosive); }
                     };
 
                     yield return new Command_Action
                     {
-                        defaultLabel = "Label_CollarExplosive_Detonate_Console".Translate(),
-                        defaultDesc = "Desc_CollarExplosive_Detonate_Console".Translate(),
+                        defaultLabel = "SSC_Console_ExplosiveDetonate".Translate(),
+                        defaultDesc = "SSC_Console_ExplosiveDetonate_Desc".Translate(),
                         icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Explosive", true),
                         action = () => { OpenPawnGroupMenu(RemoteCollarAction.DetonateExplosive); }
                     };
@@ -233,8 +233,8 @@ namespace SimpleSlaveryCollars
                 {
                     yield return new Command_Action
                     {
-                        defaultLabel = "Label_CollarElectric_Arm_Console".Translate(),
-                        defaultDesc = "Desc_CollarElectric_Arm_Console".Translate(),
+                        defaultLabel = "SSC_Console_ElectricArm".Translate(),
+                        defaultDesc = "SSC_Console_ElectricArm_Desc".Translate(),
                         icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Electric", true),
                         action = () => { OpenPawnGroupMenu(RemoteCollarAction.ArmElectric); }
                     };
@@ -244,8 +244,8 @@ namespace SimpleSlaveryCollars
                 {
                     yield return new Command_Action
                     {
-                        defaultLabel = "Label_CollarElectric_Disarm_Console".Translate(),
-                        defaultDesc = "Desc_CollarElectric_Disarm_Console".Translate(),
+                        defaultLabel = "SSC_Console_ElectricDisarm".Translate(),
+                        defaultDesc = "SSC_Console_ElectricDisarm_Desc".Translate(),
                         icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Electric", true),
                         action = () => { OpenPawnGroupMenu(RemoteCollarAction.DisarmElectric); }
                     };
@@ -255,8 +255,8 @@ namespace SimpleSlaveryCollars
                 {
                     yield return new Command_Action
                     {
-                        defaultLabel = "Label_CollarCrypto_Arm_Console".Translate(),
-                        defaultDesc = "Desc_CollarCrypto_Arm_Console".Translate(),
+                        defaultLabel = "SSC_Console_CryptoArm".Translate(),
+                        defaultDesc = "SSC_Console_CryptoArm_Desc".Translate(),
                         icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Crypto", true),
                         action = () => { OpenPawnGroupMenu(RemoteCollarAction.ArmCrypto); }
                     };
@@ -266,8 +266,8 @@ namespace SimpleSlaveryCollars
                 {
                     yield return new Command_Action
                     {
-                        defaultLabel = "Label_CollarCrypto_Disarm_Console".Translate(),
-                        defaultDesc = "Desc_CollarCrypto_Disarm_Console".Translate(),
+                        defaultLabel = "SSC_Console_CryptoDisarm".Translate(),
+                        defaultDesc = "SSC_Console_CryptoDisarm_Desc".Translate(),
                         icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Crypto", true),
                         action = () => { OpenPawnGroupMenu(RemoteCollarAction.DisarmCrypto); }
                     };
@@ -283,8 +283,8 @@ namespace SimpleSlaveryCollars
             var armCollarExplosive = new Command_Toggle();
             Func<bool> isArmedExplosive = () => remotearmedExplosive;
             armCollarExplosive.isActive = isArmedExplosive;
-            armCollarExplosive.defaultLabel = "Label_CollarExplosive_Arm_Remote".Translate();
-            armCollarExplosive.defaultDesc = "Desc_CollarExplosive_Arm_Remote".Translate();
+            armCollarExplosive.defaultLabel = "SSC_Remote_ExplosiveArm".Translate();
+            armCollarExplosive.defaultDesc = "SSC_Remote_ExplosiveArm_Desc".Translate();
             armCollarExplosive.toggleAction = delegate
             {
                 remotearmedExplosive = !remotearmedExplosive;
@@ -298,8 +298,8 @@ namespace SimpleSlaveryCollars
             if (remotearmedExplosive)
             {
                 var detonate = new Command_Action();
-                detonate.defaultLabel = "Label_CollarExplosive_Detonate_Remote".Translate();
-                detonate.defaultDesc = "Desc_CollarExplosive_Detonate_Remote".Translate();
+                detonate.defaultLabel = "SSC_Remote_ExplosiveDetonate".Translate();
+                detonate.defaultDesc = "SSC_Remote_ExplosiveDetonate_Desc".Translate();
                 detonate.action = delegate
                 {
                     DoRemoteCollarGoBoom();
@@ -313,8 +313,8 @@ namespace SimpleSlaveryCollars
             var armCollarElectric = new Command_Toggle();
             Func<bool> isArmedElectric = () => remotearmedElectric;
             armCollarElectric.isActive = isArmedElectric;
-            armCollarElectric.defaultLabel = "Label_CollarElectric_Arm_Remote".Translate();
-            armCollarElectric.defaultDesc = "Desc_CollarElectric_Arm_Remote".Translate();
+            armCollarElectric.defaultLabel = "SSC_Remote_ElectricArm".Translate();
+            armCollarElectric.defaultDesc = "SSC_Remote_ElectricArm_Desc".Translate();
             armCollarElectric.toggleAction = delegate
             {
                 remotearmedElectric = !remotearmedElectric;
@@ -328,8 +328,8 @@ namespace SimpleSlaveryCollars
             var armCollarCrypto = new Command_Toggle();
             Func<bool> isArmedCrypto = () => remotearmedCrypto;
             armCollarCrypto.isActive = isArmedCrypto;
-            armCollarCrypto.defaultLabel = "Label_CollarCrypto_Arm_Remote".Translate();
-            armCollarCrypto.defaultDesc = "Desc_CollarCrypto_Arm_Remote".Translate();
+            armCollarCrypto.defaultLabel = "SSC_Remote_CryptoArm".Translate();
+            armCollarCrypto.defaultDesc = "SSC_Remote_CryptoArm_Desc".Translate();
             armCollarCrypto.toggleAction = delegate
             {
                 remotearmedCrypto = !remotearmedCrypto;

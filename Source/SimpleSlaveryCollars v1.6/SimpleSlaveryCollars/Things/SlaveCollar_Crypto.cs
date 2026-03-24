@@ -31,18 +31,18 @@ namespace SimpleSlaveryCollars
 
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {
-                var status = armed ? "CollarState_Armed".Translate() : "CollarState_Unarmed".Translate();
+                var status = armed ? "SSC_Collar_StateArmed".Translate() : "SSC_Collar_StateUnarmed".Translate();
                 var disabled = new Command_Action
                 {
                     defaultLabel = status,
-                    defaultDesc = "Desc_CollarRemoteOnly".Translate(),
+                    defaultDesc = "SSC_Collar_RemoteOnly_Desc".Translate(),
                     icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Crypto", true),
                     action = () =>
                     {
-                        Messages.Message("Reason_CollarRemoteOnly".Translate(), MessageTypeDefOf.RejectInput);
+                        Messages.Message("SSC_Collar_RemoteOnly_Reason".Translate(), MessageTypeDefOf.RejectInput);
                     }
                 };
-                disabled.Disable("Reason_CollarRemoteOnly".Translate());
+                disabled.Disable("SSC_Collar_RemoteOnly_Reason".Translate());
 
                 yield return disabled;
                 yield break;
@@ -51,8 +51,8 @@ namespace SimpleSlaveryCollars
             var armCollar = new Command_Toggle();
             Func<bool> isArmed = () => armed;
             armCollar.isActive = isArmed;
-            armCollar.defaultLabel = "Label_CollarCrypto_Arm".Translate();
-            armCollar.defaultDesc = "Desc_CollarCrypto_Arm".Translate();
+            armCollar.defaultLabel = "SSC_Crypto_Arm".Translate();
+            armCollar.defaultDesc = "SSC_Crypto_Arm_Desc".Translate();
             armCollar.toggleAction = delegate
             {
                 armed = !armed;

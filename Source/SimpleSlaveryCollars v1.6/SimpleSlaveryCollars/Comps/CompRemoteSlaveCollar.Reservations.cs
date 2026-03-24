@@ -17,16 +17,16 @@ namespace SimpleSlaveryCollars
             if (!reservedPawns.ContainsKey(targetPawn))
             {
                 reservedPawns[targetPawn] = actionType;
-                string actionTypeLabel = ("RemoteCollarAction_" + actionType).Translate();
+                string actionTypeLabel = ("SSC_Action_" + actionType).Translate();
                 Messages.Message(
-                    "RemoteCollar_ReservedJob".Translate(targetPawn.LabelShort, actionTypeLabel),
+                    "SSC_Remote_Reserved".Translate(targetPawn.LabelShort, actionTypeLabel),
                     MessageTypeDefOf.TaskCompletion
                 );
             }
             else
             {
                 Messages.Message(
-                    "RemoteCollar_AlreadyReserved".Translate(targetPawn.LabelShort),
+                    "SSC_Remote_AlreadyReserved".Translate(targetPawn.LabelShort),
                     MessageTypeDefOf.RejectInput
                 );
             }
@@ -40,12 +40,12 @@ namespace SimpleSlaveryCollars
             {
                 reservedPawns[pawn] = actionType;
             }
-            string actionTypeLabel = ("RemoteCollarAction_" + actionType).Translate();
+            string actionTypeLabel = ("SSC_Action_" + actionType).Translate();
             groupJobPending = true;
             groupJobActionType = actionType;
 
             Messages.Message(
-                "RemoteCollar_GroupReserved".Translate(targetPawns.Count, actionTypeLabel),
+                "SSC_Remote_GroupReserved".Translate(targetPawns.Count, actionTypeLabel),
                 MessageTypeDefOf.TaskCompletion
             );
         }
@@ -89,9 +89,9 @@ namespace SimpleSlaveryCollars
                     }
                 }
             }
-            string actionTypeLabel = ("RemoteCollarAction_" + actionType).Translate();
+            string actionTypeLabel = ("SSC_Action_" + actionType).Translate();
             Messages.Message(
-                "RemoteCollar_AllReservationsCancelled".Translate(cancelled, actionTypeLabel),
+                "SSC_Remote_AllCancelled".Translate(cancelled, actionTypeLabel),
                 MessageTypeDefOf.RejectInput
             );
         }

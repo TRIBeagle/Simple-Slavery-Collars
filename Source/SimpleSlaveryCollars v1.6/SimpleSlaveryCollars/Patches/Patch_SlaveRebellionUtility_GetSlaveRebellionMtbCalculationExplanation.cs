@@ -36,7 +36,7 @@ namespace SimpleSlaveryCollars.Patches
                     return;
 
                 float time = SimpleSlaveryUtility.TimeAsSlave(pawn);
-                string stageLabel = "SuppressionSlavestageFactor".Translate();
+                string stageLabel = "SSC_Stage_SuppressionFactor".Translate();
                 float stageFactor;
 
                 // Stage1: x < S1

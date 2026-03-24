@@ -106,7 +106,7 @@ namespace SimpleSlaveryCollars.Patches
 
             slaveFactionInt = Faction.OfPlayer;
             Messages.Message(
-                "MessageAssimilationSlave".Translate().AdjustedFor(pawn),
+                "SSC_Message_Assimilation".Translate().AdjustedFor(pawn),
                 (LookTargets)pawn,
                 MessageTypeDefOf.NeutralEvent);
         }

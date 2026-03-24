@@ -107,7 +107,7 @@ namespace SimpleSlaveryCollars.Jobs
                     {
                         SimpleSlaveryUtility.GiveSlaveCollar(Victim, collar);
                         Messages.Message(
-                            "TargetSetSlaveCollar".Translate(pawn.Name.ToStringShort, Victim.Name.ToStringShort),
+                            "SSC_Job_SetCollar".Translate(pawn.Name.ToStringShort, Victim.Name.ToStringShort),
                             MessageTypeDefOf.PositiveEvent);
                         AddEndCondition(() => JobCondition.Succeeded);
                     }
@@ -116,7 +116,7 @@ namespace SimpleSlaveryCollars.Jobs
                         // [Safety] mindState/mentalStateHandler null 가드
                         Victim.mindState?.mentalStateHandler?.TryStartMentalState(
                             MentalStateDefOf.Berserk,
-                            "ReasonFailedSetSlaveCollar".Translate(pawn.Name.ToStringShort, Victim.Name.ToStringShort));
+                            "SSC_Job_SetCollarFailed".Translate(pawn.Name.ToStringShort, Victim.Name.ToStringShort));
                         AddEndCondition(() => JobCondition.Incompletable);
                     }
                 },
