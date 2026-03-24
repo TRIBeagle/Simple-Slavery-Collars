@@ -91,6 +91,10 @@ namespace SimpleSlaveryCollars
                     if (_timeAsSlaveTicks < 0f) _timeAsSlaveTicks = 0f; // 센티널→0 초기화
                     _timeAsSlaveTicks += delta;
                 }
+
+                // [안전망] 노예인데 Enslaved Hediff가 없으면 추가
+                // — 모드 연동, 퀘스트, 특수 경로 등 SetGuestStatus를 거치지 않는 케이스 대응
+                EnsureEnslavedHediff(pawn);
             }
 
             _lastGameTick = current;
@@ -196,6 +200,20 @@ namespace SimpleSlaveryCollars
             }
         }
 
+
+        /// <summary>
+        /// [안전망] 노예인데 Enslaved Hediff가 없으면 추가.
+        /// SetGuestStatus 패치를 거치지 않는 특수 경로(모드 연동, 퀘스트 등) 대응.
+        /// </summary>
+        private static void EnsureEnslavedHediff(Pawn pawn)
+        {
+            if (!pawn.RaceProps.Humanlike) return;
+            var hs = pawn.health?.hediffSet;
+            if (hs == null || SimpleSlaveryDefOf.Enslaved == null) return;
+            if (hs.HasHediff(SimpleSlaveryDefOf.Enslaved)) return;
+
+            pawn.health.AddHediff(SimpleSlaveryDefOf.Enslaved);
+        }
 
         /// <summary>
         /// 저장 직전 Comp→Record 동기화. SSC_ReflectionCache 사용.
