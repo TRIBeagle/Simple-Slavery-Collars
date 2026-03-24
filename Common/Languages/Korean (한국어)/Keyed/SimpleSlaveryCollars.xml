@@ -21,19 +21,20 @@
 	<SSC_Collar_RemoteOnly_Reason>통신기에서만 조작할 수 있습니다.</SSC_Collar_RemoteOnly_Reason>
 	<SSC_Explosive_Armed_Reason>목에 걸린 폭발성 목걸이에 전원이 들어와 폭발가능한 상태가 되었습니다.</SSC_Explosive_Armed_Reason>
 
-	<!-- ===== 칼라 — 충전 / EMP / 기즈모 ===== -->
-	<SSC_Collar_EmpDisabled>EMP 비활성화</SSC_Collar_EmpDisabled>
+	<!-- ===== 칼라 — 충전 / 전자기 교란 / 기즈모 ===== -->
+	<SSC_Collar_Disrupted>전자기 교란</SSC_Collar_Disrupted>
 	<SSC_Collar_Unlimited>무제한</SSC_Collar_Unlimited>
 	<SSC_Collar_Arm>무장</SSC_Collar_Arm>
 	<SSC_Collar_Disarm>해제</SSC_Collar_Disarm>
-	<SSC_Collar_Emp_Tooltip>EMP로 비활성화 중 (남은 시간: {0})</SSC_Collar_Emp_Tooltip>
+	<SSC_Collar_DisruptedEmp_Tooltip>EMP로 비활성화 중 (남은 시간: {0})</SSC_Collar_DisruptedEmp_Tooltip>
+	<SSC_Collar_DisruptedFlare_Tooltip>태양 흑점으로 비활성화 중</SSC_Collar_DisruptedFlare_Tooltip>
 	<SSC_Collar_Unlimited_Tooltip>충전 시스템 꺼짐 — 무제한 작동</SSC_Collar_Unlimited_Tooltip>
 	<SSC_Collar_Charge_Tooltip>충전량: {0} / {1} Wd</SSC_Collar_Charge_Tooltip>
 	<SSC_Collar_RechargeThreshold>충전 임계값</SSC_Collar_RechargeThreshold>
 	<SSC_Collar_SelfRecharge_Toggle>자가 충전 허용 토글 (Stage5 노예/식민자만 가능)</SSC_Collar_SelfRecharge_Toggle>
 	<SSC_Collar_SelfRecharge_On>자가 충전: 허용</SSC_Collar_SelfRecharge_On>
 	<SSC_Collar_SelfRecharge_Off>자가 충전: 금지</SSC_Collar_SelfRecharge_Off>
-	<SSC_Collar_NotOperational>칼라가 작동하지 않습니다 (충전 부족 또는 EMP)</SSC_Collar_NotOperational>
+	<SSC_Collar_Inoperable>칼라가 작동하지 않습니다 (충전 부족 또는 전자기 교란)</SSC_Collar_Inoperable>
 
 	<!-- ===== 원격 — 레거시 모드 ===== -->
 	<SSC_Remote_ExplosiveArm>원격 목걸이 무장</SSC_Remote_ExplosiveArm>
@@ -159,8 +160,8 @@
 	<SSC_Setting_Stage4Period_Desc>감정 변화 4단계가 적용되는 기간을 설정합니다. 기본값: 15일</SSC_Setting_Stage4Period_Desc>
 	<SSC_Setting_CollarCharge_Title>목걸이 충전 시스템</SSC_Setting_CollarCharge_Title>
 	<SSC_Setting_CollarCharge_Desc>목걸이가 전력을 소모하며, 방전 시 비활성화됩니다. 간수가 콘솔에서 충전합니다. 기본: 켜짐</SSC_Setting_CollarCharge_Desc>
-	<SSC_Setting_CollarEmp_Title>EMP 영향</SSC_Setting_CollarEmp_Title>
-	<SSC_Setting_CollarEmp_Desc>EMP 피격 시 목걸이가 일시적으로 비활성화됩니다. 기본: 켜짐</SSC_Setting_CollarEmp_Desc>
+	<SSC_Setting_CollarDisruption_Title>전자기 교란 영향</SSC_Setting_CollarDisruption_Title>
+	<SSC_Setting_CollarDisruption_Desc>EMP 피격이나 태양 흑점 시 목걸이가 일시적으로 비활성화됩니다. 기본: 켜짐</SSC_Setting_CollarDisruption_Desc>
 	<SSC_Setting_DrainMultiplier_Title>칼라 소모량 글로벌 배율</SSC_Setting_DrainMultiplier_Title>
 	<SSC_Setting_DrainMultiplier_Desc>모든 칼라의 전력 소모량에 곱해지는 배율. 1 = 기본, 0.5 = 절반, 2 = 두 배. 기본: 1</SSC_Setting_DrainMultiplier_Desc>
 	<SSC_Setting_ResetAll_Title>설정 리셋</SSC_Setting_ResetAll_Title>

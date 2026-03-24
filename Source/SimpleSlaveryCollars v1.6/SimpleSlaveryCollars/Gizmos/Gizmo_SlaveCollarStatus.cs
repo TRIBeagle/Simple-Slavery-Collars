@@ -109,9 +109,9 @@ namespace SimpleSlaveryCollars.Gizmos
 
             if (empDisabled)
             {
-                // EMP 비활성화 — 회색 바
+                // 전자기 교란(EMP/흑점) — 회색 바
                 Widgets.FillableBar(barRect, 1f, BarEmpTex, BarEmptyTex, doBorder: true);
-                DrawBarLabel(barRect, "SSC_Collar_EmpDisabled".Translate());
+                DrawBarLabel(barRect, "SSC_Collar_Disrupted".Translate());
             }
             else if (!chargeEnabled)
             {
@@ -156,7 +156,12 @@ namespace SimpleSlaveryCollars.Gizmos
         private string GetTooltip(bool empDisabled, bool chargeEnabled)
         {
             if (empDisabled)
-                return "SSC_Collar_Emp_Tooltip".Translate(collar.empDisabledTicks.ToStringTicksToPeriod());
+            {
+                // 흑점이면 잔여 시간 없음, EMP면 잔여 시간 표시
+                if (collar.empDisabledTicks > 0)
+                    return "SSC_Collar_DisruptedEmp_Tooltip".Translate(collar.empDisabledTicks.ToStringTicksToPeriod());
+                return "SSC_Collar_DisruptedFlare_Tooltip".Translate();
+            }
 
             if (!chargeEnabled)
                 return "SSC_Collar_Unlimited_Tooltip".Translate();

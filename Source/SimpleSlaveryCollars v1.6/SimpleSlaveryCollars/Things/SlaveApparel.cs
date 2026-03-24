@@ -129,7 +129,7 @@ namespace SimpleSlaveryCollars
         {
             get
             {
-                if (!SimpleSlaveryCollarsSetting.CollarEmpEnable) return false;
+                if (!SimpleSlaveryCollarsSetting.CollarDisruptionEnable) return false;
                 if (empDisabledTicks > 0) return true;
                 // 태양 흑점: 맵 위 전자기기 일괄 무력화
                 var map = Wearer?.MapHeld;
@@ -194,7 +194,7 @@ namespace SimpleSlaveryCollars
         /// <summary>EMP 피격 처리. 외부에서 호출.</summary>
         public void ApplyEmp(int durationTicks)
         {
-            if (!SimpleSlaveryCollarsSetting.CollarEmpEnable) return;
+            if (!SimpleSlaveryCollarsSetting.CollarDisruptionEnable) return;
             empDisabledTicks = Mathf.Max(empDisabledTicks, durationTicks);
         }
 

@@ -27,7 +27,7 @@ namespace SimpleSlaveryCollars
         public static bool AssimilationSlaveEnable = true;
         public static bool RemoteOnlyOnConsoleEnable = true;
         public static bool CollarChargeEnable = true;
-        public static bool CollarEmpEnable = true;
+        public static bool CollarDisruptionEnable = true;
         public static float CollarDrainMultiplier = 1f;  // 글로벌 소모 배율 (XML 값 × 이 배율)
 
         public static float Slavestage1Period = 15f;
@@ -53,7 +53,7 @@ namespace SimpleSlaveryCollars
             Scribe_Values.Look(ref AssimilationSlaveEnable, "AssimilationSlaveEnable", true);
             Scribe_Values.Look(ref RemoteOnlyOnConsoleEnable, "RemoteOnlyOnConsoleEnable", true);
             Scribe_Values.Look(ref CollarChargeEnable, "CollarChargeEnable", true);
-            Scribe_Values.Look(ref CollarEmpEnable, "CollarEmpEnable", true);
+            Scribe_Values.Look(ref CollarDisruptionEnable, "CollarDisruptionEnable", true);
             Scribe_Values.Look(ref CollarDrainMultiplier, "CollarDrainMultiplier", 1f);
             Scribe_Values.Look(ref Slavestage1Period, "Slavestage1Period", 15f);
             Scribe_Values.Look(ref Slavestage2Period, "Slavestage2Period", 15f);
@@ -78,7 +78,7 @@ namespace SimpleSlaveryCollars
             listingStandard.CheckboxLabeled("SSC_Setting_Assimilation_Title".Translate(), ref AssimilationSlaveEnable, "SSC_Setting_Assimilation_Desc".Translate());
             listingStandard.CheckboxLabeled("SSC_Setting_RemoteOnlyConsole_Title".Translate(), ref RemoteOnlyOnConsoleEnable, "SSC_Setting_RemoteOnlyConsole_Desc".Translate());
             listingStandard.CheckboxLabeled("SSC_Setting_CollarCharge_Title".Translate(), ref CollarChargeEnable, "SSC_Setting_CollarCharge_Desc".Translate());
-            listingStandard.CheckboxLabeled("SSC_Setting_CollarEmp_Title".Translate(), ref CollarEmpEnable, "SSC_Setting_CollarEmp_Desc".Translate());
+            listingStandard.CheckboxLabeled("SSC_Setting_CollarDisruption_Title".Translate(), ref CollarDisruptionEnable, "SSC_Setting_CollarDisruption_Desc".Translate());
 
             if (CollarChargeEnable)
             {
@@ -109,7 +109,7 @@ namespace SimpleSlaveryCollars
                 AssimilationSlaveEnable = true;
                 RemoteOnlyOnConsoleEnable = true;
                 CollarChargeEnable = true;
-                CollarEmpEnable = true;
+                CollarDisruptionEnable = true;
                 CollarDrainMultiplier = 1f;
 
                 Slavestage1Period = 15f;

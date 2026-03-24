@@ -70,7 +70,7 @@ namespace SimpleSlaveryCollars
             armCollar.activateSound = SoundDefOf.Click;
             armCollar.icon = ContentFinder<Texture2D>.Get("UI/Commands/ArmCollar_Explosive", true);
             if (!IsOperational)
-                armCollar.Disable("SSC_Collar_NotOperational".Translate());
+                armCollar.Disable("SSC_Collar_Inoperable".Translate());
             yield return armCollar;
 
             // 2. Detonate the collar
@@ -86,7 +86,7 @@ namespace SimpleSlaveryCollars
                 detonate.activateSound = SoundDefOf.Click;
                 detonate.icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Explosive", true);
                 if (!IsOperational)
-                    detonate.Disable("SSC_Collar_NotOperational".Translate());
+                    detonate.Disable("SSC_Collar_Inoperable".Translate());
                 yield return detonate;
             }
         }

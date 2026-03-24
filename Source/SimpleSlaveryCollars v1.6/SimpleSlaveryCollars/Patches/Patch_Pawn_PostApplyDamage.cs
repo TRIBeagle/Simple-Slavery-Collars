@@ -25,7 +25,7 @@ namespace SimpleSlaveryCollars.Patches
         {
             try
             {
-                if (!SimpleSlaveryCollarsSetting.CollarEmpEnable) return;
+                if (!SimpleSlaveryCollarsSetting.CollarDisruptionEnable) return;
                 if (dinfo.Def != DamageDefOf.EMP) return;
 
                 var collar = SimpleSlaveryUtility.GetSlaveCollar(__instance) as SlaveApparel;

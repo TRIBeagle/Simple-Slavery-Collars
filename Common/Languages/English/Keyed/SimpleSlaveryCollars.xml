@@ -21,19 +21,20 @@
 	<SSC_Collar_RemoteOnly_Reason>Can only be operated from the console.</SSC_Collar_RemoteOnly_Reason>
 	<SSC_Explosive_Armed_Reason>Explosive collar was armed to detonate.</SSC_Explosive_Armed_Reason>
 
-	<!-- ===== Collar — Charge / EMP / Gizmo ===== -->
-	<SSC_Collar_EmpDisabled>EMP Disabled</SSC_Collar_EmpDisabled>
+	<!-- ===== Collar — Charge / Disruption / Gizmo ===== -->
+	<SSC_Collar_Disrupted>EM Disrupted</SSC_Collar_Disrupted>
 	<SSC_Collar_Unlimited>Unlimited</SSC_Collar_Unlimited>
 	<SSC_Collar_Arm>Arm</SSC_Collar_Arm>
 	<SSC_Collar_Disarm>Disarm</SSC_Collar_Disarm>
-	<SSC_Collar_Emp_Tooltip>Disabled by EMP (remaining: {0})</SSC_Collar_Emp_Tooltip>
+	<SSC_Collar_DisruptedEmp_Tooltip>Disabled by EMP (remaining: {0})</SSC_Collar_DisruptedEmp_Tooltip>
+	<SSC_Collar_DisruptedFlare_Tooltip>Disabled by solar flare</SSC_Collar_DisruptedFlare_Tooltip>
 	<SSC_Collar_Unlimited_Tooltip>Charging system disabled — unlimited operation</SSC_Collar_Unlimited_Tooltip>
 	<SSC_Collar_Charge_Tooltip>Charge: {0} / {1} Wd</SSC_Collar_Charge_Tooltip>
 	<SSC_Collar_RechargeThreshold>Recharge Threshold</SSC_Collar_RechargeThreshold>
 	<SSC_Collar_SelfRecharge_Toggle>Toggle self-recharge (Stage5 slaves/colonists only)</SSC_Collar_SelfRecharge_Toggle>
 	<SSC_Collar_SelfRecharge_On>Self-recharge: Allowed</SSC_Collar_SelfRecharge_On>
 	<SSC_Collar_SelfRecharge_Off>Self-recharge: Disabled</SSC_Collar_SelfRecharge_Off>
-	<SSC_Collar_NotOperational>Collar not operational (low charge or EMP)</SSC_Collar_NotOperational>
+	<SSC_Collar_Inoperable>Collar not operational (low charge or EM disruption)</SSC_Collar_Inoperable>
 
 	<!-- ===== Remote — Legacy Mode ===== -->
 	<SSC_Remote_ExplosiveArm>Arm Collar</SSC_Remote_ExplosiveArm>
@@ -159,8 +160,8 @@
 	<SSC_Setting_Stage4Period_Desc>Sets the slave stage 4 period. Default: 15 days</SSC_Setting_Stage4Period_Desc>
 	<SSC_Setting_CollarCharge_Title>Collar Charging System</SSC_Setting_CollarCharge_Title>
 	<SSC_Setting_CollarCharge_Desc>Collars consume power and become inactive when depleted. Wardens recharge at consoles. Default: On</SSC_Setting_CollarCharge_Desc>
-	<SSC_Setting_CollarEmp_Title>EMP Effect</SSC_Setting_CollarEmp_Title>
-	<SSC_Setting_CollarEmp_Desc>Collars are temporarily disabled when hit by EMP. Default: On</SSC_Setting_CollarEmp_Desc>
+	<SSC_Setting_CollarDisruption_Title>EM Disruption Effect</SSC_Setting_CollarDisruption_Title>
+	<SSC_Setting_CollarDisruption_Desc>Collars are temporarily disabled by EMP hits or solar flares. Default: On</SSC_Setting_CollarDisruption_Desc>
 	<SSC_Setting_DrainMultiplier_Title>Collar drain global multiplier</SSC_Setting_DrainMultiplier_Title>
 	<SSC_Setting_DrainMultiplier_Desc>Multiplied to all collar power drain. 1 = default, 0.5 = half, 2 = double. Default: 1</SSC_Setting_DrainMultiplier_Desc>
 	<SSC_Setting_ResetAll_Title>Reset All Setting</SSC_Setting_ResetAll_Title>
