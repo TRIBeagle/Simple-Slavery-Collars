@@ -114,8 +114,8 @@ namespace SimpleSlaveryCollars.Debugs
         private static int GetCompTicks(Pawn pawn)
         {
             var comp = pawn?.TryGetComp<CompSlave>();
-            float f = comp?.TimeAsSlaveTicks ?? 0f;
-            return Mathf.RoundToInt(f);
+            float ticks = comp?.TimeAsSlaveTicks ?? 0f;
+            return Mathf.RoundToInt(ticks);
         }
 
         private static void SetCompTicks_Absolute(Pawn pawn, int targetTicks)

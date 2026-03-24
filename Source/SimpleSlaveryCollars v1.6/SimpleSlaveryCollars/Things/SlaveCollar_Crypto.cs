@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using SimpleSlaveryCollars.Gizmos;
 
 namespace SimpleSlaveryCollars
 {
@@ -26,7 +27,7 @@ namespace SimpleSlaveryCollars
         {
             // 충전 기즈모 (충전 ON일 때만)
             if (SimpleSlaveryCollarsSetting.CollarChargeEnable)
-                yield return new SimpleSlaveryCollars.Gizmos.Gizmo_SlaveCollarStatus { collar = this };
+                yield return new Gizmo_SlaveCollarStatus { collar = this };
 
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {

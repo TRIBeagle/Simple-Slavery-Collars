@@ -203,18 +203,8 @@ namespace SimpleSlaveryCollars.Utilities
         public static bool EverBeenSlave(Pawn pawn)
         {
             CompSlave comp = pawn?.TryGetComp<CompSlave>();
-
-            if (comp != null)
-            {
-                if (comp.TimeAsSlaveTicks > 0f) return true;
-            }
-
-            if (pawn?.records.GetAsInt(SimpleSlaveryDefOf.TimeAsSlave) > 0)
-            {
-                return true;
-            }
-
-            return false;
+            if (comp?.TimeAsSlaveTicks > 0f) return true;
+            return pawn?.records.GetAsInt(SimpleSlaveryDefOf.TimeAsSlave) > 0;
         }
 
         /// <summary>
@@ -223,13 +213,7 @@ namespace SimpleSlaveryCollars.Utilities
         public static float TimeAsSlave(Pawn pawn)
         {
             CompSlave comp = pawn?.TryGetComp<CompSlave>();
-
-            if (comp != null)
-            {
-                return comp.TimeAsSlaveTicks;
-            }
-
-            // GetValue는 float(값 타입)를 반환하므로 널 병합 연산자(??)로 깔끔하게 처리
+            if (comp != null) return comp.TimeAsSlaveTicks;
             return pawn?.records?.GetValue(SimpleSlaveryDefOf.TimeAsSlave) ?? 0f;
         }
 
@@ -241,12 +225,7 @@ namespace SimpleSlaveryCollars.Utilities
             if (pawn == null) return;
 
             CompSlave comp = pawn.TryGetComp<CompSlave>();
-
-            if (comp != null)
-            {
-                comp.SetTimeAsSlaveTicks(ticks);
-                return;
-            }
+            if (comp != null) { comp.SetTimeAsSlaveTicks(ticks); return; }
 
             // 길고 복잡했던 리플렉션 코드를 SSC_ReflectionCache 호출 한 줄로 대체
             if (pawn.records != null)
