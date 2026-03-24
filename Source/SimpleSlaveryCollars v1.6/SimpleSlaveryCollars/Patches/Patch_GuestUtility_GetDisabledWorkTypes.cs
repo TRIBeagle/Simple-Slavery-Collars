@@ -33,6 +33,8 @@ namespace SimpleSlaveryCollars.Patches
                 if (pawn == null || !SimpleSlaveryUtility.IsStage5Slave(pawn))
                     return;
 
+                // 바닐라 캐시 리스트 오염 방지 — 복사본에서 수정
+                __result = new List<WorkTypeDef>(__result);
                 __result.RemoveAll(wt => wt.disabledForSlaves);
             }
             catch (Exception ex)
