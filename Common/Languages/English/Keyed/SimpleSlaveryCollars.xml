@@ -21,6 +21,9 @@
 	<SSC_Collar_RemoteOnly_Reason>Can only be operated from the console.</SSC_Collar_RemoteOnly_Reason>
 	<SSC_Explosive_Armed_Reason>Explosive collar was armed to detonate.</SSC_Explosive_Armed_Reason>
 
+	<!-- ===== Role Requirements (XML labelKey) ===== -->
+	<RoleRequirementLabelNotSlave>Must not be a slave</RoleRequirementLabelNotSlave>
+
 	<!-- ===== Collar — Charge / Disruption / Gizmo ===== -->
 	<SSC_Collar_Disrupted>EM Disrupted</SSC_Collar_Disrupted>
 	<SSC_Collar_Unlimited>Unlimited</SSC_Collar_Unlimited>

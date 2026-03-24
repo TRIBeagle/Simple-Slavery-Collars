@@ -15,6 +15,7 @@
 	<SSC_Collar_RemoteOnly_Desc>This command can only be used from the console.</SSC_Collar_RemoteOnly_Desc>
 	<SSC_Collar_RemoteOnly_Reason>Can only be operated from the console.</SSC_Collar_RemoteOnly_Reason>
 	<SSC_Explosive_Armed_Reason>Ошейник-бомба был взведен для взрыва.</SSC_Explosive_Armed_Reason>
+	<RoleRequirementLabelNotSlave>Must not be a slave</RoleRequirementLabelNotSlave>
 	<SSC_Collar_Disrupted>EM Disrupted</SSC_Collar_Disrupted>
 	<SSC_Collar_Unlimited>Unlimited</SSC_Collar_Unlimited>
 	<SSC_Collar_Arm>Arm</SSC_Collar_Arm>

@@ -21,6 +21,9 @@
 	<SSC_Collar_RemoteOnly_Reason>只能在通讯台上操作。</SSC_Collar_RemoteOnly_Reason>
 	<SSC_Explosive_Armed_Reason>项圈上的爆炸物已通电，处于可引爆状态。</SSC_Explosive_Armed_Reason>
 
+	<!-- ===== 角色要求 (XML labelKey) ===== -->
+	<RoleRequirementLabelNotSlave>必须不是奴隶</RoleRequirementLabelNotSlave>
+
 	<!-- ===== 项圈 — 充电 / 电磁干扰 / Gizmo ===== -->
 	<SSC_Collar_Disrupted>EM Disrupted</SSC_Collar_Disrupted>
 	<SSC_Collar_Unlimited>Unlimited</SSC_Collar_Unlimited>
