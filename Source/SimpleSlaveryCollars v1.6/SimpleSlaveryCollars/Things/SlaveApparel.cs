@@ -16,8 +16,12 @@ namespace SimpleSlaveryCollars
         /// <summary>현재 충전량 (0~1). 1 = 만충, 0 = 방전.</summary>
         public float charge = 1f;
 
-        /// <summary>충전 소모율 (틱당). 서브클래스에서 오버라이드 가능.</summary>
-        protected virtual float ChargePerTick => 0.00002f; // ~50000틱(≈14분)에 완전 방전
+        /// <summary>대기 소모율 (틱당). 모드옵션 기반으로 계산.</summary>
+        private float IdleChargePerTick =>
+            1f / (SimpleSlaveryCollarsSetting.CollarBatteryDays * 60000f);
+
+        /// <summary>작동(armed) 소모율 (틱당). 서브클래스에서 오버라이드. 기본 = 대기의 5배.</summary>
+        protected virtual float ActiveChargeMultiplier => 5f;
 
         /// <summary>충전 임계값. 이 이하면 armed 불가.</summary>
         public const float ChargeThreshold = 0.05f;
@@ -68,10 +72,13 @@ namespace SimpleSlaveryCollars
                 empDisabledTicks = Mathf.Max(0, empDisabledTicks - delta);
             }
 
-            // 충전 소모 (armed 상태 + 충전 옵션 ON일 때만)
-            if (SimpleSlaveryCollarsSetting.CollarChargeEnable && IsArmed && charge > 0f)
+            // 충전 소모 (충전 옵션 ON일 때)
+            if (SimpleSlaveryCollarsSetting.CollarChargeEnable && charge > 0f)
             {
-                charge = Mathf.Max(0f, charge - ChargePerTick * delta);
+                float drain = IdleChargePerTick * delta;
+                if (IsArmed)
+                    drain *= ActiveChargeMultiplier;
+                charge = Mathf.Max(0f, charge - drain);
             }
         }
 

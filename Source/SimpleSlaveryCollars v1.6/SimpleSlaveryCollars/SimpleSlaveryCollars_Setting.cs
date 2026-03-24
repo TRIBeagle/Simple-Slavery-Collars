@@ -28,6 +28,7 @@ namespace SimpleSlaveryCollars
         public static bool RemoteOnlyOnConsoleEnable = true;
         public static bool CollarChargeEnable = true;
         public static bool CollarEmpEnable = true;
+        public static float CollarBatteryDays = 3f; // 대기 상태 만충 지속 일수
 
         public static float Slavestage1Period = 15f;
         public static float Slavestage2Period = 15f;
@@ -52,6 +53,7 @@ namespace SimpleSlaveryCollars
             Scribe_Values.Look(ref RemoteOnlyOnConsoleEnable, "RemoteOnlyOnConsoleEnable", true);
             Scribe_Values.Look(ref CollarChargeEnable, "CollarChargeEnable", true);
             Scribe_Values.Look(ref CollarEmpEnable, "CollarEmpEnable", true);
+            Scribe_Values.Look(ref CollarBatteryDays, "CollarBatteryDays", 3f);
             Scribe_Values.Look(ref Slavestage1Period, "Slavestage1Period", 15f);
             Scribe_Values.Look(ref Slavestage2Period, "Slavestage2Period", 15f);
             Scribe_Values.Look(ref Slavestage3Period, "Slavestage3Period", 15f);
@@ -77,6 +79,12 @@ namespace SimpleSlaveryCollars
             listingStandard.CheckboxLabeled("collarChargeEnableSetting_title".Translate(), ref CollarChargeEnable, "collarChargeEnableSetting_desc".Translate());
             listingStandard.CheckboxLabeled("collarEmpEnableSetting_title".Translate(), ref CollarEmpEnable, "collarEmpEnableSetting_desc".Translate());
 
+            if (CollarChargeEnable)
+            {
+                listingStandard.Label("collarBatteryDays_title".Translate() + ": " + CollarBatteryDays.ToString("0.#") + " " + "DaysLower".Translate(), -1f, "collarBatteryDays_desc".Translate());
+                CollarBatteryDays = listingStandard.Slider(CollarBatteryDays, 1f, 10f);
+            }
+
             listingStandard.Label("slavestage1Period_title".Translate(), -1f, "slavestage1Period_desc".Translate());
             listingStandard.TextFieldNumeric(ref Slavestage1Period, ref Slavestage1PeriodBuffer);
 
@@ -101,6 +109,7 @@ namespace SimpleSlaveryCollars
                 RemoteOnlyOnConsoleEnable = true;
                 CollarChargeEnable = true;
                 CollarEmpEnable = true;
+                CollarBatteryDays = 3f;
 
                 Slavestage1Period = 15f;
                 Slavestage2Period = 15f;

@@ -37,18 +37,18 @@ namespace SimpleSlaveryCollars.Jobs
             // 예약 가능 확인
             if (!pawn.CanReserve(slave)) return null;
 
-            // 콘솔 찾기
-            var console = FindNearestConsole(pawn);
-            if (console == null) return null;
-            if (!pawn.CanReserveAndReach(console, PathEndMode.InteractionCell, pawn.NormalMaxDanger()))
+            // 충전소 찾기 (콘솔 또는 배터리)
+            var station = FindNearestChargeStation(pawn);
+            if (station == null) return null;
+            if (!pawn.CanReserveAndReach(station, PathEndMode.InteractionCell, pawn.NormalMaxDanger()))
                 return null;
 
-            var job = JobMaker.MakeJob(SimpleSlaveryDefOf.RechargeSlaveCollar, slave, console);
+            var job = JobMaker.MakeJob(SimpleSlaveryDefOf.RechargeSlaveCollar, slave, station);
             return job;
         }
 
-        /// <summary>맵에서 전원 켜진 가장 가까운 콘솔을 찾는다.</summary>
-        private Building FindNearestConsole(Pawn pawn)
+        /// <summary>맵에서 가장 가까운 충전소를 찾는다 (콘솔 또는 전력 보유 배터리).</summary>
+        internal static Building FindNearestChargeStation(Pawn pawn)
         {
             Building closest = null;
             float closestDist = float.MaxValue;
@@ -57,14 +57,30 @@ namespace SimpleSlaveryCollars.Jobs
             for (int i = 0; i < buildings.Count; i++)
             {
                 var b = buildings[i];
-                var comp = b.TryGetComp<CompRemoteSlaveCollar>();
-                if (comp == null || !comp.PowerOn) continue;
 
-                float dist = b.Position.DistanceToSquared(pawn.Position);
-                if (dist < closestDist)
+                // 콘솔 (전원 ON)
+                var remoteComp = b.TryGetComp<CompRemoteSlaveCollar>();
+                if (remoteComp != null && remoteComp.PowerOn)
                 {
-                    closestDist = dist;
-                    closest = b;
+                    float dist = b.Position.DistanceToSquared(pawn.Position);
+                    if (dist < closestDist)
+                    {
+                        closestDist = dist;
+                        closest = b;
+                    }
+                    continue;
+                }
+
+                // 배터리 (저장 전력 있음)
+                var battery = b.TryGetComp<CompPowerBattery>();
+                if (battery != null && battery.StoredEnergy > 0f)
+                {
+                    float dist = b.Position.DistanceToSquared(pawn.Position);
+                    if (dist < closestDist)
+                    {
+                        closestDist = dist;
+                        closest = b;
+                    }
                 }
             }
 
