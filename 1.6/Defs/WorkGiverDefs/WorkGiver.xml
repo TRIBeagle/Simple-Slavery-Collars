@@ -36,4 +36,16 @@
             <li>Manipulation</li>
         </requiredCapacities>
     </WorkGiverDef>
+    <WorkGiverDef>
+        <defName>SelfRechargeSlaveCollar</defName>
+        <label>self-recharge slave collar</label>
+        <giverClass>SimpleSlaveryCollars.Jobs.WorkGiver_SelfRechargeCollar</giverClass>
+        <workType>Warden</workType>
+        <verb>recharge own collar</verb>
+        <gerund>recharging own slave collar</gerund>
+        <priorityInType>106</priorityInType>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+    </WorkGiverDef>
 </Defs>

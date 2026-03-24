@@ -25,8 +25,8 @@ namespace SimpleSlaveryCollars
         /// <summary>자가충전 허용 여부. Stage5 노예 또는 식민자가 직접 충전소에서 충전.</summary>
         public bool selfRechargeAllowed = false;
 
-        /// <summary>자동 충전 임계값. 이 이하면 자가충전/Warden 충전 트리거.</summary>
-        public const float RechargeThreshold = 0.5f;
+        /// <summary>자동 충전 임계값. 이 이하면 자가충전/Warden 충전 트리거. Gizmo에서 드래그 조절 가능.</summary>
+        public float rechargeThreshold = 0.5f;
 
         // 충전 시스템 마이그레이션 플래그 — 기존 세이브에서 false로 로드, 1회 메시지 후 true
         private bool _chargeMigrated;
@@ -143,6 +143,7 @@ namespace SimpleSlaveryCollars
             Scribe_Values.Look(ref charge, "ssc_charge", 1f);
             Scribe_Values.Look(ref empDisabledTicks, "ssc_empDisabledTicks", 0);
             Scribe_Values.Look(ref selfRechargeAllowed, "ssc_selfRechargeAllowed", false);
+            Scribe_Values.Look(ref rechargeThreshold, "ssc_rechargeThreshold", 0.5f);
             Scribe_Values.Look(ref _chargeMigrated, "ssc_chargeMigrated", false);
         }
 

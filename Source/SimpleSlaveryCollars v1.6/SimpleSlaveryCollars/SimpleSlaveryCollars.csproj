@@ -107,6 +107,8 @@
     <Compile Include="Jobs\WorkGiver_Warden_ShackleSlave.cs" />
     <Compile Include="Jobs\WorkGiver_Warden_RechargeCollar.cs" />
     <Compile Include="Jobs\JobDriver_RechargeCollar.cs" />
+    <Compile Include="Jobs\JobDriver_SelfRechargeCollar.cs" />
+    <Compile Include="Jobs\WorkGiver_SelfRechargeCollar.cs" />
     <Compile Include="Gizmos\Gizmo_SlaveCollarStatus.cs" />
     <Compile Include="Patches\Patch_Pawn_PostApplyDamage.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

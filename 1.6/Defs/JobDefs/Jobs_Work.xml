@@ -31,4 +31,11 @@
         <casualInterruptible>false</casualInterruptible>
         <playerInterruptible>true</playerInterruptible>
     </JobDef>
+    <JobDef>
+        <defName>SelfRechargeSlaveCollar</defName>
+        <driverClass>SimpleSlaveryCollars.Jobs.JobDriver_SelfRechargeCollar</driverClass>
+        <reportString>Recharging own slave collar at TargetA.</reportString>
+        <casualInterruptible>false</casualInterruptible>
+        <playerInterruptible>true</playerInterruptible>
+    </JobDef>
 </Defs>

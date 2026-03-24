@@ -1,8 +1,10 @@
 // SimpleSlaveryCollars | Gizmos | Gizmo_SlaveCollarStatus.cs
-// 목적 : 노예 칼라 충전 상태 기즈모 — 프로그래스 바 + 자가충전 토글
+// 목적 : 노예 칼라 충전 상태 기즈모 — 충전 바 + 드래그 임계값 슬라이더 + 자가충전 토글
 // 용도 : 충전 옵션 ON 시 기존 Arm/Detonate 기즈모와 함께 표시
 // 주의 : EMP 비활성화 중에는 바 회색 + "EMP 비활성화" 텍스트
+//        드래그 중 collar.rechargeThreshold 실시간 갱신 → 세이브에 반영
 
+using System.Collections.Generic;
 using UnityEngine;
 using Verse;
 using Verse.Sound;
@@ -18,14 +20,24 @@ namespace SimpleSlaveryCollars.Gizmos
         // 바 텍스처 (static 캐시)
         private static readonly Texture2D BarFilledTex =
             SolidColorMaterials.NewSolidColorTexture(new Color(0.24f, 0.55f, 0.72f));
+        private static readonly Texture2D BarHighlightTex =
+            SolidColorMaterials.NewSolidColorTexture(new Color(0.34f, 0.65f, 0.82f));
         private static readonly Texture2D BarLowTex =
             SolidColorMaterials.NewSolidColorTexture(new Color(0.75f, 0.25f, 0.20f));
         private static readonly Texture2D BarEmpTex =
             SolidColorMaterials.NewSolidColorTexture(new Color(0.35f, 0.35f, 0.35f));
         private static readonly Texture2D BarEmptyTex =
             SolidColorMaterials.NewSolidColorTexture(new Color(0.03f, 0.035f, 0.05f));
+        private static readonly Texture2D BarDragTex =
+            SolidColorMaterials.NewSolidColorTexture(new Color(0.74f, 0.97f, 0.8f));
 
         private const float HeaderBtnSize = 24f;
+
+        // 임계값 드래그 상태 (Gizmo_SetFuelLevel과 동일 패턴: static)
+        private static bool draggingBar;
+
+        // ChargeThreshold(armed 최소) 위치를 고정 마커로 표시
+        private static readonly float[] ThresholdMarkers = { SlaveApparel.ChargeThreshold };
 
         public Gizmo_SlaveCollarStatus()
         {
@@ -61,7 +73,6 @@ namespace SimpleSlaveryCollars.Gizmos
                 headerBtnX -= HeaderBtnSize;
                 Rect toggleRect = new Rect(headerBtnX, headerRect.y, HeaderBtnSize, HeaderBtnSize);
 
-                // 체크박스 스타일
                 GUI.DrawTexture(toggleRect, collar.selfRechargeAllowed
                     ? Widgets.CheckboxOnTex : Widgets.CheckboxOffTex);
 
@@ -92,39 +103,35 @@ namespace SimpleSlaveryCollars.Gizmos
             if (truncated != collarLabel && Mouse.IsOver(headerRect))
                 TooltipHandler.TipRegion(headerRect, collarLabel);
 
-            // ── 하단: 프로그래스 바 ──
+            // ── 하단: 충전 바 ──
             Rect barRect = innerRect;
             barRect.yMin = headerRect.yMax + 4f;
 
-            float fillPct;
-            string barLabel;
-            Texture2D fillTex;
-
             if (empDisabled)
             {
-                fillPct = 1f;
-                barLabel = "SSC_Collar_EmpDisabled".Translate();
-                fillTex = BarEmpTex;
+                // EMP 비활성화 — 회색 바
+                Widgets.FillableBar(barRect, 1f, BarEmpTex, BarEmptyTex, doBorder: true);
+                DrawBarLabel(barRect, "SSC_Collar_EmpDisabled".Translate());
             }
             else if (!chargeEnabled)
             {
-                fillPct = 1f;
-                barLabel = "SSC_Collar_Unlimited".Translate();
-                fillTex = BarFilledTex;
+                // 충전 비활성화 — 무한
+                Widgets.FillableBar(barRect, 1f, BarFilledTex, BarEmptyTex, doBorder: true);
+                DrawBarLabel(barRect, "SSC_Collar_Unlimited".Translate());
             }
             else
             {
-                fillPct = collar.charge;
-                barLabel = collar.ChargePercent + "%";
-                fillTex = collar.charge <= SlaveApparel.ChargeThreshold ? BarLowTex : BarFilledTex;
+                // 드래그 가능한 임계값 슬라이더 + 충전 바
+                float threshold = collar.rechargeThreshold;
+                Texture2D fillTex = collar.charge <= SlaveApparel.ChargeThreshold ? BarLowTex : BarFilledTex;
+
+                Widgets.DraggableBar(barRect, fillTex, BarHighlightTex, BarEmptyTex, BarDragTex,
+                    ref draggingBar, collar.charge, ref threshold,
+                    ThresholdMarkers, 20, 0.1f, 0.95f);
+
+                collar.rechargeThreshold = threshold;
+                DrawBarLabel(barRect, $"{collar.ChargePercent}%");
             }
-
-            Widgets.FillableBar(barRect, fillPct, fillTex, BarEmptyTex, doBorder: true);
-
-            Text.Font = GameFont.Small;
-            Text.Anchor = TextAnchor.MiddleCenter;
-            Widgets.Label(barRect, barLabel);
-            Text.Anchor = TextAnchor.UpperLeft;
 
             // ── 툴팁 ──
             if (Mouse.IsOver(outerRect) && !mouseOverBtn)
@@ -136,6 +143,15 @@ namespace SimpleSlaveryCollars.Gizmos
             return new GizmoResult(GizmoState.Clear);
         }
 
+        /// <summary>바 중앙에 라벨 표시.</summary>
+        private static void DrawBarLabel(Rect barRect, string label)
+        {
+            Text.Font = GameFont.Small;
+            Text.Anchor = TextAnchor.MiddleCenter;
+            Widgets.Label(barRect, label);
+            Text.Anchor = TextAnchor.UpperLeft;
+        }
+
         /// <summary>툴팁 생성.</summary>
         private string GetTooltip(bool empDisabled, bool chargeEnabled)
         {
@@ -145,10 +161,11 @@ namespace SimpleSlaveryCollars.Gizmos
             if (!chargeEnabled)
                 return "SSC_Collar_UnlimitedTooltip".Translate();
 
+            int thresholdPct = Mathf.RoundToInt(collar.rechargeThreshold * 100f);
             string selfStatus = collar.selfRechargeAllowed
                 ? "SSC_Collar_SelfRechargeOn".Translate()
                 : "SSC_Collar_SelfRechargeOff".Translate();
-            return "SSC_Collar_ChargeTooltip".Translate(collar.ChargePercent) + "\n" + selfStatus;
+            return $"{"SSC_Collar_ChargeTooltip".Translate(collar.ChargePercent)}\n{"SSC_Collar_RechargeThreshold".Translate()}: {thresholdPct}%\n{selfStatus}";
         }
     }
 }

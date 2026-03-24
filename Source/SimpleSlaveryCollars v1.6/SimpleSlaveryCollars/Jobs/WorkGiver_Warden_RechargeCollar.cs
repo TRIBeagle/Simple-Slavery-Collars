@@ -15,8 +15,6 @@ namespace SimpleSlaveryCollars.Jobs
     /// </summary>
     public class WorkGiver_Warden_RechargeCollar : WorkGiver_Warden
     {
-        /// <summary>충전 경고 임계값. 이 이하면 충전 작업 발생.</summary>
-        private const float RechargeThreshold = 0.5f;
         /// <summary>최소 배터리 저장량. 이 미만이면 충전소로 인정 안함.</summary>
         private const float MinBatteryEnergy = 1f;
 
@@ -34,7 +32,7 @@ namespace SimpleSlaveryCollars.Jobs
             // 칼라 확인
             var collar = SimpleSlaveryUtility.GetSlaveCollar(slave) as SlaveApparel;
             if (collar == null) return null;
-            if (collar.charge > RechargeThreshold) return null;
+            if (collar.charge > collar.rechargeThreshold) return null;
 
             // 예약 가능 확인
             if (!pawn.CanReserve(slave)) return null;
