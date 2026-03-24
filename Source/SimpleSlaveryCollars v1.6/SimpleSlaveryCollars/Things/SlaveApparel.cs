@@ -124,10 +124,22 @@ namespace SimpleSlaveryCollars
         /// <summary>EMP 비활성화 남은 틱. 0이면 정상.</summary>
         public int empDisabledTicks;
 
-        /// <summary>EMP로 비활성화 중인지 여부.</summary>
-        public bool IsEmpDisabled => SimpleSlaveryCollarsSetting.CollarEmpEnable && empDisabledTicks > 0;
+        /// <summary>EMP 또는 태양 흑점으로 비활성화 중인지 여부.</summary>
+        public bool IsEmpDisabled
+        {
+            get
+            {
+                if (!SimpleSlaveryCollarsSetting.CollarEmpEnable) return false;
+                if (empDisabledTicks > 0) return true;
+                // 태양 흑점: 맵 위 전자기기 일괄 무력화
+                var map = Wearer?.MapHeld;
+                if (map != null && map.gameConditionManager.ConditionIsActive(GameConditionDefOf.SolarFlare))
+                    return true;
+                return false;
+            }
+        }
 
-        /// <summary>칼라가 작동 가능한 상태인지 (충전 충분 + EMP 아님).</summary>
+        /// <summary>칼라가 작동 가능한 상태인지 (충전 충분 + EMP/흑점 아님).</summary>
         public bool IsOperational => HasCharge && !IsEmpDisabled;
 
         // ── 추상 ──
