@@ -130,37 +130,31 @@ namespace SimpleSlaveryCollars.Gizmos
 
         #region 조합 필터
 
-        /// <summary>2줄 조합 필터: 신분 행 + 칼라 행. 각 행에 [전체] 토글 포함.</summary>
+        /// <summary>2줄 조합 필터: 신분 행 + 칼라 행. 버튼이 남은 폭을 균등 분배.</summary>
         private float DrawFilters(float x, float y, float width)
         {
             float gap = 3f;
             float rowGap = 4f;
             float labelW = 40f;
-            float allBtnW = 40f;  // [전체] 버튼
-            float btnW = 62f;     // 개별 필터 버튼
 
-            // ── 1행: 신분 필터 ──
-            Text.Font = GameFont.Tiny;
-            Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(new Rect(x, y, labelW, BtnH), "SSC_Console_Header_Type".Translate());
-            Text.Anchor = TextAnchor.UpperLeft;
-            Text.Font = GameFont.Small;
-
+            // ── 1행: 신분 필터 (전체 + 3개 = 4버튼) ──
+            DrawFilterLabel(x, y, labelW, "SSC_Console_Header_Type".Translate());
+            float availW = width - labelW - 2f;
+            int typeCount = 4; // 전체, 정착민, 노예, 죄수
+            float btnW = (availW - gap * (typeCount - 1)) / typeCount;
             float btnX = x + labelW + 2f;
 
-            // [전체] 토글 — 하나라도 켜져 있으면 모두 끔, 모두 꺼져 있으면 전체 = 이미 전체
             bool anyTypeOn = filterColonist || filterSlave || filterPrisoner;
-            bool allTypeOff = !anyTypeOn; // 전부 OFF = 전체 표시 중
-            if (DrawFilterToggle(new Rect(btnX, y, allBtnW, BtnH),
-                "SSC_Console_FilterAll".Translate(), allTypeOff))
+            if (DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
+                "SSC_Console_FilterAll".Translate(), !anyTypeOn))
             {
-                if (!allTypeOff)
+                if (anyTypeOn)
                 {
                     filterColonist = false; filterSlave = false; filterPrisoner = false;
                     InvalidateCache();
                 }
             }
-            btnX += allBtnW + gap;
+            btnX += btnW + gap;
 
             filterColonist = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
                 "SSC_Console_PawnType_Colonist".Translate(), filterColonist);
@@ -173,18 +167,14 @@ namespace SimpleSlaveryCollars.Gizmos
 
             y += BtnH + rowGap;
 
-            // ── 2행: 칼라 종류 필터 (동적) ──
-            Text.Font = GameFont.Tiny;
-            Text.Anchor = TextAnchor.MiddleLeft;
-            Widgets.Label(new Rect(x, y, labelW, BtnH), "SSC_Console_Header_Collar".Translate());
-            Text.Anchor = TextAnchor.UpperLeft;
-            Text.Font = GameFont.Small;
-
+            // ── 2행: 칼라 종류 필터 (전체 + 동적) ──
+            DrawFilterLabel(x, y, labelW, "SSC_Console_Header_Collar".Translate());
+            int collarCount = 1 + KnownCollarTypes.Length; // 전체 + 종류별
+            btnW = (availW - gap * (collarCount - 1)) / collarCount;
             btnX = x + labelW + 2f;
 
-            // [전체] 토글
             bool allCollarOff = filterCollarTypes.Count == 0;
-            if (DrawFilterToggle(new Rect(btnX, y, allBtnW, BtnH),
+            if (DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
                 "SSC_Console_FilterAll".Translate(), allCollarOff))
             {
                 if (!allCollarOff)
@@ -193,7 +183,7 @@ namespace SimpleSlaveryCollars.Gizmos
                     InvalidateCache();
                 }
             }
-            btnX += allBtnW + gap;
+            btnX += btnW + gap;
 
             for (int i = 0; i < KnownCollarTypes.Length; i++)
             {
@@ -213,6 +203,16 @@ namespace SimpleSlaveryCollars.Gizmos
 
             y += BtnH;
             return y;
+        }
+
+        /// <summary>필터 행 라벨 (Tiny 폰트).</summary>
+        private static void DrawFilterLabel(float x, float y, float w, string label)
+        {
+            Text.Font = GameFont.Tiny;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(new Rect(x, y, w, BtnH), label);
+            Text.Anchor = TextAnchor.UpperLeft;
+            Text.Font = GameFont.Small;
         }
 
         /// <summary>토글 필터 버튼. 활성=밝은 배경, 비활성=일반. 반환: 새 상태.</summary>
