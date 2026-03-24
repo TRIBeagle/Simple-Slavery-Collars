@@ -124,10 +124,6 @@ namespace SimpleSlaveryCollars
         /// <summary>EMP 비활성화 남은 틱. 0이면 정상.</summary>
         public int empDisabledTicks;
 
-        // 태양 흑점 Def — 1회 조회 후 캐시. null이면 미탐색
-        private static GameConditionDef _solarFlareDef;
-        private static bool _solarFlareSearched;
-
         /// <summary>EMP 또는 태양 흑점으로 비활성화 중인지 여부.</summary>
         public bool IsEmpDisabled
         {
@@ -137,16 +133,9 @@ namespace SimpleSlaveryCollars
                 if (empDisabledTicks > 0) return true;
                 // 태양 흑점: 맵 위 전자기기 일괄 무력화
                 var map = Wearer?.MapHeld;
-                if (map != null)
-                {
-                    if (!_solarFlareSearched)
-                    {
-                        _solarFlareDef = DefDatabase<GameConditionDef>.GetNamedSilentFail("SolarFlare");
-                        _solarFlareSearched = true;
-                    }
-                    if (_solarFlareDef != null && map.gameConditionManager.ConditionIsActive(_solarFlareDef))
-                        return true;
-                }
+                if (map != null && SimpleSlaveryDefOf.SolarFlare != null
+                    && map.gameConditionManager.ConditionIsActive(SimpleSlaveryDefOf.SolarFlare))
+                    return true;
                 return false;
             }
         }

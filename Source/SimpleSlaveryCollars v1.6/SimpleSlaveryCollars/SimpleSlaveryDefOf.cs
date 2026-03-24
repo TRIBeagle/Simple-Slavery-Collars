@@ -49,5 +49,8 @@ namespace SimpleSlaveryCollars
 
         // --- TraitDefOfs ---
         public static TraitDef Nerves;
+
+        // --- GameConditionDefs (바닐라 DefOf에 없는 것) ---
+        public static GameConditionDef SolarFlare;
     }
 }
