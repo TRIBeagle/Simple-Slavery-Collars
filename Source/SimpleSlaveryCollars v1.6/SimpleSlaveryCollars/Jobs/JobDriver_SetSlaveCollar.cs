@@ -113,7 +113,8 @@ namespace SimpleSlaveryCollars.Jobs
                     }
                     else
                     {
-                        Victim.mindState.mentalStateHandler.TryStartMentalState(
+                        // [Safety] mindState/mentalStateHandler null 가드
+                        Victim.mindState?.mentalStateHandler?.TryStartMentalState(
                             MentalStateDefOf.Berserk,
                             "ReasonFailedSetSlaveCollar".Translate(pawn.Name.ToStringShort, Victim.Name.ToStringShort));
                         AddEndCondition(() => JobCondition.Incompletable);

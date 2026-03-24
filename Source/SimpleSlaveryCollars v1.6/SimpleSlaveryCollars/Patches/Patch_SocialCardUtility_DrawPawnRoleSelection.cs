@@ -26,10 +26,16 @@ namespace SimpleSlaveryCollars.Patches
         private static readonly FieldInfo _buttonSizeField =
             AccessTools.Field(typeof(SocialCardUtility), "RoleChangeButtonSize");
 
+        // [성능] RoleChangeButtonSize는 static readonly 상수이므로 1회만 읽어 캐시
+        private static readonly Vector2 _buttonSizeCached =
+            _buttonSizeField != null
+                ? (Vector2)_buttonSizeField.GetValue(null)
+                : new Vector2(200f, 25f);
+
+        // cachedRoles는 RimWorld이 매 프레임 갱신하는 가변 리스트이므로 매번 읽어야 함
         static List<Precept_Role> CachedRoles =>
             (List<Precept_Role>)_cachedRolesField.GetValue(null);
-        static Vector2 RoleChangeButtonSize =>
-            (Vector2)_buttonSizeField.GetValue(null);
+        static Vector2 RoleChangeButtonSize => _buttonSizeCached;
 
         [HarmonyPostfix]
         public static void Postfix_DrawPawnRoleSelection(Pawn pawn, Rect rect)
