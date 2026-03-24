@@ -92,7 +92,8 @@ namespace SimpleSlaveryCollars.Jobs
                 initAction = () =>
                 {
                     var hediff = SimpleSlaveryUtility.GetEnslavedHediff(Victim);
-                    hediff.shackled = hediff.shackledGoal;
+                    if (hediff != null)
+                        hediff.shackled = hediff.shackledGoal;
                 },
                 defaultCompleteMode = ToilCompleteMode.Instant
             };
