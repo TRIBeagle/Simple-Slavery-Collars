@@ -177,6 +177,7 @@ namespace SimpleSlaveryCollars.Utilities
 
         public static bool IsSteadfast(Pawn pawn)
         {
+            if (pawn?.story?.traits == null) return false;
             if (pawn.story.traits.HasTrait(WimpTrait))
             {
                 return false;

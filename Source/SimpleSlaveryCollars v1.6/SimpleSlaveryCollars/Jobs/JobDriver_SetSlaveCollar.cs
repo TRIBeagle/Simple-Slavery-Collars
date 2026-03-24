@@ -89,6 +89,7 @@ namespace SimpleSlaveryCollars.Jobs
 
                     // [조건] Victim이 깨어있고, Wimp 아님, 정신이상/다운 아님일 때만 저항 발생
                     if (Victim.jobs?.curDriver?.asleep != true &&
+                        Victim.story?.traits != null &&
                         !Victim.story.traits.HasTrait(TraitDef.Named("Wimp")) &&
                         !Victim.InMentalState &&
                         !Victim.Downed)

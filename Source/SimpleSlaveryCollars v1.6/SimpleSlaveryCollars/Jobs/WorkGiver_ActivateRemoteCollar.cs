@@ -117,7 +117,7 @@ namespace SimpleSlaveryCollars.Jobs
             }
 
             // [Job] 개별 Job 생성
-            var targetPawn = comp.GetAllReservedPawns().FirstOrDefault(p => p != pawn);
+            var targetPawn = comp.GetAllReservedPawns().FirstOrDefault(p => p != pawn && !p.Dead && p.Spawned);
             if (targetPawn == null) return null;
 
             if (!pawn.CanReserveAndReach(t, PathEndMode.InteractionCell, pawn.NormalMaxDanger(), 1, -1, null, forced))
