@@ -133,19 +133,12 @@ namespace SimpleSlaveryCollars
             }
         }
 
-        /// <summary>인스펙트 문자열. 노예 상태일 때만 경과 시간 + 구속 상태를 한 줄로 표기.</summary>
+        /// <summary>인스펙트 문자열. 노예 상태일 때만 경과 시간(가독 포맷) 표기.</summary>
         public override string CompInspectStringExtra()
         {
             if (parent is Pawn pawn && pawn.IsSlaveOfColony)
             {
-                string duration = SimpleSlaveryUtility.FormatEnslaveDurationReadable(pawn, TimeAsSlaveTicks);
-                // 구속 상태면 한 줄에 합침
-                var hediff = SimpleSlaveryUtility.GetEnslavedHediff(pawn);
-                if (hediff != null && hediff.shackled)
-                {
-                    duration += ", " + "SSC_Inspect_Shackled".Translate();
-                }
-                return duration;
+                return SimpleSlaveryUtility.FormatEnslaveDurationReadable(pawn, TimeAsSlaveTicks);
             }
             return null;
         }

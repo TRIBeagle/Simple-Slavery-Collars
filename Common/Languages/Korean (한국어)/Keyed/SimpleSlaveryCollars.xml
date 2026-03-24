@@ -151,7 +151,4 @@
 	<SSC_Stat_ActiveDrain>활성 소모량</SSC_Stat_ActiveDrain>
 	<SSC_Stat_ActiveDrain_Desc>목걸이가 무장(활성) 상태일 때의 전력 소모량입니다.</SSC_Stat_ActiveDrain_Desc>
 	<SSC_Stat_Day>일</SSC_Stat_Day>
-
-	<!-- ===== 인스펙트 — 구속 ===== -->
-	<SSC_Inspect_Shackled>구속됨 (느려짐)</SSC_Inspect_Shackled>
 </LanguageData>

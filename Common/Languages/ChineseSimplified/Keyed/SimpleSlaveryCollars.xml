@@ -149,6 +149,4 @@
 	<SSC_Stat_IdleDrain_Desc>项圈待机（未激活）时的耗电量。</SSC_Stat_IdleDrain_Desc>
 	<SSC_Stat_ActiveDrain>激活消耗</SSC_Stat_ActiveDrain>
 	<SSC_Stat_ActiveDrain_Desc>项圈激活（武装）时的耗电量。</SSC_Stat_ActiveDrain_Desc>
-	<SSC_Stat_Day>天</SSC_Stat_Day>
-	<SSC_Inspect_Shackled>被束缚（减速）</SSC_Inspect_Shackled>
-</LanguageData>
+	<SSC_Stat_Day>天</SSC_Stat_Day></LanguageData>

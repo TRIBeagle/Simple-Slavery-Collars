@@ -151,7 +151,4 @@
 	<SSC_Stat_ActiveDrain>Active Drain Rate</SSC_Stat_ActiveDrain>
 	<SSC_Stat_ActiveDrain_Desc>Power drain when the collar is armed (active).</SSC_Stat_ActiveDrain_Desc>
 	<SSC_Stat_Day>day</SSC_Stat_Day>
-
-	<!-- ===== Inspect — Shackled ===== -->
-	<SSC_Inspect_Shackled>Restrained (slowed)</SSC_Inspect_Shackled>
 </LanguageData>
