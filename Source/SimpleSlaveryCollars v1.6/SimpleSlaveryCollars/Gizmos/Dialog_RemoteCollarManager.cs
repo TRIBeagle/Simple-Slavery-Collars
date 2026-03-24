@@ -53,17 +53,17 @@ namespace SimpleSlaveryCollars.Gizmos
         // 컬럼 오프셋 (초상화 뒤)
         private const float ColPortrait = 2f;
         private const float ColName = 36f;
-        private const float NameWidth = 136f;
-        private const float ColType = 176f;
-        private const float TypeWidth = 48f;
-        private const float ColCollar = 228f;
-        private const float CollarWidth = 50f;
-        private const float ColStatus = 282f;
-        private const float StatusWidth = 44f;
-        private const float ColAction = 330f;
+        private const float NameWidth = 120f;
+        private const float ColType = 158f;
+        private const float TypeWidth = 44f;
+        private const float ColCollar = 204f;
+        private const float CollarWidth = 46f;
+        private const float ColStatus = 252f;
+        private const float StatusWidth = 40f;
+        private const float ColAction = 294f;
 
         // 동적 창 크기
-        private const float WindowWidth = 580f;
+        private const float WindowWidth = 500f;
         private const float MinWindowHeight = 250f;
         private const float MaxWindowHeight = 600f;
         // 고정 영역 높이: 타이틀(40) + 필터2행(52) + 간격(6) + 헤더(26) + 하단(40) + 마진(36*2)
@@ -136,8 +136,8 @@ namespace SimpleSlaveryCollars.Gizmos
             float gap = 3f;
             float rowGap = 4f;
             float labelW = 40f;
-            float allBtnW = 42f;  // [전체] 버튼
-            float btnW = 68f;     // 개별 필터 버튼
+            float allBtnW = 40f;  // [전체] 버튼
+            float btnW = 62f;     // 개별 필터 버튼
 
             // ── 1행: 신분 필터 ──
             Text.Font = GameFont.Tiny;
