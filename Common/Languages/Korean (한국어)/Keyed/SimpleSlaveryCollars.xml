@@ -45,6 +45,19 @@
 	<SSC_Remote_CryptoArm>원격 동결</SSC_Remote_CryptoArm>
 	<SSC_Remote_CryptoArm_Desc>지도상의 모든 암호화 목걸이 착용자를 제자리에서 얼려버립니다.</SSC_Remote_CryptoArm_Desc>
 
+	<!-- ===== 콘솔 — 관리 창 ===== -->
+	<SSC_Console_ManageCollars>목걸이 관리</SSC_Console_ManageCollars>
+	<SSC_Console_ManageCollars_Desc>원격 목걸이 관리 창을 열어 개별 또는 그룹 대상으로 무장, 해제, 폭발 명령을 내립니다.</SSC_Console_ManageCollars_Desc>
+	<SSC_Console_WindowTitle>원격 목걸이 관리</SSC_Console_WindowTitle>
+	<SSC_Console_Header_Name>이름</SSC_Console_Header_Name>
+	<SSC_Console_Header_Collar>목걸이</SSC_Console_Header_Collar>
+	<SSC_Console_Header_Status>상태</SSC_Console_Header_Status>
+	<SSC_Console_CollarExplosive>폭발</SSC_Console_CollarExplosive>
+	<SSC_Console_CollarElectric>전기</SSC_Console_CollarElectric>
+	<SSC_Console_CollarCrypto>암호화</SSC_Console_CollarCrypto>
+	<SSC_Console_CancelAllReservations>전체 취소</SSC_Console_CancelAllReservations>
+	<SSC_Console_NoWardenWarning>간수(Warden) 작업이 할당된 식민자가 없습니다. 간수가 지정되어야 예약된 작업이 실행됩니다.</SSC_Console_NoWardenWarning>
+
 	<!-- ===== 콘솔 — 선택 모드 ===== -->
 	<SSC_Console_ExplosiveArm>원격 목걸이 무장 (선택)</SSC_Console_ExplosiveArm>
 	<SSC_Console_ExplosiveArm_Desc>폭발성 목걸이를 착용한 인원 목록에서 대상을 선택해 무장 명령을 내립니다.</SSC_Console_ExplosiveArm_Desc>

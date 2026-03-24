@@ -35,6 +35,17 @@
 	<SSC_Remote_ElectricArm_Desc>Electrocutes wearer untill uncouscious.</SSC_Remote_ElectricArm_Desc>
 	<SSC_Remote_CryptoArm>Freeze</SSC_Remote_CryptoArm>
 	<SSC_Remote_CryptoArm_Desc>Freezes wearer in place.</SSC_Remote_CryptoArm_Desc>
+	<SSC_Console_ManageCollars>Manage Collars</SSC_Console_ManageCollars>
+	<SSC_Console_ManageCollars_Desc>Open the remote collar management window to arm, disarm, or detonate collars on individual or grouped pawns.</SSC_Console_ManageCollars_Desc>
+	<SSC_Console_WindowTitle>Remote Collar Management</SSC_Console_WindowTitle>
+	<SSC_Console_Header_Name>Name</SSC_Console_Header_Name>
+	<SSC_Console_Header_Collar>Collar</SSC_Console_Header_Collar>
+	<SSC_Console_Header_Status>Status</SSC_Console_Header_Status>
+	<SSC_Console_CollarExplosive>Explosive</SSC_Console_CollarExplosive>
+	<SSC_Console_CollarElectric>Electric</SSC_Console_CollarElectric>
+	<SSC_Console_CollarCrypto>Crypto</SSC_Console_CollarCrypto>
+	<SSC_Console_CancelAllReservations>Cancel All</SSC_Console_CancelAllReservations>
+	<SSC_Console_NoWardenWarning>No colonist has Warden work enabled. Scheduled operations will not be executed until a Warden is assigned.</SSC_Console_NoWardenWarning>
 	<SSC_Console_ExplosiveArm>Arm Collar (Select)</SSC_Console_ExplosiveArm>
 	<SSC_Console_ExplosiveArm_Desc>Select pawns wearing explosive collars to arm them for detonation.</SSC_Console_ExplosiveArm_Desc>
 	<SSC_Console_ExplosiveDisarm>Disarm Collar (Select)</SSC_Console_ExplosiveDisarm>
