@@ -18,8 +18,20 @@ namespace SimpleSlaveryCollars
         public bool armed = false;
         public int arm_cooldown = 0; // 무장 직후 정신붕괴 방지 쿨다운 (틱)
 
+        public override bool IsArmed => armed;
+
+        // Explosive는 대기 전력만 소모 (신호 수신 대기)
+        protected override float ChargePerTick => 0.000005f; // ~200000틱(≈56분)에 완전 방전
+
         public override IEnumerable<Gizmo> SlaveGizmos()
         {
+            // 충전 ON → 통합 기즈모
+            if (SimpleSlaveryCollarsSetting.CollarChargeEnable)
+            {
+                yield return new SimpleSlaveryCollars.Gizmos.Gizmo_SlaveCollarStatus { collar = this };
+                yield break;
+            }
+
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {
                 var status = armed ? "CollarState_Armed".Translate() : "CollarState_Unarmed".Translate();
@@ -117,8 +129,12 @@ namespace SimpleSlaveryCollars
         protected override void TickInterval(int delta)
         {
             base.TickInterval(delta);
-            if (!armed || arm_cooldown <= 0) return;
 
+            // 충전 부족 or EMP → 강제 해제
+            if (armed && !IsOperational)
+                armed = false;
+
+            if (!armed || arm_cooldown <= 0) return;
             arm_cooldown = Math.Max(arm_cooldown - delta, 0);
         }
     }

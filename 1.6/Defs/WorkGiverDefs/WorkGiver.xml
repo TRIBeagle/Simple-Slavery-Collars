@@ -24,4 +24,16 @@
             <li>Manipulation</li>
         </requiredCapacities>
     </WorkGiverDef>
+    <WorkGiverDef>
+        <defName>RechargeSlaveCollar</defName>
+        <label>recharge slave collars</label>
+        <giverClass>SimpleSlaveryCollars.Jobs.WorkGiver_Warden_RechargeCollar</giverClass>
+        <workType>Warden</workType>
+        <verb>recharge collar</verb>
+        <gerund>recharging slave collars</gerund>
+        <priorityInType>105</priorityInType>
+        <requiredCapacities>
+            <li>Manipulation</li>
+        </requiredCapacities>
+    </WorkGiverDef>
 </Defs>

@@ -97,4 +97,15 @@
 	<SimpleSlaveryCollars_SlaveTime_YearQuadrumDays>Time enslaved: year {0}, quadrum {1}, day {2}</SimpleSlaveryCollars_SlaveTime_YearQuadrumDays>
 	<SimpleSlaveryCollars_SlaveStageSuffix>(slave stage {0})</SimpleSlaveryCollars_SlaveStageSuffix>
 	<SimpleSlaveryCollars_MigrationDone>{0}: migrated legacy slave-time record to Comp</SimpleSlaveryCollars_MigrationDone>
+	<collarChargeEnableSetting_title>Collar Charging System</collarChargeEnableSetting_title>
+	<collarChargeEnableSetting_desc>Collars consume power and become inactive when depleted. Wardens recharge at consoles. Default: On</collarChargeEnableSetting_desc>
+	<collarEmpEnableSetting_title>EMP Effect</collarEmpEnableSetting_title>
+	<collarEmpEnableSetting_desc>Collars are temporarily disabled when hit by EMP. Default: On</collarEmpEnableSetting_desc>
+	<SSC_Collar_EmpDisabled>EMP Disabled</SSC_Collar_EmpDisabled>
+	<SSC_Collar_Unlimited>Unlimited</SSC_Collar_Unlimited>
+	<SSC_Collar_Arm>Arm</SSC_Collar_Arm>
+	<SSC_Collar_Disarm>Disarm</SSC_Collar_Disarm>
+	<SSC_Collar_EmpTooltip>Disabled by EMP (remaining: {0})</SSC_Collar_EmpTooltip>
+	<SSC_Collar_UnlimitedTooltip>Charging system disabled — unlimited operation</SSC_Collar_UnlimitedTooltip>
+	<SSC_Collar_ChargeTooltip>Charge: {0}%</SSC_Collar_ChargeTooltip>
 </LanguageData>

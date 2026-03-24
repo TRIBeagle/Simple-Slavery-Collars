@@ -30,6 +30,7 @@ namespace SimpleSlaveryCollars
         public static JobDef ShackleSlave;
         public static JobDef ActivateRemoteCollar;
         public static JobDef ActivateRemoteCollarGroup;
+        public static JobDef RechargeSlaveCollar;
 
         // --- MentalStateDefs ---
         public static MentalStateDef CryptoStasis;

@@ -19,8 +19,17 @@ namespace SimpleSlaveryCollars
         public int zap_cooldown = 0;
         public const int zap_period = 50; // 감전 간격 (틱). 50틱 ≈ 0.83초
 
+        public override bool IsArmed => armed;
+
         public override IEnumerable<Gizmo> SlaveGizmos()
         {
+            // 충전 ON → 통합 기즈모
+            if (SimpleSlaveryCollarsSetting.CollarChargeEnable)
+            {
+                yield return new SimpleSlaveryCollars.Gizmos.Gizmo_SlaveCollarStatus { collar = this };
+                yield break;
+            }
+
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {
                 var status = armed ? "CollarState_Armed".Translate() : "CollarState_Unarmed".Translate();
@@ -63,6 +72,11 @@ namespace SimpleSlaveryCollars
         protected override void TickInterval(int delta)
         {
             base.TickInterval(delta);
+
+            // 충전 부족 or EMP → 강제 해제
+            if (armed && !IsOperational)
+                armed = false;
+
             if (!armed) return;
 
             zap_cooldown -= delta;

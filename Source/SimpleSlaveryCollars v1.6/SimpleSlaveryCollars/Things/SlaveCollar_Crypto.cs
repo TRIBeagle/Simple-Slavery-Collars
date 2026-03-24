@@ -17,8 +17,17 @@ namespace SimpleSlaveryCollars
         // 이펙트 쿨다운 — 저장 불필요 (시각 효과 전용)
         private int _fleckCooldown;
 
+        public override bool IsArmed => armed;
+
         public override IEnumerable<Gizmo> SlaveGizmos()
         {
+            // 충전 ON → 통합 기즈모
+            if (SimpleSlaveryCollarsSetting.CollarChargeEnable)
+            {
+                yield return new SimpleSlaveryCollars.Gizmos.Gizmo_SlaveCollarStatus { collar = this };
+                yield break;
+            }
+
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {
                 var status = armed ? "CollarState_Armed".Translate() : "CollarState_Unarmed".Translate();
@@ -144,6 +153,14 @@ namespace SimpleSlaveryCollars
         protected override void TickInterval(int delta)
         {
             base.TickInterval(delta);
+
+            // 충전 부족 or EMP → 강제 해제 + 정신상태 복원
+            if (armed && !IsOperational)
+            {
+                armed = false;
+                RevertMentalState();
+            }
+
             if (!armed) return;
 
             CryptoStasis();
