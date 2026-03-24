@@ -50,6 +50,7 @@
 	<SSC_Console_ManageCollars_Desc>원격 목걸이 관리 창을 열어 개별 또는 그룹 대상으로 무장, 해제, 폭발 명령을 내립니다.</SSC_Console_ManageCollars_Desc>
 	<SSC_Console_WindowTitle>원격 목걸이 관리</SSC_Console_WindowTitle>
 	<SSC_Console_Header_Name>이름</SSC_Console_Header_Name>
+	<SSC_Console_Header_Type>신분</SSC_Console_Header_Type>
 	<SSC_Console_Header_Collar>목걸이</SSC_Console_Header_Collar>
 	<SSC_Console_Header_Status>상태</SSC_Console_Header_Status>
 	<SSC_Console_CollarExplosive>폭발</SSC_Console_CollarExplosive>

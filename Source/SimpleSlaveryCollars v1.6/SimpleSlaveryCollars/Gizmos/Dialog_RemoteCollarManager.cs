@@ -40,14 +40,16 @@ namespace SimpleSlaveryCollars.Gizmos
         // 컬럼 오프셋 (초상화 뒤)
         private const float ColPortrait = 2f;
         private const float ColName = 36f;
-        private const float NameWidth = 148f;
-        private const float ColCollar = 188f;
-        private const float CollarWidth = 70f;
-        private const float ColStatus = 262f;
-        private const float StatusWidth = 56f;
-        private const float ColAction = 322f;
+        private const float NameWidth = 120f;
+        private const float ColType = 160f;
+        private const float TypeWidth = 50f;
+        private const float ColCollar = 214f;
+        private const float CollarWidth = 56f;
+        private const float ColStatus = 274f;
+        private const float StatusWidth = 48f;
+        private const float ColAction = 326f;
 
-        public override Vector2 InitialSize => new Vector2(620f, 460f);
+        public override Vector2 InitialSize => new Vector2(680f, 460f);
 
         public Dialog_RemoteCollarManager(CompRemoteSlaveCollar comp)
         {
@@ -185,6 +187,8 @@ namespace SimpleSlaveryCollars.Gizmos
 
             DrawSortableHeaderLabel(new Rect(x + ColName, rect.y, NameWidth, rect.height),
                 "SSC_Console_Header_Name".Translate(), SortColumn.Name);
+            DrawSortableHeaderLabel(new Rect(x + ColType, rect.y, TypeWidth, rect.height),
+                "SSC_Console_Header_Type".Translate(), SortColumn.Type);
             DrawSortableHeaderLabel(new Rect(x + ColCollar, rect.y, CollarWidth, rect.height),
                 "SSC_Console_Header_Collar".Translate(), SortColumn.Collar);
             DrawSortableHeaderLabel(new Rect(x + ColStatus, rect.y, StatusWidth, rect.height),
@@ -240,6 +244,10 @@ namespace SimpleSlaveryCollars.Gizmos
             // 이름 (컬러)
             Widgets.Label(new Rect(baseX + ColName, rowRect.y, NameWidth, rowRect.height),
                 GetColoredLabel(info.pawn));
+
+            // 신분
+            Widgets.Label(new Rect(baseX + ColType, rowRect.y, TypeWidth, rowRect.height),
+                GetPawnTypeLabel(info.pawn));
 
             // 칼라 종류
             Widgets.Label(new Rect(baseX + ColCollar, rowRect.y, CollarWidth, rowRect.height),
@@ -483,7 +491,7 @@ namespace SimpleSlaveryCollars.Gizmos
         #region 데이터/정렬
 
         /// <summary>정렬 컬럼.</summary>
-        private enum SortColumn { None, Name, Collar, Status }
+        private enum SortColumn { None, Name, Type, Collar, Status }
 
         /// <summary>폰+칼라 쌍.</summary>
         private struct PawnCollarInfo
@@ -551,6 +559,9 @@ namespace SimpleSlaveryCollars.Gizmos
                 case SortColumn.Name:
                     comparison = (a, b) => string.Compare(a.pawn.LabelShort, b.pawn.LabelShort, StringComparison.Ordinal);
                     break;
+                case SortColumn.Type:
+                    comparison = (a, b) => GetPawnTypeSortKey(a.pawn) - GetPawnTypeSortKey(b.pawn);
+                    break;
                 case SortColumn.Collar:
                     comparison = (a, b) => GetCollarSortKey(a.collar) - GetCollarSortKey(b.collar);
                     break;
@@ -604,37 +615,35 @@ namespace SimpleSlaveryCollars.Gizmos
             return 3;
         }
 
-        /// <summary>폰 이름 + 신분 컬러링 (식민=하늘/노예=금/죄수=빨강).</summary>
+        /// <summary>폰 이름 컬러링 (식민=하늘/노예=금/죄수=빨강).</summary>
         private static string GetColoredLabel(Pawn pawn)
         {
             string name = pawn.LabelShort;
             string title = pawn.story?.Title;
             string label = title != null ? $"{name}, {title}" : name;
 
-            // 신분 태그 (짧은 회색 텍스트)
-            string typeTag;
-            string color;
-            if (pawn.IsSlaveOfColony)
-            {
-                color = "#ffd700";
-                typeTag = "SSC_Console_PawnType_Slave".Translate();
-            }
-            else if (pawn.IsPrisonerOfColony)
-            {
-                color = "#ff9090";
-                typeTag = "SSC_Console_PawnType_Prisoner".Translate();
-            }
-            else if (pawn.IsColonist)
-            {
-                color = "#a2c8ff";
-                typeTag = "SSC_Console_PawnType_Colonist".Translate();
-            }
-            else
-            {
-                return label;
-            }
+            if (pawn.IsSlaveOfColony) return $"<color=#ffd700>{label}</color>";
+            if (pawn.IsPrisonerOfColony) return $"<color=#ff9090>{label}</color>";
+            if (pawn.IsColonist) return $"<color=#a2c8ff>{label}</color>";
+            return label;
+        }
 
-            return $"<color={color}>{label}</color> <color=#888>[{typeTag}]</color>";
+        /// <summary>폰 신분 라벨 (별도 컬럼용).</summary>
+        private static string GetPawnTypeLabel(Pawn pawn)
+        {
+            if (pawn.IsSlaveOfColony) return "SSC_Console_PawnType_Slave".Translate();
+            if (pawn.IsPrisonerOfColony) return "SSC_Console_PawnType_Prisoner".Translate();
+            if (pawn.IsColonist) return "SSC_Console_PawnType_Colonist".Translate();
+            return "";
+        }
+
+        /// <summary>정렬용 신분 키.</summary>
+        private static int GetPawnTypeSortKey(Pawn pawn)
+        {
+            if (pawn.IsColonist) return 0;
+            if (pawn.IsSlaveOfColony) return 1;
+            if (pawn.IsPrisonerOfColony) return 2;
+            return 3;
         }
 
         /// <summary>칼라 종류 라벨.</summary>

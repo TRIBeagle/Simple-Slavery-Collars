@@ -50,6 +50,7 @@
 	<SSC_Console_ManageCollars_Desc>打开远程项圈管理窗口，对单个或分组目标进行武装、解除或引爆操作。</SSC_Console_ManageCollars_Desc>
 	<SSC_Console_WindowTitle>远程项圈管理</SSC_Console_WindowTitle>
 	<SSC_Console_Header_Name>名称</SSC_Console_Header_Name>
+	<SSC_Console_Header_Type>身份</SSC_Console_Header_Type>
 	<SSC_Console_Header_Collar>项圈</SSC_Console_Header_Collar>
 	<SSC_Console_Header_Status>状态</SSC_Console_Header_Status>
 	<SSC_Console_CollarExplosive>爆炸</SSC_Console_CollarExplosive>

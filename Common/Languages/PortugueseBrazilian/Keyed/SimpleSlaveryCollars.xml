@@ -39,6 +39,7 @@
 	<SSC_Console_ManageCollars_Desc>Open the remote collar management window to arm, disarm, or detonate collars on individual or grouped pawns.</SSC_Console_ManageCollars_Desc>
 	<SSC_Console_WindowTitle>Remote Collar Management</SSC_Console_WindowTitle>
 	<SSC_Console_Header_Name>Name</SSC_Console_Header_Name>
+	<SSC_Console_Header_Type>Type</SSC_Console_Header_Type>
 	<SSC_Console_Header_Collar>Collar</SSC_Console_Header_Collar>
 	<SSC_Console_Header_Status>Status</SSC_Console_Header_Status>
 	<SSC_Console_CollarExplosive>Explosive</SSC_Console_CollarExplosive>
