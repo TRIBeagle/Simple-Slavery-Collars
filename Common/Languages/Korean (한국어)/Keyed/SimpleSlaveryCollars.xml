@@ -56,7 +56,9 @@
 	<SSC_Console_CollarExplosive>폭발</SSC_Console_CollarExplosive>
 	<SSC_Console_CollarElectric>전기</SSC_Console_CollarElectric>
 	<SSC_Console_CollarCrypto>암호화</SSC_Console_CollarCrypto>
+	<SSC_Console_FilterAll>전체</SSC_Console_FilterAll>
 	<SSC_Console_ArmAll>일괄 무장</SSC_Console_ArmAll>
+	<SSC_Console_DetonateAll>일괄 폭발</SSC_Console_DetonateAll>
 	<SSC_Console_DisarmAll>일괄 해제</SSC_Console_DisarmAll>
 	<SSC_Console_CancelAllReservations>예약 취소</SSC_Console_CancelAllReservations>
 	<SSC_Console_AllCancelledCount>{0}명에 대한 예약이 모두 취소되었습니다.</SSC_Console_AllCancelledCount>

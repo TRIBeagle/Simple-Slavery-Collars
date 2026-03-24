@@ -53,16 +53,16 @@ namespace SimpleSlaveryCollars.Gizmos
         // 컬럼 오프셋 (초상화 뒤)
         private const float ColPortrait = 2f;
         private const float ColName = 36f;
-        private const float NameWidth = 120f;
-        private const float ColType = 160f;
-        private const float TypeWidth = 50f;
-        private const float ColCollar = 214f;
-        private const float CollarWidth = 56f;
-        private const float ColStatus = 274f;
-        private const float StatusWidth = 48f;
-        private const float ColAction = 326f;
+        private const float NameWidth = 136f;
+        private const float ColType = 176f;
+        private const float TypeWidth = 48f;
+        private const float ColCollar = 228f;
+        private const float CollarWidth = 50f;
+        private const float ColStatus = 282f;
+        private const float StatusWidth = 44f;
+        private const float ColAction = 330f;
 
-        public override Vector2 InitialSize => new Vector2(680f, 490f);
+        public override Vector2 InitialSize => new Vector2(580f, 490f);
 
         public Dialog_RemoteCollarManager(CompRemoteSlaveCollar comp)
         {
@@ -107,22 +107,37 @@ namespace SimpleSlaveryCollars.Gizmos
 
         #region 조합 필터
 
-        /// <summary>2줄 조합 필터: 신분 행 + 칼라 행.</summary>
+        /// <summary>2줄 조합 필터: 신분 행 + 칼라 행. 각 행에 [전체] 토글 포함.</summary>
         private float DrawFilters(float x, float y, float width)
         {
-            float gap = 4f;
+            float gap = 3f;
             float rowGap = 4f;
+            float labelW = 40f;
+            float allBtnW = 42f;  // [전체] 버튼
+            float btnW = 68f;     // 개별 필터 버튼
 
             // ── 1행: 신분 필터 ──
             Text.Font = GameFont.Tiny;
             Text.Anchor = TextAnchor.MiddleLeft;
-            float labelW = 34f;
             Widgets.Label(new Rect(x, y, labelW, BtnH), "SSC_Console_Header_Type".Translate());
             Text.Anchor = TextAnchor.UpperLeft;
             Text.Font = GameFont.Small;
 
             float btnX = x + labelW + 2f;
-            float btnW = 72f;
+
+            // [전체] 토글 — 하나라도 켜져 있으면 모두 끔, 모두 꺼져 있으면 전체 = 이미 전체
+            bool anyTypeOn = filterColonist || filterSlave || filterPrisoner;
+            bool allTypeOff = !anyTypeOn; // 전부 OFF = 전체 표시 중
+            if (DrawFilterToggle(new Rect(btnX, y, allBtnW, BtnH),
+                "SSC_Console_FilterAll".Translate(), allTypeOff))
+            {
+                if (!allTypeOff)
+                {
+                    filterColonist = false; filterSlave = false; filterPrisoner = false;
+                    InvalidateCache();
+                }
+            }
+            btnX += allBtnW + gap;
 
             filterColonist = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
                 "SSC_Console_PawnType_Colonist".Translate(), filterColonist);
@@ -143,6 +158,20 @@ namespace SimpleSlaveryCollars.Gizmos
             Text.Font = GameFont.Small;
 
             btnX = x + labelW + 2f;
+
+            // [전체] 토글
+            bool allCollarOff = filterCollarTypes.Count == 0;
+            if (DrawFilterToggle(new Rect(btnX, y, allBtnW, BtnH),
+                "SSC_Console_FilterAll".Translate(), allCollarOff))
+            {
+                if (!allCollarOff)
+                {
+                    filterCollarTypes.Clear();
+                    InvalidateCache();
+                }
+            }
+            btnX += allBtnW + gap;
+
             for (int i = 0; i < KnownCollarTypes.Length; i++)
             {
                 var ct = KnownCollarTypes[i];
@@ -288,9 +317,16 @@ namespace SimpleSlaveryCollars.Gizmos
 
             Text.Anchor = TextAnchor.MiddleLeft;
 
-            // 이름 (컬러)
-            Widgets.Label(new Rect(baseX + ColName, rowRect.y, NameWidth, rowRect.height),
-                GetColoredLabel(info.pawn));
+            // 이름 (컬러) — 텍스트 넘치면 폰트 축소
+            string nameLabel = GetColoredLabel(info.pawn);
+            Rect nameRect = new Rect(baseX + ColName, rowRect.y, NameWidth, rowRect.height);
+            float nameTextWidth = Text.CalcSize(info.pawn.LabelShort).x;
+            if (info.pawn.story?.Title != null)
+                nameTextWidth = Text.CalcSize(info.pawn.LabelShort + ", " + info.pawn.story.Title).x;
+            if (nameTextWidth > NameWidth - 4f)
+                Text.Font = GameFont.Tiny;
+            Widgets.Label(nameRect, nameLabel);
+            Text.Font = GameFont.Small;
 
             // 신분
             Widgets.Label(new Rect(baseX + ColType, rowRect.y, TypeWidth, rowRect.height),
@@ -386,14 +422,14 @@ namespace SimpleSlaveryCollars.Gizmos
 
         #region 하단 버튼
 
-        /// <summary>하단: 일괄 무장/해제(드롭다운) + 예약 취소 + Warden 경고.</summary>
+        /// <summary>하단: 일괄 무장/해제(드롭다운) + 일괄 폭발 + 예약 취소 + Warden 경고.</summary>
         private void DrawBottomButtons(Rect rect)
         {
-            float btnW = 100f;
-            float gap = 4f;
+            float btnW = 86f;
+            float gap = 3f;
             float x = rect.x;
 
-            // [일괄 무장 ▾] — 드롭다운
+            // [일괄 무장 ▾]
             if (Widgets.ButtonText(new Rect(x, rect.y, btnW, rect.height),
                 "SSC_Console_ArmAll".Translate() + " \u25BE"))
             {
@@ -401,12 +437,22 @@ namespace SimpleSlaveryCollars.Gizmos
             }
             x += btnW + gap;
 
-            // [일괄 해제 ▾] — 드롭다운
+            // [일괄 해제 ▾]
             if (Widgets.ButtonText(new Rect(x, rect.y, btnW, rect.height),
                 "SSC_Console_DisarmAll".Translate() + " \u25BE"))
             {
                 OpenBulkMenu(arm: false);
             }
+            x += btnW + gap;
+
+            // [일괄 폭발] — 무장된 폭발 칼라 전체 폭발
+            GUI.color = new Color(1f, 0.5f, 0.5f);
+            if (Widgets.ButtonText(new Rect(x, rect.y, btnW, rect.height),
+                "SSC_Console_DetonateAll".Translate()))
+            {
+                BulkDetonate();
+            }
+            GUI.color = Color.white;
             x += btnW + gap;
 
             // [예약 취소]
@@ -420,7 +466,6 @@ namespace SimpleSlaveryCollars.Gizmos
             // Warden 미할당 경고
             if (!HasWardenOnMap())
             {
-                x += 4f;
                 GUI.color = new Color(1f, 0.6f, 0.3f);
                 Text.Font = GameFont.Tiny;
                 Text.Anchor = TextAnchor.MiddleLeft;
@@ -430,6 +475,34 @@ namespace SimpleSlaveryCollars.Gizmos
                 Text.Font = GameFont.Small;
                 GUI.color = Color.white;
             }
+        }
+
+        /// <summary>무장된 폭발 칼라 전체 폭발 예약.</summary>
+        private void BulkDetonate()
+        {
+            var pawns = GetFilteredPawns();
+            int count = 0;
+            for (int i = 0; i < pawns.Count; i++)
+            {
+                var info = pawns[i];
+                if (comp.IsPawnReserved(info.pawn)) continue;
+                if (!(info.collar is SlaveCollar_Explosive)) continue;
+                if (!info.collar.IsArmed) continue;
+
+                comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DetonateExplosive);
+                count++;
+            }
+            if (count > 0)
+            {
+                Messages.Message(
+                    "SSC_Remote_GroupReserved".Translate(count, "SSC_Explosive_Detonate".Translate()),
+                    MessageTypeDefOf.TaskCompletion);
+            }
+            else
+            {
+                Messages.Message("SSC_Remote_NoEligiblePawn".Translate(), MessageTypeDefOf.RejectInput);
+            }
+            InvalidateCache();
         }
 
         /// <summary>일괄 무장/해제 드롭다운 메뉴. 칼라 종류별 항목 + 대상 수 표시.</summary>
