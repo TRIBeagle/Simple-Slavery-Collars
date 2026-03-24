@@ -5,6 +5,7 @@
 // 주의   : ShacklesDefault 옵션이 false일 경우, shackledGoal을 강제로 false로 초기화
 // 저장   : Hediff 추가/속성 변경은 세이브 데이터에 직접 기록됨
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -26,20 +27,27 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void TryEnslavePrisoner_Postfix(bool __result, Pawn warden, Pawn prisoner)
         {
-            if (!__result) return;
-            if (prisoner == null) return;
-
-            var hs = prisoner.health?.hediffSet;
-            if (hs == null) return;
-
-            if (!hs.HasHediff(SimpleSlaveryDefOf.Enslaved))
-                prisoner.health.AddHediff(SimpleSlaveryDefOf.Enslaved);
-
-            if (SimpleSlaveryCollarsSetting.ShacklesDefault == false)
+            try
             {
-                var enslaved = SimpleSlaveryUtility.GetEnslavedHediff(prisoner);
-                if (enslaved != null)
-                    enslaved.shackledGoal = false;
+                if (!__result) return;
+                if (prisoner == null) return;
+
+                var hs = prisoner.health?.hediffSet;
+                if (hs == null) return;
+
+                if (!hs.HasHediff(SimpleSlaveryDefOf.Enslaved))
+                    prisoner.health.AddHediff(SimpleSlaveryDefOf.Enslaved);
+
+                if (SimpleSlaveryCollarsSetting.ShacklesDefault == false)
+                {
+                    var enslaved = SimpleSlaveryUtility.GetEnslavedHediff(prisoner);
+                    if (enslaved != null)
+                        enslaved.shackledGoal = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[SSC] Patch_GenGuest_TryEnslavePrisoner.TryEnslavePrisoner_Postfix 오류: {ex}");
             }
         }
     }

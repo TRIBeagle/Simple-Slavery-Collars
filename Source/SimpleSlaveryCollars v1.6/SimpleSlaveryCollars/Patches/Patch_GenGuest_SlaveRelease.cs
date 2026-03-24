@@ -5,6 +5,7 @@
 // 주의   : Stage5 = ( x ≥ SlaveStage4 ) && !Steadfast / Stage4 = (SlaveStage3 < x < SlaveStage4) 또는 ( x ≥ SlaveStage4 && Steadfast )
 // 저장   : ThoughtMemories 변경은 Pawn 세이브에 직접 반영됨
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -26,17 +27,24 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void SlaveRelease_Patch(Pawn p)
         {
-            if (p == null) return;
-            if (p.Faction != Faction.OfPlayer) return;
-
-            var mood = p.needs?.mood;
-            if (mood == null) return;
-
-            if (SimpleSlaveryUtility.TimeAsSlave(p) >= SimpleSlaveryUtility.SlaveStage4 &&
-                !SimpleSlaveryUtility.IsSteadfast(p))
+            try
             {
-                mood.thoughts.memories.RemoveMemoriesOfDef(ThoughtDefOf.WasEnslaved);
-                mood.thoughts.memories.TryGainMemory(SimpleSlaveryDefOf.WasEnslaved_Assimilation);
+                if (p == null) return;
+                if (p.Faction != Faction.OfPlayer) return;
+
+                var mood = p.needs?.mood;
+                if (mood == null) return;
+
+                if (SimpleSlaveryUtility.TimeAsSlave(p) >= SimpleSlaveryUtility.SlaveStage4 &&
+                    !SimpleSlaveryUtility.IsSteadfast(p))
+                {
+                    mood.thoughts.memories.RemoveMemoriesOfDef(ThoughtDefOf.WasEnslaved);
+                    mood.thoughts.memories.TryGainMemory(SimpleSlaveryDefOf.WasEnslaved_Assimilation);
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[SSC] Patch_GenGuest_SlaveRelease.SlaveRelease_Patch 오류: {ex}");
             }
         }
     }

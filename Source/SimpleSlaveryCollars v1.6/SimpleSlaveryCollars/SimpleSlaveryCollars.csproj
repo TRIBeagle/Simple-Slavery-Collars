@@ -70,6 +70,9 @@
     <Compile Include="Comps\CompProperties_RemoteSlaveCollar.cs" />
     <Compile Include="Comps\CompProperties_Slave.cs" />
     <Compile Include="Comps\CompRemoteSlaveCollar.cs" />
+    <Compile Include="Comps\CompRemoteSlaveCollar.Actions.cs" />
+    <Compile Include="Comps\CompRemoteSlaveCollar.Gizmos.cs" />
+    <Compile Include="Comps\CompRemoteSlaveCollar.Reservations.cs" />
     <Compile Include="Comps\CompSlave.cs" />
     <Compile Include="Comps\CollarBatteryExtension.cs" />
     <Compile Include="Comps\CompTarget_SetSlaveCollar.cs" />
@@ -119,6 +122,7 @@
     <Compile Include="Things\SlaveCollar_Explosive.cs" />
     <Compile Include="Utilities\SimpleSlaveryReflectionUtility.cs" />
     <Compile Include="Utilities\SimpleSlaveryUtility.cs" />
+    <Compile Include="Utilities\SlaveCollarRegistry.cs" />
     <Compile Include="ThoughtWorkers\ThoughtWorker_Enslaved.cs" />
     <Compile Include="ThoughtWorkers\ThoughtWorker_ExplosiveCollar.cs" />
     <Compile Include="ThoughtWorkers\ThoughtWorker_SlaveCollar.cs" />

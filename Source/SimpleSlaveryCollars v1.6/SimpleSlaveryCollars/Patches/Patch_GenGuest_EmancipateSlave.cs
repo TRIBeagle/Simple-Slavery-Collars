@@ -4,6 +4,7 @@
 // 변경   : 2026-01-27 버그 수정 — [HarmonyPostfix] 누락 추가 + 파라미터 바인딩 안정화(ref 제거)
 // 주의   : Pawn에 Enslaved Hediff가 존재할 경우에만 제거 호출
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -23,14 +24,21 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void EmancipateSlave_Postfix(Pawn warden, Pawn slave)
         {
-            if (slave == null) return;
+            try
+            {
+                if (slave == null) return;
 
-            var hs = slave.health?.hediffSet;
-            if (hs == null) return;
+                var hs = slave.health?.hediffSet;
+                if (hs == null) return;
 
-            var enslaved = hs.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved);
-            if (enslaved != null)
-                slave.health.RemoveHediff(enslaved);
+                var enslaved = hs.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved);
+                if (enslaved != null)
+                    slave.health.RemoveHediff(enslaved);
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[SSC] Patch_GenGuest_EmancipateSlave.EmancipateSlave_Postfix 오류: {ex}");
+            }
         }
     }
 }

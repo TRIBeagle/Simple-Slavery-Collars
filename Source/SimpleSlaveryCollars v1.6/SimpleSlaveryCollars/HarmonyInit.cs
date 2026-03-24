@@ -8,6 +8,7 @@
 using HarmonyLib;
 using System.Reflection;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars
 {
@@ -21,6 +22,19 @@ namespace SimpleSlaveryCollars
         {
             new Harmony("TRIBeagle.simpleslaverycollars")
                 .PatchAll(Assembly.GetExecutingAssembly());
+        }
+    }
+
+    /// <summary>
+    /// 게임 로드/새 게임 시 SlaveCollarRegistry 초기화.
+    /// </summary>
+    [HarmonyPatch(typeof(Game), "FinalizeInit")]
+    public static class Patch_Game_FinalizeInit
+    {
+        [HarmonyPostfix]
+        public static void Postfix()
+        {
+            SlaveCollarRegistry.Clear();
         }
     }
 }

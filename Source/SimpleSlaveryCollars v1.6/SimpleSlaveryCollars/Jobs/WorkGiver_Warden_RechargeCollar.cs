@@ -17,6 +17,8 @@ namespace SimpleSlaveryCollars.Jobs
     {
         /// <summary>충전 경고 임계값. 이 이하면 충전 작업 발생.</summary>
         private const float RechargeThreshold = 0.5f;
+        /// <summary>최소 배터리 저장량. 이 미만이면 충전소로 인정 안함.</summary>
+        private const float MinBatteryEnergy = 1f;
 
         public override PathEndMode PathEndMode => PathEndMode.Touch;
 
@@ -73,7 +75,7 @@ namespace SimpleSlaveryCollars.Jobs
 
                 // 배터리 (저장 전력 있음)
                 var battery = b.TryGetComp<CompPowerBattery>();
-                if (battery != null && battery.StoredEnergy > 0f)
+                if (battery != null && battery.StoredEnergy >= MinBatteryEnergy)
                 {
                     float dist = b.Position.DistanceToSquared(pawn.Position);
                     if (dist < closestDist)

@@ -3,6 +3,7 @@
 // 용도 : Harmony Postfix 패치. EMP 옵션 ON일 때만 작동
 // 주의 : DamageDef.isEMP 체크. 바닐라 EMP stun 기본 틱(180) 사용
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -22,13 +23,20 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void Postfix(Pawn __instance, DamageInfo dinfo)
         {
-            if (!SimpleSlaveryCollarsSetting.CollarEmpEnable) return;
-            if (dinfo.Def == null || !dinfo.Def.isEMP) return;
+            try
+            {
+                if (!SimpleSlaveryCollarsSetting.CollarEmpEnable) return;
+                if (dinfo.Def == null || !dinfo.Def.isEMP) return;
 
-            var collar = SimpleSlaveryUtility.GetSlaveCollar(__instance) as SlaveApparel;
-            if (collar == null) return;
+                var collar = SimpleSlaveryUtility.GetSlaveCollar(__instance) as SlaveApparel;
+                if (collar == null) return;
 
-            collar.ApplyEmp(DefaultEmpDuration);
+                collar.ApplyEmp(DefaultEmpDuration);
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[SSC] Patch_Pawn_PostApplyDamage.Postfix 오류: {ex}");
+            }
         }
     }
 }

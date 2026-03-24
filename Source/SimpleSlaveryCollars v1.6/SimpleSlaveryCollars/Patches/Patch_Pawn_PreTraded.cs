@@ -5,6 +5,7 @@
 // 주의   : PlayerBuys 시 Colony 노예면 헤디프 부여, PlayerSells 시 제거
 // 저장   : Hediff 추가/삭제는 Pawn 세이브에 직접 반영됨
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -25,21 +26,28 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void PreTraded_Patch(ref Pawn __instance, ref TradeAction action)
         {
-            var hs = __instance.health?.hediffSet;
-            if (hs == null) return;
+            try
+            {
+                var hs = __instance.health?.hediffSet;
+                if (hs == null) return;
 
-            if (action == TradeAction.PlayerBuys &&
-                __instance.RaceProps.Humanlike &&
-                !hs.HasHediff(SimpleSlaveryDefOf.Enslaved) &&
-                __instance.IsSlaveOfColony)
-            {
-                __instance.health.AddHediff(SimpleSlaveryDefOf.Enslaved);
+                if (action == TradeAction.PlayerBuys &&
+                    __instance.RaceProps.Humanlike &&
+                    !hs.HasHediff(SimpleSlaveryDefOf.Enslaved) &&
+                    __instance.IsSlaveOfColony)
+                {
+                    __instance.health.AddHediff(SimpleSlaveryDefOf.Enslaved);
+                }
+                else if (action == TradeAction.PlayerSells)
+                {
+                    var enslaved = hs.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved);
+                    if (enslaved != null)
+                        __instance.health.RemoveHediff(enslaved);
+                }
             }
-            else if (action == TradeAction.PlayerSells)
+            catch (Exception ex)
             {
-                var enslaved = hs.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved);
-                if (enslaved != null)
-                    __instance.health.RemoveHediff(enslaved);
+                Log.Error($"[SSC] Patch_Pawn_PreTraded.PreTraded_Patch 오류: {ex}");
             }
         }
     }

@@ -82,11 +82,22 @@ namespace SimpleSlaveryCollars.Utilities
         /// </summary>
         public static Apparel GetSlaveCollar(Pawn pawn)
         {
+            // O(1) 캐시 조회 우선
+            var cached = SlaveCollarRegistry.GetCached(pawn);
+            if (cached != null) return cached;
+
+            // 폴백: WornApparel 순회
             if (pawn?.apparel == null) return null;
             var worn = pawn.apparel.WornApparel;
             for (int i = 0; i < worn.Count; i++)
             {
-                if (IsSlaveCollar(worn[i])) return worn[i];
+                if (IsSlaveCollar(worn[i]))
+                {
+                    // 폴백에서 찾으면 레지스트리에 자가 복구 등록
+                    if (worn[i] is SlaveApparel sa)
+                        SlaveCollarRegistry.Register(pawn, sa);
+                    return worn[i];
+                }
             }
             return null;
         }
@@ -321,24 +332,36 @@ namespace SimpleSlaveryCollars.Utilities
             return $"{baseText} {tail}";
         }
 
-        /// <summary>
-        /// Stage1 경계 틱 값입니다.
-        /// </summary>
-        public static float SlaveStage1 => GenDate.TicksPerDay * SimpleSlaveryCollarsSetting.Slavestage1Period;
+        #region Stage 경계값 틱 캐시
+        // 설정은 게임 중 변경 안됨. 같은 틱 내 반복 곱셈 제거
+        private static int _stageCacheTick = -1;
+        private static float _cachedS1, _cachedS2, _cachedS3, _cachedS4;
 
-        /// <summary>
-        /// Stage2 경계 틱 값입니다.
-        /// </summary>
-        public static float SlaveStage2 => SlaveStage1 + (GenDate.TicksPerDay * SimpleSlaveryCollarsSetting.Slavestage2Period);
+        /// <summary>틱 단위 캐시 갱신. 같은 틱이면 스킵.</summary>
+        private static void RefreshStageCacheIfNeeded()
+        {
+            int tick = Find.TickManager.TicksGame;
+            if (tick == _stageCacheTick) return;
+            _stageCacheTick = tick;
 
-        /// <summary>
-        /// Stage3 경계 틱 값입니다.
-        /// </summary>
-        public static float SlaveStage3 => SlaveStage2 + (GenDate.TicksPerDay * SimpleSlaveryCollarsSetting.Slavestage3Period);
+            float tpd = GenDate.TicksPerDay;
+            _cachedS1 = tpd * SimpleSlaveryCollarsSetting.Slavestage1Period;
+            _cachedS2 = _cachedS1 + tpd * SimpleSlaveryCollarsSetting.Slavestage2Period;
+            _cachedS3 = _cachedS2 + tpd * SimpleSlaveryCollarsSetting.Slavestage3Period;
+            _cachedS4 = _cachedS3 + tpd * SimpleSlaveryCollarsSetting.Slavestage4Period;
+        }
 
-        /// <summary>
-        /// Stage4 경계 틱 값입니다. Stage5는 x ≥ Stage4 && !Steadfast 입니다.
-        /// </summary>
-        public static float SlaveStage4 => SlaveStage3 + (GenDate.TicksPerDay * SimpleSlaveryCollarsSetting.Slavestage4Period);
+        /// <summary>Stage1 경계 틱 값입니다.</summary>
+        public static float SlaveStage1 { get { RefreshStageCacheIfNeeded(); return _cachedS1; } }
+
+        /// <summary>Stage2 경계 틱 값입니다.</summary>
+        public static float SlaveStage2 { get { RefreshStageCacheIfNeeded(); return _cachedS2; } }
+
+        /// <summary>Stage3 경계 틱 값입니다.</summary>
+        public static float SlaveStage3 { get { RefreshStageCacheIfNeeded(); return _cachedS3; } }
+
+        /// <summary>Stage4 경계 틱 값입니다. Stage5는 x ≥ Stage4 && !Steadfast 입니다.</summary>
+        public static float SlaveStage4 { get { RefreshStageCacheIfNeeded(); return _cachedS4; } }
+        #endregion
     }
 }

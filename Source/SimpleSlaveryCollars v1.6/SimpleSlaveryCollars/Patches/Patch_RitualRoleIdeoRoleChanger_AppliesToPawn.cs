@@ -5,6 +5,7 @@
 // 주의   : Juvenile/Ideo/Role/Player Ideo 조건은 그대로 유지. 노예만 예외 처리
 // 저장   : 역할 배정 여부는 Pawn 세이브에 간접 반영됨
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using System.Linq;
@@ -58,40 +59,48 @@ namespace SimpleSlaveryCollars.Patches
         {
             reason = null;
 
-            if (p.IsSlaveOfColony)
+            try
             {
-                if (!AppliesIfChild_Custom(__instance, p, out reason, skipReason))
+                if (p.IsSlaveOfColony)
                 {
-                    __result = false;
+                    if (!AppliesIfChild_Custom(__instance, p, out reason, skipReason))
+                    {
+                        __result = false;
+                        return false;
+                    }
+
+                    if (p.Ideo == null)
+                    {
+                        __result = false;
+                        return false;
+                    }
+
+                    if (p.Ideo.GetRole(p) == null &&
+                        !RitualUtility.AllRolesForPawn(p).Any(r => r.RequirementsMet(p)))
+                    {
+                        reason = "MessageRitualNoRolesAvailable".Translate(p);
+                        __result = false;
+                        return false;
+                    }
+
+                    if (!Faction.OfPlayer.ideos.Has(p.Ideo))
+                    {
+                        reason = "MessageRitualNotOfPlayerIdeo".Translate(p);
+                        __result = false;
+                        return false;
+                    }
+
+                    __result = true;
                     return false;
                 }
 
-                if (p.Ideo == null)
-                {
-                    __result = false;
-                    return false;
-                }
-
-                if (p.Ideo.GetRole(p) == null &&
-                    !RitualUtility.AllRolesForPawn(p).Any(r => r.RequirementsMet(p)))
-                {
-                    reason = "MessageRitualNoRolesAvailable".Translate(p);
-                    __result = false;
-                    return false;
-                }
-
-                if (!Faction.OfPlayer.ideos.Has(p.Ideo))
-                {
-                    reason = "MessageRitualNotOfPlayerIdeo".Translate(p);
-                    __result = false;
-                    return false;
-                }
-
-                __result = true;
-                return false;
+                return true; // 노예가 아닐 경우 원본 실행
             }
-
-            return true; // 노예가 아닐 경우 원본 실행
+            catch (Exception ex)
+            {
+                Log.Error($"[SSC] Patch_RitualRoleIdeoRoleChanger_AppliesToPawn.Prefix 오류: {ex}");
+                return true; // 오류 시 원본 메서드 실행
+            }
         }
     }
 }

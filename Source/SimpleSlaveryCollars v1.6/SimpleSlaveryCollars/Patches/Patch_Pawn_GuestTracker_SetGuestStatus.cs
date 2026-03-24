@@ -10,6 +10,7 @@
 //           - Patch_Pawn_GuestTracker_SetGuestStatus_RemoveEnslavedHediff.cs
 //           (이 파일이 기존 Patch_Pawn_GuestTracker_SetGuestStatus.cs를 대체)
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -32,21 +33,31 @@ namespace SimpleSlaveryCollars.Patches
             GuestStatus guestStatus,
             Pawn ___pawn)
         {
-            if (___pawn == null) return;
-            if (___pawn.Dead || ___pawn.DestroyedOrNull()) return;
-
-            if (guestStatus == GuestStatus.Slave && newHost == Faction.OfPlayer)
+            try
             {
-                // === 1) Enslaved Hediff 부여 (기존 EnsureEnslavedHediff) ===
-                EnsureEnslavedHediff(___pawn);
+                if (___pawn == null) return;
+                if (___pawn.Dead || ___pawn.DestroyedOrNull()) return;
 
-                // === 2) Stage5 동화 (기존 Assimilation) ===
-                TryAssimilation(__instance, ref ___slaveFactionInt, ___pawn);
+                if (guestStatus == GuestStatus.Slave && newHost == Faction.OfPlayer)
+                {
+                    // === 1) Enslaved Hediff 부여 (기존 EnsureEnslavedHediff) ===
+                    try { EnsureEnslavedHediff(___pawn); }
+                    catch (Exception ex) { Log.Error($"[SSC] EnsureEnslavedHediff 오류: {ex}"); }
+
+                    // === 2) Stage5 동화 (기존 Assimilation) ===
+                    try { TryAssimilation(__instance, ref ___slaveFactionInt, ___pawn); }
+                    catch (Exception ex) { Log.Error($"[SSC] TryAssimilation 오류: {ex}"); }
+                }
+                else if (guestStatus != GuestStatus.Slave)
+                {
+                    // === 3) Enslaved Hediff 제거 (기존 RemoveEnslavedHediff) ===
+                    try { TryRemoveEnslavedHediff(__instance, newHost, ___pawn); }
+                    catch (Exception ex) { Log.Error($"[SSC] TryRemoveEnslavedHediff 오류: {ex}"); }
+                }
             }
-            else if (guestStatus != GuestStatus.Slave)
+            catch (Exception ex)
             {
-                // === 3) Enslaved Hediff 제거 (기존 RemoveEnslavedHediff) ===
-                TryRemoveEnslavedHediff(__instance, newHost, ___pawn);
+                Log.Error($"[SSC] Patch_Pawn_GuestTracker_SetGuestStatus.Postfix 오류: {ex}");
             }
         }
 

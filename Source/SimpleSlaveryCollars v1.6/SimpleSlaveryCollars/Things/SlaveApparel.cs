@@ -8,6 +8,7 @@ using RimWorld;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars
 {
@@ -26,6 +27,9 @@ namespace SimpleSlaveryCollars
 
         /// <summary>자동 충전 임계값. 이 이하면 자가충전/Warden 충전 트리거.</summary>
         public const float RechargeThreshold = 0.5f;
+
+        // 충전 시스템 마이그레이션 플래그 — 기존 세이브에서 false로 로드, 1회 메시지 후 true
+        private bool _chargeMigrated;
 
         // ── Extension 캐시 ──
         private CollarBatteryExtension _extCache;
@@ -139,6 +143,7 @@ namespace SimpleSlaveryCollars
             Scribe_Values.Look(ref charge, "ssc_charge", 1f);
             Scribe_Values.Look(ref empDisabledTicks, "ssc_empDisabledTicks", 0);
             Scribe_Values.Look(ref selfRechargeAllowed, "ssc_selfRechargeAllowed", false);
+            Scribe_Values.Look(ref _chargeMigrated, "ssc_chargeMigrated", false);
         }
 
         /// <summary>
@@ -147,6 +152,14 @@ namespace SimpleSlaveryCollars
         /// </summary>
         protected override void TickInterval(int delta)
         {
+            // [FIX] 충전 시스템 마이그레이션 — 기존 세이브에서 첫 로드 시 1회 알림
+            if (!_chargeMigrated && SimpleSlaveryCollarsSetting.CollarChargeEnable)
+            {
+                _chargeMigrated = true;
+                if (Wearer != null)
+                    Log.Message($"[SSC] {Wearer.LabelShort}: 충전 시스템 첫 적용. 만충 상태로 시작.");
+            }
+
             // EMP 쿨다운 감소
             if (empDisabledTicks > 0)
                 empDisabledTicks = Mathf.Max(0, empDisabledTicks - delta);
@@ -186,5 +199,21 @@ namespace SimpleSlaveryCollars
 
         /// <summary>충전량 퍼센트 (0~100).</summary>
         public int ChargePercent => Mathf.RoundToInt(charge * 100f);
+
+        #region 레지스트리 통합
+        /// <summary>착용 시 SlaveCollarRegistry에 등록.</summary>
+        public override void Notify_Equipped(Pawn pawn)
+        {
+            base.Notify_Equipped(pawn);
+            SlaveCollarRegistry.Register(pawn, this);
+        }
+
+        /// <summary>해제 시 SlaveCollarRegistry에서 등록 해제.</summary>
+        public override void Notify_Unequipped(Pawn pawn)
+        {
+            base.Notify_Unequipped(pawn);
+            SlaveCollarRegistry.Unregister(pawn);
+        }
+        #endregion
     }
 }

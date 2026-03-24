@@ -5,6 +5,7 @@
 // 주의   : Colony 소속 노예 + Enslaved Hediff 보유 시에만 동작
 // 저장   : shackled 값은 Hediff 필드에 저장되며 Pawn 세이브에 직접 반영됨
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -25,10 +26,17 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void InRestraints_Patch(ref Pawn pawn, ref bool __result)
         {
-            if (pawn.IsSlaveOfColony &&
-                pawn.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Enslaved))
+            try
             {
-                __result = SimpleSlaveryUtility.GetEnslavedHediff(pawn).shackled;
+                if (pawn.IsSlaveOfColony &&
+                    pawn.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Enslaved))
+                {
+                    __result = SimpleSlaveryUtility.GetEnslavedHediff(pawn).shackled;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[SSC] Patch_RestraintUtility_InRestraints.InRestraints_Patch 오류: {ex}");
             }
         }
     }

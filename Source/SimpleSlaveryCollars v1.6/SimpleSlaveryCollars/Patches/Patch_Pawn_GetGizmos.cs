@@ -5,8 +5,9 @@
 // 주의   : Colony Pawn만 적용, Colonist/Prisoner는 제외
 // 성능   : Pawn.apparel.WornApparel 순회. 보통 5개 이하 아이템이라 부담 미미
 
-using HarmonyLib;
+using System;
 using System.Collections.Generic;
+using HarmonyLib;
 using Verse;
 using SimpleSlaveryCollars.Utilities;
 
@@ -20,7 +21,8 @@ namespace SimpleSlaveryCollars.Patches
     public static class Patch_Pawn_GetGizmos
     {
         /// <summary>
-        /// Postfix: 원래 Gizmos + SlaveGizmos 병합. LINQ Concat 제거 → yield 체이닝.
+        /// Postfix: 원래 Gizmos + SlaveGizmos 병합.
+        /// iterator 메서드이므로 SSC 로직은 별도 헬퍼에서 try-catch 처리.
         /// </summary>
         static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> __result, Pawn __instance)
         {
@@ -30,21 +32,36 @@ namespace SimpleSlaveryCollars.Patches
                     yield return g;
             }
 
-            if (!SimpleSlaveryUtility.IsColonyMember(__instance))
-                yield break;
+            List<Gizmo> extras = null;
+            try { extras = GetSlaveGizmosSafe(__instance); }
+            catch (Exception ex) { Log.Error($"[SSC] Patch_Pawn_GetGizmos 오류: {ex}"); }
 
-            if (__instance.apparel == null)
-                yield break;
+            if (extras != null)
+            {
+                foreach (var g in extras)
+                    yield return g;
+            }
+        }
 
-            var worn = __instance.apparel.WornApparel;
+        /// <summary>
+        /// SSC Gizmo 수집 헬퍼. iterator 외부에서 try-catch 가능하도록 분리.
+        /// </summary>
+        private static List<Gizmo> GetSlaveGizmosSafe(Pawn pawn)
+        {
+            if (!SimpleSlaveryUtility.IsColonyMember(pawn)) return null;
+            if (pawn.apparel == null) return null;
+
+            var result = new List<Gizmo>();
+            var worn = pawn.apparel.WornApparel;
             for (int i = 0; i < worn.Count; i++)
             {
                 if (worn[i] is SlaveApparel slaveApparel)
                 {
                     foreach (var g in slaveApparel.SlaveGizmos())
-                        yield return g;
+                        result.Add(g);
                 }
             }
+            return result.Count > 0 ? result : null;
         }
     }
 }

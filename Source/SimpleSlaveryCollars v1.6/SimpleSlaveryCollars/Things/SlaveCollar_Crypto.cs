@@ -16,6 +16,8 @@ namespace SimpleSlaveryCollars
         public bool armed = false;
         // 이펙트 쿨다운 — 저장 불필요 (시각 효과 전용)
         private int _fleckCooldown;
+        // 로드 후 1회 일관성 검증 플래그 — 저장 불필요
+        private bool _postLoadValidated;
 
         public override bool IsArmed => armed;
 
@@ -133,7 +135,7 @@ namespace SimpleSlaveryCollars
             if (Wearer.mindState.mentalStateHandler.CurStateDef != SimpleSlaveryDefOf.CryptoStasis)
                 Wearer.mindState.mentalStateHandler.TryStartMentalState(SimpleSlaveryDefOf.CryptoStasis, reason: null, forceWake: true, causedByMood: false, otherPawn: null, transitionSilently: true);
             // 이펙트 빈도 조절: 매 틱 33% → 10틱 간격 (성능 개선, 시각 차이 미미)
-            if (_fleckCooldown <= 0)
+            if (_fleckCooldown <= 0 && Wearer.Map != null)
             {
                 FleckMaker.ThrowTornadoDustPuff(Wearer.TrueCenter() + Vector3Utility.RandomHorizontalOffset(0.5f), Wearer.Map, Rand.Range(0.25f, 1f), new Color(0.65f, 0.9f, 0.93f));
                 _fleckCooldown = 10;
@@ -152,6 +154,18 @@ namespace SimpleSlaveryCollars
 
         protected override void TickInterval(int delta)
         {
+            // [FIX] 로드 후 armed=true + CryptoStasis Hediff 누락 좀비 상태 검증
+            if (!_postLoadValidated)
+            {
+                _postLoadValidated = true;
+                if (armed && Wearer != null
+                    && Wearer.health?.hediffSet != null
+                    && !Wearer.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Crypto_Stasis))
+                {
+                    Log.Warning($"[SSC] {Wearer.LabelShort}: armed=true이나 CryptoStasis Hediff 누락. 다음 틱에서 재적용됨.");
+                }
+            }
+
             base.TickInterval(delta);
 
             // 충전 부족 or EMP → 강제 해제 + 정신상태 복원
