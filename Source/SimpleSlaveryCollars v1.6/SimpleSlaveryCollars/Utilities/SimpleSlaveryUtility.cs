@@ -1,4 +1,4 @@
-﻿// SimpleSlaveryCollars | Utilities | SlaveUtility.cs
+﻿// SimpleSlaveryCollars | Utilities | SimpleSlaveryUtility.cs
 // 목적   : 노예 관련 공용 유틸 함수 집합
 // 용도   : Stage 판정, 칼라 제어, 정신붕괴/심장발작 유발, 시간 기록 관리, UI 표시 문자열 처리
 // 변경   : 2025-09-22 주석 규칙(v4.2) 적용 — 기존 주석 제거 후 요약 주석 추가
