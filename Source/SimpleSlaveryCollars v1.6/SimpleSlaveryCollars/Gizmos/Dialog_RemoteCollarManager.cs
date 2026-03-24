@@ -16,13 +16,26 @@ namespace SimpleSlaveryCollars.Gizmos
     public class Dialog_RemoteCollarManager : Window
     {
         private readonly CompRemoteSlaveCollar comp;
-        private RemoteCollarPawnGroup currentGroup = RemoteCollarPawnGroup.All;
         private Vector2 scrollPos;
+
+        // ── 조합 필터 (모두 false = 전체) ──
+        private bool filterColonist;
+        private bool filterSlave;
+        private bool filterPrisoner;
+        private readonly HashSet<System.Type> filterCollarTypes = new HashSet<System.Type>();
+
+        /// <summary>알려진 칼라 종류. 새 칼라 추가 시 여기만 확장.</summary>
+        private static readonly (System.Type type, string labelKey)[] KnownCollarTypes =
+        {
+            (typeof(SlaveCollar_Explosive), "SSC_Console_CollarExplosive"),
+            (typeof(SlaveCollar_Electric),  "SSC_Console_CollarElectric"),
+            (typeof(SlaveCollar_Crypto),    "SSC_Console_CollarCrypto"),
+        };
 
         // 캐시 — 매 프레임 재스캔 방지, 30틱마다 갱신
         private List<PawnCollarInfo> cachedPawns;
         private int lastCacheTick = -1;
-        private RemoteCollarPawnGroup lastCacheGroup;
+        private int lastFilterHash = -1;
         private const int CacheInterval = 30;
 
         // 정렬 상태
@@ -49,7 +62,7 @@ namespace SimpleSlaveryCollars.Gizmos
         private const float StatusWidth = 48f;
         private const float ColAction = 326f;
 
-        public override Vector2 InitialSize => new Vector2(680f, 460f);
+        public override Vector2 InitialSize => new Vector2(680f, 490f);
 
         public Dialog_RemoteCollarManager(CompRemoteSlaveCollar comp)
         {
@@ -79,8 +92,8 @@ namespace SimpleSlaveryCollars.Gizmos
             Text.Font = GameFont.Small;
             y += 40f;
 
-            // ── 그룹 필터 ──
-            y = DrawGroupFilter(inRect.x, y, inRect.width);
+            // ── 조합 필터 ──
+            y = DrawFilters(inRect.x, y, inRect.width);
             y += 6f;
 
             // ── 폰 리스트 ──
@@ -92,55 +105,89 @@ namespace SimpleSlaveryCollars.Gizmos
             DrawBottomButtons(new Rect(inRect.x, inRect.yMax - bottomHeight, inRect.width, bottomHeight));
         }
 
-        #region 그룹 필터
+        #region 조합 필터
 
-        /// <summary>그룹 필터 버튼 행.</summary>
-        private float DrawGroupFilter(float x, float y, float width)
+        /// <summary>2줄 조합 필터: 신분 행 + 칼라 행.</summary>
+        private float DrawFilters(float x, float y, float width)
         {
             float gap = 4f;
-            float btnW = (width - gap * 4f) / 5f;
+            float rowGap = 4f;
 
-            var groups = new (RemoteCollarPawnGroup grp, string key)[]
+            // ── 1행: 신분 필터 ──
+            Text.Font = GameFont.Tiny;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            float labelW = 34f;
+            Widgets.Label(new Rect(x, y, labelW, BtnH), "SSC_Console_Header_Type".Translate());
+            Text.Anchor = TextAnchor.UpperLeft;
+            Text.Font = GameFont.Small;
+
+            float btnX = x + labelW + 2f;
+            float btnW = 72f;
+
+            filterColonist = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
+                "SSC_Console_PawnType_Colonist".Translate(), filterColonist);
+            btnX += btnW + gap;
+            filterSlave = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
+                "SSC_Console_PawnType_Slave".Translate(), filterSlave);
+            btnX += btnW + gap;
+            filterPrisoner = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
+                "SSC_Console_PawnType_Prisoner".Translate(), filterPrisoner);
+
+            y += BtnH + rowGap;
+
+            // ── 2행: 칼라 종류 필터 (동적) ──
+            Text.Font = GameFont.Tiny;
+            Text.Anchor = TextAnchor.MiddleLeft;
+            Widgets.Label(new Rect(x, y, labelW, BtnH), "SSC_Console_Header_Collar".Translate());
+            Text.Anchor = TextAnchor.UpperLeft;
+            Text.Font = GameFont.Small;
+
+            btnX = x + labelW + 2f;
+            for (int i = 0; i < KnownCollarTypes.Length; i++)
             {
-                (RemoteCollarPawnGroup.All, "SSC_Remote_GroupAll"),
-                (RemoteCollarPawnGroup.Slaves, "SSC_Remote_GroupSlaves"),
-                (RemoteCollarPawnGroup.Prisoners, "SSC_Remote_GroupPrisoners"),
-                (RemoteCollarPawnGroup.Colonists, "SSC_Remote_GroupColonists"),
-                (RemoteCollarPawnGroup.SlavesAndPrisoners, "SSC_Remote_GroupSlavesAndPrisoners"),
-            };
+                var ct = KnownCollarTypes[i];
+                bool active = filterCollarTypes.Contains(ct.type);
+                bool newActive = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
+                    ct.labelKey.Translate(), active);
 
-            float cx = x;
-            for (int i = 0; i < groups.Length; i++)
-            {
-                Rect btnRect = new Rect(cx, y, btnW, BtnH);
-                bool selected = currentGroup == groups[i].grp;
-
-                if (selected)
+                if (newActive != active)
                 {
-                    // 선택된 탭: 밝은 배경 + 흰색 텍스트
-                    Widgets.DrawBoxSolidWithOutline(btnRect, new Color(1f, 1f, 1f, 0.12f), new Color(1f, 1f, 1f, 0.3f));
-                    Text.Anchor = TextAnchor.MiddleCenter;
-                    Widgets.Label(btnRect, groups[i].key.Translate());
-                    Text.Anchor = TextAnchor.UpperLeft;
-                    if (Widgets.ButtonInvisible(btnRect))
-                    {
-                        currentGroup = groups[i].grp;
-                        InvalidateCache();
-                    }
+                    if (newActive) filterCollarTypes.Add(ct.type);
+                    else filterCollarTypes.Remove(ct.type);
+                    InvalidateCache();
                 }
-                else
-                {
-                    if (Widgets.ButtonText(btnRect, groups[i].key.Translate()))
-                    {
-                        currentGroup = groups[i].grp;
-                        InvalidateCache();
-                    }
-                }
-
-                cx += btnW + gap;
+                btnX += btnW + gap;
             }
 
-            return y + BtnH;
+            y += BtnH;
+            return y;
+        }
+
+        /// <summary>토글 필터 버튼. 활성=밝은 배경, 비활성=일반. 반환: 새 상태.</summary>
+        private bool DrawFilterToggle(Rect rect, string label, bool active)
+        {
+            if (active)
+            {
+                Widgets.DrawBoxSolidWithOutline(rect, new Color(1f, 1f, 1f, 0.12f), new Color(1f, 1f, 1f, 0.3f));
+                Text.Anchor = TextAnchor.MiddleCenter;
+                Widgets.Label(rect, label);
+                Text.Anchor = TextAnchor.UpperLeft;
+                if (Widgets.ButtonInvisible(rect))
+                {
+                    InvalidateCache();
+                    return false;
+                }
+                return true;
+            }
+            else
+            {
+                if (Widgets.ButtonText(rect, label))
+                {
+                    InvalidateCache();
+                    return true;
+                }
+                return false;
+            }
         }
 
         #endregion
@@ -500,18 +547,19 @@ namespace SimpleSlaveryCollars.Gizmos
             public SlaveApparel collar;
         }
 
-        /// <summary>캐시된 폰 리스트 반환. CacheInterval 틱마다 또는 정렬 변경 시 갱신.</summary>
+        /// <summary>캐시된 폰 리스트 반환. CacheInterval 틱마다 또는 필터/정렬 변경 시 갱신.</summary>
         private List<PawnCollarInfo> GetFilteredPawns()
         {
             int tick = Find.TickManager.TicksGame;
+            int curFilterHash = ComputeFilterHash();
             bool sortChanged = sortColumn != lastSortColumn || sortAscending != lastSortAscending;
 
-            if (cachedPawns != null && lastCacheGroup == currentGroup
+            if (cachedPawns != null && curFilterHash == lastFilterHash
                 && !sortChanged && tick - lastCacheTick < CacheInterval)
                 return cachedPawns;
 
             lastCacheTick = tick;
-            lastCacheGroup = currentGroup;
+            lastFilterHash = curFilterHash;
             lastSortColumn = sortColumn;
             lastSortAscending = sortAscending;
 
@@ -520,32 +568,47 @@ namespace SimpleSlaveryCollars.Gizmos
             else
                 cachedPawns.Clear();
 
+            bool anyTypeFilter = filterColonist || filterSlave || filterPrisoner;
+            bool anyCollarFilter = filterCollarTypes.Count > 0;
+
             var allPawns = comp.parent.Map.mapPawns.AllPawnsSpawned;
             for (int i = 0; i < allPawns.Count; i++)
             {
                 var p = allPawns[i];
                 if (p.Dead || !p.Spawned) continue;
 
-                switch (currentGroup)
+                // 신분 필터 (모두 꺼짐 = 전체 통과)
+                if (anyTypeFilter)
                 {
-                    case RemoteCollarPawnGroup.Slaves:
-                        if (!p.IsSlaveOfColony) continue; break;
-                    case RemoteCollarPawnGroup.Prisoners:
-                        if (!p.IsPrisonerOfColony) continue; break;
-                    case RemoteCollarPawnGroup.Colonists:
-                        if (!p.IsColonist) continue; break;
-                    case RemoteCollarPawnGroup.SlavesAndPrisoners:
-                        if (!p.IsSlaveOfColony && !p.IsPrisonerOfColony) continue; break;
+                    bool pass = false;
+                    // 노예 판정을 먼저 (IsColonist은 노예도 true이므로)
+                    if (filterSlave && p.IsSlaveOfColony) pass = true;
+                    if (!pass && filterPrisoner && p.IsPrisonerOfColony) pass = true;
+                    if (!pass && filterColonist && p.IsColonist && !p.IsSlaveOfColony) pass = true;
+                    if (!pass) continue;
                 }
 
                 var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveApparel;
                 if (collar == null) continue;
+
+                // 칼라 종류 필터 (모두 꺼짐 = 전체 통과)
+                if (anyCollarFilter && !filterCollarTypes.Contains(collar.GetType()))
+                    continue;
 
                 cachedPawns.Add(new PawnCollarInfo { pawn = p, collar = collar });
             }
 
             ApplySort(cachedPawns);
             return cachedPawns;
+        }
+
+        /// <summary>필터 상태 해시 (캐시 무효화 판정용).</summary>
+        private int ComputeFilterHash()
+        {
+            int h = (filterColonist ? 1 : 0) | (filterSlave ? 2 : 0) | (filterPrisoner ? 4 : 0);
+            foreach (var t in filterCollarTypes)
+                h ^= t.GetHashCode();
+            return h;
         }
 
         /// <summary>리스트 정렬 적용.</summary>
@@ -615,7 +678,7 @@ namespace SimpleSlaveryCollars.Gizmos
             return 3;
         }
 
-        /// <summary>폰 이름 컬러링 (식민=하늘/노예=금/죄수=빨강).</summary>
+        /// <summary>폰 이름 컬러링 (노예=금/죄수=빨강/식민=하늘). 노예 판정 먼저.</summary>
         private static string GetColoredLabel(Pawn pawn)
         {
             string name = pawn.LabelShort;
@@ -628,7 +691,7 @@ namespace SimpleSlaveryCollars.Gizmos
             return label;
         }
 
-        /// <summary>폰 신분 라벨 (별도 컬럼용).</summary>
+        /// <summary>폰 신분 라벨 (별도 컬럼용). 노예 판정을 먼저(IsColonist이 노예도 포함하므로).</summary>
         private static string GetPawnTypeLabel(Pawn pawn)
         {
             if (pawn.IsSlaveOfColony) return "SSC_Console_PawnType_Slave".Translate();
@@ -637,12 +700,12 @@ namespace SimpleSlaveryCollars.Gizmos
             return "";
         }
 
-        /// <summary>정렬용 신분 키.</summary>
+        /// <summary>정렬용 신분 키 (노예 판정을 먼저).</summary>
         private static int GetPawnTypeSortKey(Pawn pawn)
         {
-            if (pawn.IsColonist) return 0;
             if (pawn.IsSlaveOfColony) return 1;
             if (pawn.IsPrisonerOfColony) return 2;
+            if (pawn.IsColonist) return 0;
             return 3;
         }
 
