@@ -1,4 +1,4 @@
-﻿// SimpleSlaveryCollars | Roles | RoleRequirement_NotSlave.cs
+﻿// SimpleSlaveryCollars | Precepts | RoleRequirement_NotSlave.cs
 // 목적   : Precept_Role 조건에서 Pawn이 노예가 아닌 경우만 허용
 // 용도   : RimWorld RoleRequirement 확장
 // 변경   : 2025-09-22 주석 규칙(v4.2) 적용

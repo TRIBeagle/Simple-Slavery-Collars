@@ -1,4 +1,4 @@
-﻿// SimpleSlaveryCollars | Thoughts | ThoughtWorker_Enslaved.cs
+﻿// SimpleSlaveryCollars | ThoughtWorkers | ThoughtWorker_Enslaved.cs
 // 목적   : Pawn이 Colony 소속 노예일 때 억제 단계(Slavery Stage)에 따른 정신 사상을 부여
 // 용도   : RimWorld ThoughtWorker 확장
 // 변경   : [FIX] 부작용 로직(SetGuestStatus, Notify_DisabledWorkTypesChanged, assimilatedAtStage4 등)

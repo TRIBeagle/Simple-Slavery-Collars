@@ -1,4 +1,4 @@
-﻿// SimpleSlaveryCollars | Roles | RoleRequirement_SlaveStage.cs
+﻿// SimpleSlaveryCollars | Precepts | RoleRequirement_SlaveStage.cs
 // 목적   : Precept_Role 조건에서 Pawn의 Slavery Stage에 따라 역할 허용/차단
 // 용도   : RimWorld RoleRequirement 확장
 // 변경   : 2025-09-22 주석 규칙(v4.2) 적용 — Stage4/5 조건 반영

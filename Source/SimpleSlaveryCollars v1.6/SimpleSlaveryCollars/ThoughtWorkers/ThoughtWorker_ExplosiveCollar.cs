@@ -1,4 +1,4 @@
-﻿// SimpleSlaveryCollars | Thoughts | ThoughtWorker_ExplosiveCollar.cs
+﻿// SimpleSlaveryCollars | ThoughtWorkers | ThoughtWorker_ExplosiveCollar.cs
 // 목적   : 노예가 폭발 칼라(Explosive Collar)를 착용했을 때 정신 사상(Thought)을 부여
 // 용도   : RimWorld ThoughtWorker 확장
 // 변경   : 2025-09-22 주석 규칙(v4.2) 적용
