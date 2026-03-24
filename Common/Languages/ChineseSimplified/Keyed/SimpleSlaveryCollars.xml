@@ -55,8 +55,14 @@
 	<SSC_Console_CollarExplosive>爆炸</SSC_Console_CollarExplosive>
 	<SSC_Console_CollarElectric>电击</SSC_Console_CollarElectric>
 	<SSC_Console_CollarCrypto>冷冻</SSC_Console_CollarCrypto>
+	<SSC_Console_ArmAll>全部武装</SSC_Console_ArmAll>
+	<SSC_Console_DisarmAll>全部解除</SSC_Console_DisarmAll>
 	<SSC_Console_CancelAllReservations>全部取消</SSC_Console_CancelAllReservations>
+	<SSC_Console_AllCancelledCount>已取消 {0} 名目标的所有计划操作。</SSC_Console_AllCancelledCount>
 	<SSC_Console_NoWardenWarning>没有殖民者启用了狱卒工作。在分配狱卒之前，已计划的操作将不会执行。</SSC_Console_NoWardenWarning>
+	<SSC_Console_PawnType_Colonist>殖民者</SSC_Console_PawnType_Colonist>
+	<SSC_Console_PawnType_Slave>奴隶</SSC_Console_PawnType_Slave>
+	<SSC_Console_PawnType_Prisoner>囚犯</SSC_Console_PawnType_Prisoner>
 
 	<!-- ===== 控制台 — 选择模式 ===== -->
 	<SSC_Console_ExplosiveArm>远程项圈武装（选择）</SSC_Console_ExplosiveArm>

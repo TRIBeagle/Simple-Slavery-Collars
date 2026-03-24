@@ -55,8 +55,14 @@
 	<SSC_Console_CollarExplosive>폭발</SSC_Console_CollarExplosive>
 	<SSC_Console_CollarElectric>전기</SSC_Console_CollarElectric>
 	<SSC_Console_CollarCrypto>암호화</SSC_Console_CollarCrypto>
+	<SSC_Console_ArmAll>일괄 무장</SSC_Console_ArmAll>
+	<SSC_Console_DisarmAll>일괄 해제</SSC_Console_DisarmAll>
 	<SSC_Console_CancelAllReservations>전체 취소</SSC_Console_CancelAllReservations>
+	<SSC_Console_AllCancelledCount>{0}명에 대한 예약이 모두 취소되었습니다.</SSC_Console_AllCancelledCount>
 	<SSC_Console_NoWardenWarning>간수(Warden) 작업이 할당된 식민자가 없습니다. 간수가 지정되어야 예약된 작업이 실행됩니다.</SSC_Console_NoWardenWarning>
+	<SSC_Console_PawnType_Colonist>정착민</SSC_Console_PawnType_Colonist>
+	<SSC_Console_PawnType_Slave>노예</SSC_Console_PawnType_Slave>
+	<SSC_Console_PawnType_Prisoner>죄수</SSC_Console_PawnType_Prisoner>
 
 	<!-- ===== 콘솔 — 선택 모드 ===== -->
 	<SSC_Console_ExplosiveArm>원격 목걸이 무장 (선택)</SSC_Console_ExplosiveArm>
