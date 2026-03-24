@@ -62,7 +62,14 @@ namespace SimpleSlaveryCollars.Gizmos
         private const float StatusWidth = 44f;
         private const float ColAction = 330f;
 
-        public override Vector2 InitialSize => new Vector2(580f, 490f);
+        // 동적 창 크기
+        private const float WindowWidth = 580f;
+        private const float MinWindowHeight = 250f;
+        private const float MaxWindowHeight = 600f;
+        // 고정 영역 높이: 타이틀(40) + 필터2행(52) + 간격(6) + 헤더(26) + 하단(40) + 마진(36*2)
+        private const float FixedAreaHeight = 236f;
+
+        public override Vector2 InitialSize => new Vector2(WindowWidth, MinWindowHeight);
 
         public Dialog_RemoteCollarManager(CompRemoteSlaveCollar comp)
         {
@@ -82,6 +89,22 @@ namespace SimpleSlaveryCollars.Gizmos
             {
                 Close();
                 return;
+            }
+
+            // ── 동적 높이 계산: 폰 수에 맞춤 ──
+            var pawns = GetFilteredPawns();
+            float desiredHeight = FixedAreaHeight + pawns.Count * RowHeight;
+            desiredHeight = Mathf.Clamp(desiredHeight, MinWindowHeight, MaxWindowHeight);
+            if (Mathf.Abs(windowRect.height - desiredHeight) > 2f)
+            {
+                float centerX = windowRect.center.x;
+                float centerY = windowRect.center.y;
+                windowRect.height = desiredHeight;
+                windowRect.x = centerX - windowRect.width / 2f;
+                windowRect.y = centerY - windowRect.height / 2f;
+                // 화면 밖으로 나가지 않도록 클램프
+                windowRect.x = Mathf.Clamp(windowRect.x, 0f, UI.screenWidth - windowRect.width);
+                windowRect.y = Mathf.Clamp(windowRect.y, 0f, UI.screenHeight - windowRect.height);
             }
 
             float y = inRect.y;
