@@ -97,21 +97,4 @@
 	<SimpleSlaveryCollars_SlaveTime_YearQuadrumDays>Time enslaved: year {0}, quadrum {1}, day {2}</SimpleSlaveryCollars_SlaveTime_YearQuadrumDays>
 	<SimpleSlaveryCollars_SlaveStageSuffix>(slave stage {0})</SimpleSlaveryCollars_SlaveStageSuffix>
 	<SimpleSlaveryCollars_MigrationDone>{0}: migrated legacy slave-time record to Comp</SimpleSlaveryCollars_MigrationDone>
-	<collarChargeEnableSetting_title>Collar Charging System</collarChargeEnableSetting_title>
-	<collarChargeEnableSetting_desc>Collars consume power and become inactive when depleted. Wardens recharge at consoles. Default: On</collarChargeEnableSetting_desc>
-	<collarEmpEnableSetting_title>EMP Effect</collarEmpEnableSetting_title>
-	<collarEmpEnableSetting_desc>Collars are temporarily disabled when hit by EMP. Default: On</collarEmpEnableSetting_desc>
-	<SSC_Collar_EmpDisabled>EMP Disabled</SSC_Collar_EmpDisabled>
-	<SSC_Collar_Unlimited>Unlimited</SSC_Collar_Unlimited>
-	<SSC_Collar_Arm>Arm</SSC_Collar_Arm>
-	<SSC_Collar_Disarm>Disarm</SSC_Collar_Disarm>
-	<SSC_Collar_EmpTooltip>Disabled by EMP (remaining: {0})</SSC_Collar_EmpTooltip>
-	<SSC_Collar_UnlimitedTooltip>Charging system disabled — unlimited operation</SSC_Collar_UnlimitedTooltip>
-	<SSC_Collar_ChargeTooltip>Charge: {0}%</SSC_Collar_ChargeTooltip>
-	<SSC_Collar_SelfRechargeToggle>Toggle self-recharge (Stage5 slaves/colonists only)</SSC_Collar_SelfRechargeToggle>
-	<SSC_Collar_SelfRechargeOn>Self-recharge: Allowed</SSC_Collar_SelfRechargeOn>
-	<SSC_Collar_SelfRechargeOff>Self-recharge: Disabled</SSC_Collar_SelfRechargeOff>
-	<SSC_Collar_NotOperational>Collar not operational (low charge or EMP)</SSC_Collar_NotOperational>
-	<collarDrainMultiplier_title>Collar drain global multiplier</collarDrainMultiplier_title>
-	<collarDrainMultiplier_desc>Multiplied to all collar power drain. 1 = default, 0.5 = half, 2 = double. Default: 1</collarDrainMultiplier_desc>
 </LanguageData>
