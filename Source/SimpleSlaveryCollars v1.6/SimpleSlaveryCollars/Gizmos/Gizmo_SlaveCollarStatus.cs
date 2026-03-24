@@ -36,8 +36,8 @@ namespace SimpleSlaveryCollars.Gizmos
         // 임계값 드래그 상태 (Gizmo_SetFuelLevel과 동일 패턴: static)
         private static bool draggingBar;
 
-        // ChargeThreshold(armed 최소) 위치를 고정 마커로 표시
-        private static readonly float[] ThresholdMarkers = { SlaveApparel.ChargeThreshold };
+        // 고정 마커 없음
+        private static readonly float[] ThresholdMarkers = { };
 
         public Gizmo_SlaveCollarStatus()
         {
