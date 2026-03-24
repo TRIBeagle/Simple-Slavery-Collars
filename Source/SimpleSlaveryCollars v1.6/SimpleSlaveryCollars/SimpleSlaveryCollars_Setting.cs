@@ -28,7 +28,8 @@ namespace SimpleSlaveryCollars
         public static bool RemoteOnlyOnConsoleEnable = true;
         public static bool CollarChargeEnable = true;
         public static bool CollarEmpEnable = true;
-        public static float CollarBatteryDays = 5f; // 대기 상태 만충 지속 일수
+        public static float CollarDailyDrain = 20f;   // 대기 일당 소모량 (%/일)
+        public static float CollarRechargeCost = 50f;  // 0→만충 전력 비용 (Wd)
         public static float CollarElectricDrainMultiplier = 3f;
         public static float CollarCryptoDrainMultiplier = 5f;
 
@@ -37,7 +38,8 @@ namespace SimpleSlaveryCollars
         public static float Slavestage3Period = 15f;
         public static float Slavestage4Period = 15f;
 
-        private string CollarBatteryDaysBuffer;
+        private string CollarDailyDrainBuffer;
+        private string CollarRechargeCostBuffer;
         private string CollarElectricDrainMultiplierBuffer;
         private string CollarCryptoDrainMultiplierBuffer;
         private string Slavestage1PeriodBuffer;
@@ -58,7 +60,8 @@ namespace SimpleSlaveryCollars
             Scribe_Values.Look(ref RemoteOnlyOnConsoleEnable, "RemoteOnlyOnConsoleEnable", true);
             Scribe_Values.Look(ref CollarChargeEnable, "CollarChargeEnable", true);
             Scribe_Values.Look(ref CollarEmpEnable, "CollarEmpEnable", true);
-            Scribe_Values.Look(ref CollarBatteryDays, "CollarBatteryDays", 3f);
+            Scribe_Values.Look(ref CollarDailyDrain, "CollarDailyDrain", 20f);
+            Scribe_Values.Look(ref CollarRechargeCost, "CollarRechargeCost", 50f);
             Scribe_Values.Look(ref CollarElectricDrainMultiplier, "CollarElectricDrainMultiplier", 3f);
             Scribe_Values.Look(ref CollarCryptoDrainMultiplier, "CollarCryptoDrainMultiplier", 5f);
             Scribe_Values.Look(ref Slavestage1Period, "Slavestage1Period", 15f);
@@ -88,8 +91,10 @@ namespace SimpleSlaveryCollars
 
             if (CollarChargeEnable)
             {
-                listingStandard.Label("collarBatteryDays_title".Translate(), -1f, "collarBatteryDays_desc".Translate());
-                listingStandard.TextFieldNumeric(ref CollarBatteryDays, ref CollarBatteryDaysBuffer, 1f, 60f);
+                listingStandard.Label("collarDailyDrain_title".Translate(), -1f, "collarDailyDrain_desc".Translate());
+                listingStandard.TextFieldNumeric(ref CollarDailyDrain, ref CollarDailyDrainBuffer, 1f, 100f);
+                listingStandard.Label("collarRechargeCost_title".Translate(), -1f, "collarRechargeCost_desc".Translate());
+                listingStandard.TextFieldNumeric(ref CollarRechargeCost, ref CollarRechargeCostBuffer, 1f, 500f);
                 listingStandard.Label("collarElectricDrain_title".Translate(), -1f, "collarElectricDrain_desc".Translate());
                 listingStandard.TextFieldNumeric(ref CollarElectricDrainMultiplier, ref CollarElectricDrainMultiplierBuffer, 1f, 20f);
                 listingStandard.Label("collarCryptoDrain_title".Translate(), -1f, "collarCryptoDrain_desc".Translate());
@@ -120,7 +125,8 @@ namespace SimpleSlaveryCollars
                 RemoteOnlyOnConsoleEnable = true;
                 CollarChargeEnable = true;
                 CollarEmpEnable = true;
-                CollarBatteryDays = 5f;
+                CollarDailyDrain = 20f;
+                CollarRechargeCost = 50f;
                 CollarElectricDrainMultiplier = 3f;
                 CollarCryptoDrainMultiplier = 5f;
 

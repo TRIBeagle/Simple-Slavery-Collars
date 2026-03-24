@@ -16,9 +16,9 @@ namespace SimpleSlaveryCollars
         /// <summary>현재 충전량 (0~1). 1 = 만충, 0 = 방전.</summary>
         public float charge = 1f;
 
-        /// <summary>대기 소모율 (틱당). 모드옵션 기반으로 계산.</summary>
+        /// <summary>대기 소모율 (틱당). 모드옵션 일당 소모% 기반.</summary>
         private float IdleChargePerTick =>
-            1f / (SimpleSlaveryCollarsSetting.CollarBatteryDays * 60000f);
+            (SimpleSlaveryCollarsSetting.CollarDailyDrain / 100f) / 60000f;
 
         /// <summary>작동(armed) 소모 배율. 서브클래스에서 오버라이드.</summary>
         protected virtual float ActiveChargeMultiplier => 1f;
