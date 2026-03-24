@@ -367,20 +367,21 @@ namespace SimpleSlaveryCollars.Gizmos
 
             Text.Anchor = TextAnchor.UpperLeft;
 
-            // 액션 버튼
+            // 액션 버튼 — 남은 폭을 채움
             float actionX = baseX + ColAction;
+            float actionW = rowRect.xMax - actionX;
             if (comp.IsPawnReserved(info.pawn))
             {
                 GUI.color = Color.gray;
-                Text.Anchor = TextAnchor.MiddleLeft;
-                Widgets.Label(new Rect(actionX, rowRect.y, 100f, rowRect.height),
+                Text.Anchor = TextAnchor.MiddleCenter;
+                Widgets.Label(new Rect(actionX, rowRect.y, actionW, rowRect.height),
                     "SSC_Remote_AlreadyReservedShort".Translate());
                 Text.Anchor = TextAnchor.UpperLeft;
                 GUI.color = Color.white;
             }
             else
             {
-                DrawActionButtons(actionX, btnY, info);
+                DrawActionButtons(actionX, btnY, actionW, info);
             }
         }
 
@@ -394,49 +395,53 @@ namespace SimpleSlaveryCollars.Gizmos
             GUI.DrawTexture(rect, portrait);
         }
 
-        /// <summary>칼라 종류/상태에 따른 개별 액션 버튼.</summary>
-        private void DrawActionButtons(float x, float y, PawnCollarInfo info)
+        /// <summary>칼라 종류/상태에 따른 개별 액션 버튼. 남은 폭을 균등 분배.</summary>
+        private void DrawActionButtons(float x, float y, float totalW, PawnCollarInfo info)
         {
-            float btnW = 56f;
-            float gap = 4f;
+            float gap = 3f;
 
             if (!info.collar.IsArmed)
             {
-                // 무장 버튼
+                // 비무장: [무장] 1개 — 전체 폭 사용
                 var armAction = GetArmAction(info.collar);
                 if (armAction.HasValue)
                 {
-                    if (Widgets.ButtonText(new Rect(x, y, btnW, BtnH), "SSC_Collar_Arm".Translate()))
+                    if (Widgets.ButtonText(new Rect(x, y, totalW, BtnH), "SSC_Collar_Arm".Translate()))
                     {
                         comp.ReserveJobForPawn(info.pawn, armAction.Value);
                         InvalidateCache();
                     }
                 }
             }
+            else if (info.collar is SlaveCollar_Explosive)
+            {
+                // 폭발 무장: [해제] [폭발] 2개 — 반씩
+                float btnW = (totalW - gap) / 2f;
+                if (Widgets.ButtonText(new Rect(x, y, btnW, BtnH), "SSC_Collar_Disarm".Translate()))
+                {
+                    comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DisarmExplosive);
+                    InvalidateCache();
+                }
+
+                GUI.color = new Color(1f, 0.5f, 0.5f);
+                if (Widgets.ButtonText(new Rect(x + btnW + gap, y, btnW, BtnH), "SSC_Explosive_Detonate".Translate()))
+                {
+                    comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DetonateExplosive);
+                    InvalidateCache();
+                }
+                GUI.color = Color.white;
+            }
             else
             {
-                // 해제 버튼
+                // 기타 무장 (전기/암호화): [해제] 1개 — 전체 폭 사용
                 var disarmAction = GetDisarmAction(info.collar);
                 if (disarmAction.HasValue)
                 {
-                    if (Widgets.ButtonText(new Rect(x, y, btnW, BtnH), "SSC_Collar_Disarm".Translate()))
+                    if (Widgets.ButtonText(new Rect(x, y, totalW, BtnH), "SSC_Collar_Disarm".Translate()))
                     {
                         comp.ReserveJobForPawn(info.pawn, disarmAction.Value);
                         InvalidateCache();
                     }
-                    x += btnW + gap;
-                }
-
-                // 폭발 전용: 폭발 버튼
-                if (info.collar is SlaveCollar_Explosive)
-                {
-                    GUI.color = new Color(1f, 0.5f, 0.5f);
-                    if (Widgets.ButtonText(new Rect(x, y, btnW, BtnH), "SSC_Explosive_Detonate".Translate()))
-                    {
-                        comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DetonateExplosive);
-                        InvalidateCache();
-                    }
-                    GUI.color = Color.white;
                 }
             }
         }
