@@ -40,7 +40,7 @@ namespace SimpleSlaveryCollars.Debugs
             if (pawn == null || pawn.DestroyedOrNull()) return;
             if (!Prefs.DevMode) return;
 
-            var rec = DefDatabase<RecordDef>.GetNamed("TimeAsSlave", errorOnFail: false);
+            var rec = SimpleSlaveryDefOf.TimeAsSlave;
             int curTicks = GetCompTicks(pawn);
             bool isSteadfast = SimpleSlaveryUtility.IsSteadfast(pawn);
 
