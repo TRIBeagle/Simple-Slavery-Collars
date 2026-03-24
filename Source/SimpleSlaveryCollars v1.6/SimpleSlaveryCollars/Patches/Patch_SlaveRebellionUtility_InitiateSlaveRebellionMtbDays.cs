@@ -29,20 +29,22 @@ namespace SimpleSlaveryCollars.Patches
                     || __result == -1f)
                     return;
 
-                if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage1)
+                float time = SimpleSlaveryUtility.TimeAsSlave(pawn);
+
+                if (time < SimpleSlaveryUtility.SlaveStage1)
                 {
-                    __result *= 1f;
+                    // Stage1: 바닐라 MTB 그대로 유지
                 }
-                else if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage2)
+                else if (time < SimpleSlaveryUtility.SlaveStage2)
                 {
                     __result *= 1.5f;
                 }
-                else if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage3)
+                else if (time < SimpleSlaveryUtility.SlaveStage3)
                 {
                     __result *= 1.75f;
                 }
-                else if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage4
-                      || (SimpleSlaveryUtility.TimeAsSlave(pawn) >= SimpleSlaveryUtility.SlaveStage3 && SimpleSlaveryUtility.IsSteadfast(pawn)))
+                else if (time < SimpleSlaveryUtility.SlaveStage4
+                      || SimpleSlaveryUtility.IsSteadfast(pawn))
                 {
                     __result *= 2f;
                 }

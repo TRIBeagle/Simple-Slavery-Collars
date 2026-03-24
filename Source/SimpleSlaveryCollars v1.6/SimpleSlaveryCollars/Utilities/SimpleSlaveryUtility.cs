@@ -139,6 +139,7 @@ namespace SimpleSlaveryCollars.Utilities
             if (pawn.Downed) return;
             if (pawn.jobs?.curDriver?.asleep == true) return;
             if (pawn.InMentalState) return;
+            if (pawn.mindState?.mentalStateHandler == null) return;
 
             if (Rand.Chance(chance))
             {

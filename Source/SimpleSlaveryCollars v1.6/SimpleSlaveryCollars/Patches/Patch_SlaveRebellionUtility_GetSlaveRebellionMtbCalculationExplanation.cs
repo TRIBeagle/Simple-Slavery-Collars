@@ -37,28 +37,29 @@ namespace SimpleSlaveryCollars.Patches
                 if (SimpleSlaveryCollarsSetting.SlavestageEnable == false || SimpleSlaveryCollarsSetting.RebelCycleChangeEnable == false || need == null || !SlaveRebellionUtility.CanParticipateInSlaveRebellion(pawn))
                     return;
 
+                float time = SimpleSlaveryUtility.TimeAsSlave(pawn);
                 StringBuilder stringBuilder = new StringBuilder();
 
                 // Stage1: x < S1
-                if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage1)
+                if (time < SimpleSlaveryUtility.SlaveStage1)
                 {
                     float f4 = 1f;
                     stringBuilder.AppendLine(string.Format("\n{0}: x{1}", (object)"SuppressionSlavestageFactor".Translate(), (object)f4.ToStringPercent()));
                 }
                 // Stage2: S1 ≤ x < S2
-                else if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage2)
+                else if (time < SimpleSlaveryUtility.SlaveStage2)
                 {
                     float f4 = 1.5f;
                     stringBuilder.AppendLine(string.Format("\n{0}: x{1}", (object)"SuppressionSlavestageFactor".Translate(), (object)f4.ToStringPercent()));
                 }
-                // Stage3: S2 ≤ x ≤ S3 (경계 포함 여부는 유틸 정의에 따름)
-                else if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage3)
+                // Stage3: S2 ≤ x < S3
+                else if (time < SimpleSlaveryUtility.SlaveStage3)
                 {
                     float f4 = 1.75f;
                     stringBuilder.AppendLine(string.Format("\n{0}: x{1}", (object)"SuppressionSlavestageFactor".Translate(), (object)f4.ToStringPercent()));
                 }
-                // Stage4: (S3 < x < S4) 또는 (x ≥ S4 && Steadfast) — Steadfast 예외 포함
-                else if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage4 || (SimpleSlaveryUtility.TimeAsSlave(pawn) >= SimpleSlaveryUtility.SlaveStage3 && SimpleSlaveryUtility.IsSteadfast(pawn)))
+                // Stage4: (S3 ≤ x < S4) 또는 (x ≥ S4 && Steadfast) — Steadfast 예외 포함
+                else if (time < SimpleSlaveryUtility.SlaveStage4 || SimpleSlaveryUtility.IsSteadfast(pawn))
                 {
                     float f4 = 2f;
                     stringBuilder.AppendLine(string.Format("\n{0}: x{1}", (object)"SuppressionSlavestageFactor".Translate(), (object)f4.ToStringPercent()));

@@ -25,8 +25,9 @@ namespace SimpleSlaveryCollars
             if (!pawn.IsSlaveOfColony)
                 return false;
 
-            // 2. Stage 5 조건 (Stage 4 미만이거나 Steadfast 특성이 있으면 불가)
-            if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage4 || SimpleSlaveryUtility.IsSteadfast(pawn))
+            // 2. Stage5 조건: SlaveStage4 이상 && !Steadfast 일 때만 충족
+            float time = SimpleSlaveryUtility.TimeAsSlave(pawn);
+            if (time < SimpleSlaveryUtility.SlaveStage4 || SimpleSlaveryUtility.IsSteadfast(pawn))
                 return false;
 
             return true;

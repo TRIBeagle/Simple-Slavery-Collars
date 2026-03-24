@@ -99,7 +99,8 @@ namespace SimpleSlaveryCollars.Patches
             if (!SimpleSlaveryCollarsSetting.AssimilationSlaveEnable) return;
 
             if (!pawn.IsSlaveOfColony) return;
-            if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage4) return;
+            float time = SimpleSlaveryUtility.TimeAsSlave(pawn);
+            if (time < SimpleSlaveryUtility.SlaveStage4) return;
             if (SimpleSlaveryUtility.IsSteadfast(pawn)) return;
             if (guest.SlaveFaction == Faction.OfPlayer) return;
 
