@@ -24,31 +24,30 @@ namespace SimpleSlaveryCollars
         /// <summary>
         /// Pawn의 특성/소속/노예 경과시간 및 칼라 종류에 따라 ThoughtState를 반환한다.
         /// </summary>
+        // TraitDef.Named 반복 호출 방지 — 1회 캐싱
+        private static TraitDef _masochistTraitDef;
+        private static TraitDef MasochistTrait => _masochistTraitDef ?? (_masochistTraitDef = TraitDef.Named("Masochist"));
+
         protected override ThoughtState CurrentStateInternal(Pawn pawn)
         {
-            float num = SimpleSlaveryUtility.TimeAsSlave(pawn);
-            float stage1 = 60000f * SimpleSlaveryCollarsSetting.Slavestage1Period;
-            float stage2 = 60000f * SimpleSlaveryCollarsSetting.Slavestage2Period;
-            float stage3 = 60000f * SimpleSlaveryCollarsSetting.Slavestage3Period;
+            // GetSlaveCollar 1회 호출 + 폭발 칼라 제외
+            var collar = SimpleSlaveryUtility.GetSlaveCollar(pawn);
+            if (collar == null || collar is SlaveCollar_Explosive)
+                return ThoughtState.Inactive;
 
-            if (SimpleSlaveryUtility.HasSlaveCollar(pawn)
-                && !(SimpleSlaveryUtility.GetSlaveCollar(pawn).def.thingClass == typeof(SlaveCollar_Explosive)))
-            {
-                // Masochist 특성 보유 → Stage2
-                if (pawn.story.traits.HasTrait(TraitDef.Named("Masochist")))
-                    return ThoughtState.ActiveAtStage(2);
+            // Masochist 특성 보유 → Stage2
+            if (pawn.story.traits.HasTrait(MasochistTrait))
+                return ThoughtState.ActiveAtStage(2);
 
-                // Colonist인데 SlaveOfColony 아님 → Stage3 (예외 처리)
-                else if (pawn.IsColonist && !pawn.IsSlaveOfColony)
-                    return ThoughtState.ActiveAtStage(3);
+            // Colonist인데 SlaveOfColony 아님 → Stage3 (예외 처리)
+            if (pawn.IsColonist && !pawn.IsSlaveOfColony)
+                return ThoughtState.ActiveAtStage(3);
 
-                // 노예 경과시간 기준 Stage0/1
-                return num < stage1 + stage2 + stage3
-                    ? ThoughtState.ActiveAtStage(0)
-                    : ThoughtState.ActiveAtStage(1);
-            }
-
-            return ThoughtState.Inactive;
+            // 노예 경과시간 기준 Stage0/1 — SlaveStage3(누적 경계값) 활용
+            float time = SimpleSlaveryUtility.TimeAsSlave(pawn);
+            return time < SimpleSlaveryUtility.SlaveStage3
+                ? ThoughtState.ActiveAtStage(0)
+                : ThoughtState.ActiveAtStage(1);
         }
     }
 }

@@ -25,10 +25,9 @@ namespace SimpleSlaveryCollars
         /// </summary>
         protected override ThoughtState CurrentStateInternal(Pawn pawn)
         {
-            if (SimpleSlaveryUtility.HasSlaveCollar(pawn)
-                && SimpleSlaveryUtility.GetSlaveCollar(pawn).def.thingClass == typeof(SlaveCollar_Explosive))
+            // GetSlaveCollar 1회 호출 + is 패턴매칭으로 null/타입 동시 체크
+            if (SimpleSlaveryUtility.GetSlaveCollar(pawn) is SlaveCollar_Explosive collar)
             {
-                var collar = SimpleSlaveryUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive;
                 if (collar.armed)
                     return ThoughtState.ActiveAtStage(1); // armed 상태
                 return pawn.IsSlaveOfColony

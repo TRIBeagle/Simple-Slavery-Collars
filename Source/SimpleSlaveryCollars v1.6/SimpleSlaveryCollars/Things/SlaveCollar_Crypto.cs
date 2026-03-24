@@ -1,4 +1,9 @@
-﻿using RimWorld;
+﻿// SimpleSlaveryCollars | Things | SlaveCollar_Crypto.cs
+// 목적 : 동결 노예 칼라. 무장(armed) 시 착용자를 정신동결(CryptoStasis) 상태로 고정
+// 용도 : 직접 토글 또는 원격 콘솔에서 제어. 비폭력 제압 수단
+// 주의 : RevertMentalState()에서 이전 정신상태 복원. mindState null 방어 필수
+
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using UnityEngine;

@@ -1,4 +1,9 @@
-﻿using RimWorld;
+﻿// SimpleSlaveryCollars | Things | SlaveCollar_Electric.cs
+// 목적 : 감전 노예 칼라. 무장(armed) 시 주기적 전기 충격으로 착용자 제압
+// 용도 : 직접 토글 또는 원격 콘솔에서 제어
+// 주의 : Zap() 실행 시 Dead/Downed 체크 → 연쇄 크래시 방지
+
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -12,7 +17,7 @@ namespace SimpleSlaveryCollars
     {
         public bool armed = false;
         public int zap_cooldown = 0;
-        public const int zap_period = 50;
+        public const int zap_period = 50; // 감전 간격 (틱). 50틱 ≈ 0.83초
 
         public override IEnumerable<Gizmo> SlaveGizmos()
         {

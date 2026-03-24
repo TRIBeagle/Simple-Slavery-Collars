@@ -1,4 +1,9 @@
-﻿using RimWorld;
+﻿// SimpleSlaveryCollars | Things | SlaveCollar_Explosive.cs
+// 목적 : 폭발 노예 칼라. 무장(armed) 시 폭발로 착용자 즉사
+// 용도 : 직접 토글 또는 원격 콘솔(CompRemoteSlaveCollar)에서 제어
+// 주의 : GoBoom() 실행 시 Wearer 사망 가능 → Position/Map 선캐싱 필수
+
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
@@ -11,7 +16,7 @@ namespace SimpleSlaveryCollars
     public class SlaveCollar_Explosive : SlaveApparel
     {
         public bool armed = false;
-        public int arm_cooldown = 0;
+        public int arm_cooldown = 0; // 무장 직후 정신붕괴 방지 쿨다운 (틱)
 
         public override IEnumerable<Gizmo> SlaveGizmos()
         {
@@ -49,8 +54,8 @@ namespace SimpleSlaveryCollars
                 {
                     if (arm_cooldown == 0)
                     {
-                        SimpleSlaveryUtility.TryInstantBreak(Wearer, Rand.Range(0.25f, 0.33f));
-                        arm_cooldown = 2500;
+                        SimpleSlaveryUtility.TryInstantBreak(Wearer, Rand.Range(0.25f, 0.33f)); // 25~33% 확률 정신붕괴
+                        arm_cooldown = 2500; // 약 42초 쿨다운 (2500틱)
                     }
                 }
             };

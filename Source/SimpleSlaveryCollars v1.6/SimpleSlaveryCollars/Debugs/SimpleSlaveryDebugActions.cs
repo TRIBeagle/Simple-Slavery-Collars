@@ -20,7 +20,7 @@ namespace SimpleSlaveryCollars.Debugs
     /// </summary>
     public static class SimpleSlaveryDebugActions
     {
-        private const int TicksPerDay = 60000;
+        private const int TicksPerDay = 60000; // GenDate.TicksPerDay와 동일. const 사용으로 컴파일 시 인라인
 
         // [옵션] true: Comp 수정 시 Record도 즉시 맞춤 / false: 세이브-타임만 반영
         private static readonly bool AlsoSyncLegacyRecord = true;

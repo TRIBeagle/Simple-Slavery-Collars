@@ -23,9 +23,7 @@ namespace SimpleSlaveryCollars.Utilities
         /// </summary>
         public static bool IsColonyMember(Pawn pawn)
         {
-            if (pawn.IsColonist || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony)
-                return true;
-            return false;
+            return pawn.IsColonist || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony;
         }
 
         /// <summary>

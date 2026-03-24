@@ -1,4 +1,8 @@
-﻿using HarmonyLib;
+﻿// SimpleSlaveryCollars | Patches | Patch_GuestUtility_GetDisabledWorkTypes.cs
+// 목적 : Stage5 노예의 작업 제한 해제. disabledForSlaves 목록에서 해당 항목 제거
+// 용도 : Harmony Postfix 패치. SlavestageEnable + Stage5SlaveWorkUnlockEnable 옵션 활성화 시 적용
+
+using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
 using Verse;

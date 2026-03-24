@@ -37,11 +37,15 @@ namespace SimpleSlaveryCollars.Jobs
                 !slave.IsSlaveOfColony ||
                 !slave.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Enslaved) ||
                 !pawn.CanReserve(slave) ||
-                SimpleSlaveryUtility.GetEnslavedHediff(slave).shackledGoal == SimpleSlaveryUtility.GetEnslavedHediff(slave).shackled ||
                 slave.InAggroMentalState)
             {
                 return null;
             }
+
+            // GetEnslavedHediff 1회만 호출
+            var hediff = SimpleSlaveryUtility.GetEnslavedHediff(slave);
+            if (hediff == null || hediff.shackledGoal == hediff.shackled)
+                return null;
 
             return JobMaker.MakeJob(SimpleSlaveryDefOf.ShackleSlave, slave);
         }

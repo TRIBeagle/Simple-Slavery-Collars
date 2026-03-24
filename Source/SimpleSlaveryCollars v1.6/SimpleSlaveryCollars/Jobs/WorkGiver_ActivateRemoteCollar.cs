@@ -60,10 +60,12 @@ namespace SimpleSlaveryCollars.Jobs
             if (!pawn.CanReserveAndReach(t, PathEndMode.InteractionCell, pawn.NormalMaxDanger(), 1, -1, null, forced))
                 return false;
 
+            // [Job] 예약 리스트 1회 캐싱
+            var reservedList = comp.GetAllReservedPawns().ToList();
+
             // [Job] 그룹 예약이 있으면 자기 자신 제외 시 true
             if (comp.groupJobPending)
             {
-                var reservedList = comp.GetAllReservedPawns().ToList();
                 if (reservedList.Contains(pawn))
                     return false;
                 if (reservedList.Count > 0)
@@ -71,7 +73,7 @@ namespace SimpleSlaveryCollars.Jobs
             }
 
             // [Job] 개별 예약 확인: 자기 자신 제외, Pawn/콘솔 둘 다 예약 가능해야 함
-            foreach (var targetPawn in comp.GetAllReservedPawns().ToList())
+            foreach (var targetPawn in reservedList)
             {
                 if (targetPawn == pawn)
                     continue;
