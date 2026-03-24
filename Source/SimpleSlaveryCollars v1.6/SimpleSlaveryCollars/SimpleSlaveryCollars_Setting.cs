@@ -121,6 +121,7 @@ namespace SimpleSlaveryCollars
                 Slavestage2PeriodBuffer = "15";
                 Slavestage3PeriodBuffer = "15";
                 Slavestage4PeriodBuffer = "15";
+                CollarDrainMultiplierBuffer = "1";
             }
 
             listingStandard.End();

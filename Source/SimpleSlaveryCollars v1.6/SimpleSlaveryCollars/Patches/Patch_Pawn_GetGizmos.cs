@@ -49,7 +49,7 @@ namespace SimpleSlaveryCollars.Patches
         private static List<Gizmo> GetSlaveGizmosSafe(Pawn pawn)
         {
             if (!SimpleSlaveryUtility.IsColonyMember(pawn)) return null;
-            if (pawn.apparel == null) return null;
+            if (pawn.apparel?.WornApparel == null) return null;
 
             var result = new List<Gizmo>();
             var worn = pawn.apparel.WornApparel;

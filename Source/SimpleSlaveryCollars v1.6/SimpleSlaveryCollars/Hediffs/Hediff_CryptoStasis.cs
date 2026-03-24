@@ -40,7 +40,7 @@ namespace SimpleSlaveryCollars
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Defs.Look<MentalStateDef>(ref revertMentalStateDef, "revertMentalStateDef");
+            Scribe_Defs.Look(ref revertMentalStateDef, "revertMentalStateDef");
         }
     }
 }

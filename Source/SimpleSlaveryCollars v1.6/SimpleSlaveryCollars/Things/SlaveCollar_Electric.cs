@@ -65,8 +65,8 @@ namespace SimpleSlaveryCollars
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<bool>(ref armed, "armed", false);
-            Scribe_Values.Look<int>(ref zap_cooldown, "zap_cooldown", 0);
+            Scribe_Values.Look(ref armed, "armed", false);
+            Scribe_Values.Look(ref zap_cooldown, "zap_cooldown", 0);
         }
 
         protected override void TickInterval(int delta)

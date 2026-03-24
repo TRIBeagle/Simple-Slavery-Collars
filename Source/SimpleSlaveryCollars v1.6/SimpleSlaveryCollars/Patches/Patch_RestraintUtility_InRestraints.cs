@@ -28,10 +28,11 @@ namespace SimpleSlaveryCollars.Patches
         {
             try
             {
-                if (pawn.IsSlaveOfColony &&
-                    pawn.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Enslaved))
+                if (pawn.IsSlaveOfColony)
                 {
-                    __result = SimpleSlaveryUtility.GetEnslavedHediff(pawn).shackled;
+                    var enslaved = SimpleSlaveryUtility.GetEnslavedHediff(pawn);
+                    if (enslaved != null)
+                        __result = enslaved.shackled;
                 }
             }
             catch (Exception ex)

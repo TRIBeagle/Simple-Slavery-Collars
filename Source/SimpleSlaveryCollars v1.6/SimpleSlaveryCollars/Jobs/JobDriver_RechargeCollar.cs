@@ -62,7 +62,7 @@ namespace SimpleSlaveryCollars.Jobs
                     if (pawn.carryTracker.CarriedThing != null)
                         pawn.carryTracker.TryDropCarriedThing(pawn.Position, ThingPlaceMode.Near, out _);
 
-                    var collar = SimpleSlaveryCollars.Utilities.SimpleSlaveryUtility.GetSlaveCollar(Slave) as SlaveApparel;
+                    var collar = SimpleSlaveryUtility.GetSlaveCollar(Slave) as SlaveApparel;
                     if (collar != null)
                     {
                         float neededWd = (1f - collar.charge) * collar.BatteryCapacityWd;

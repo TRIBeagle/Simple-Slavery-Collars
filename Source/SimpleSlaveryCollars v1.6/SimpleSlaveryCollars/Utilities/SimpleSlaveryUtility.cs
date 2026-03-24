@@ -49,16 +49,7 @@ namespace SimpleSlaveryCollars.Utilities
         /// </summary>
         public static bool IsSlaveCollar(Apparel apparel)
         {
-            if (apparel
-                == null) return false;
-
-            if (apparel.def == null) return false;
-
-            if (apparel.def.apparel == null) return false;
-
-            if (apparel.def.apparel.defaultOutfitTags == null) return false;
-
-            return apparel.def.apparel.defaultOutfitTags.Contains("SlaveCollar");
+            return apparel?.def?.apparel?.defaultOutfitTags?.Contains("SlaveCollar") ?? false;
         }
 
         /// <summary>

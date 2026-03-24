@@ -68,10 +68,7 @@ namespace SimpleSlaveryCollars
 
         public void RevertMentalState()
         {
-            if (Wearer == null || Wearer.health == null)
-                return;
-
-            var hediffSet = Wearer.health.hediffSet;
+            var hediffSet = Wearer?.health?.hediffSet;
             if (hediffSet == null)
                 return;
 
@@ -79,34 +76,22 @@ namespace SimpleSlaveryCollars
             if (cryptoStasis == null)
                 return;
 
-            var stasis = cryptoStasis as Hediff_CryptoStasis;
-            var memory = stasis != null ? stasis.revertMentalStateDef : null;
+            // 이전 정신상태 복원 시도
+            var stasisHediff = cryptoStasis as Hediff_CryptoStasis;
+            var savedMentalState = stasisHediff?.revertMentalStateDef;
 
-            if (Wearer.mindState != null && Wearer.mindState.mentalStateHandler != null)
+            if (Wearer.mindState?.mentalStateHandler != null)
             {
-                if (memory != null)
-                {
-                    Wearer.mindState.mentalStateHandler.TryStartMentalState(memory, reason: null, forceWake: true, causedByMood: false, otherPawn: null, transitionSilently: true);
-                    Wearer.health.RemoveHediff(cryptoStasis);
-                    if (Rand.Value > 0.66f)
-                    {
-                        Wearer.health.AddHediff(HediffDefOf.CryptosleepSickness);
-                    }
-                }
+                if (savedMentalState != null)
+                    Wearer.mindState.mentalStateHandler.TryStartMentalState(savedMentalState, reason: null, forceWake: true, causedByMood: false, otherPawn: null, transitionSilently: true);
                 else
-                {
-                    Wearer.health.RemoveHediff(cryptoStasis);
                     Wearer.mindState.mentalStateHandler.Reset();
-                    if (Rand.Value > 0.66f)
-                    {
-                        Wearer.health.AddHediff(HediffDefOf.CryptosleepSickness);
-                    }
-                }
             }
-            else
-            {
-                Wearer.health.RemoveHediff(cryptoStasis);
-            }
+
+            // Hediff 제거 + 크립토슬립 후유증 (33%)
+            Wearer.health.RemoveHediff(cryptoStasis);
+            if (Rand.Value > 0.66f)
+                Wearer.health.AddHediff(HediffDefOf.CryptosleepSickness);
         }
 
 
@@ -116,13 +101,13 @@ namespace SimpleSlaveryCollars
         /// </summary>
         public void CryptoStasis()
         {
-            Hediff_CryptoStasis revertMentalState = null;
+            Hediff_CryptoStasis stasisHediff = null;
             if (!Wearer.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Crypto_Stasis))
             {
                 Wearer.health.AddHediff(SimpleSlaveryDefOf.Crypto_Stasis);
-                revertMentalState = Wearer.health.hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Crypto_Stasis) as Hediff_CryptoStasis;
+                stasisHediff = Wearer.health.hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Crypto_Stasis) as Hediff_CryptoStasis;
                 // 캐스트 실패 방어 — XML에서 hediffClass가 Hediff_CryptoStasis가 아니면 null
-                revertMentalState?.SaveMemory();
+                stasisHediff?.SaveMemory();
             }
             if (Wearer.InBed())
             {
@@ -149,7 +134,7 @@ namespace SimpleSlaveryCollars
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<bool>(ref armed, "armed", false);
+            Scribe_Values.Look(ref armed, "armed", false);
         }
 
         protected override void TickInterval(int delta)
