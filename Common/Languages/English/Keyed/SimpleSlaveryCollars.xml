@@ -23,6 +23,7 @@
 
 	<!-- ===== Role Requirements (XML labelKey) ===== -->
 	<RoleRequirementLabelNotSlave>Must not be a slave</RoleRequirementLabelNotSlave>
+	<RoleRequirementLabelSlaveStage>Must be at least slave stage 5</RoleRequirementLabelSlaveStage>
 
 	<!-- ===== Collar — Charge / Disruption / Gizmo ===== -->
 	<SSC_Collar_Disrupted>EM Disrupted</SSC_Collar_Disrupted>

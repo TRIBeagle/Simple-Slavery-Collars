@@ -23,6 +23,7 @@
 
 	<!-- ===== 角色要求 (XML labelKey) ===== -->
 	<RoleRequirementLabelNotSlave>必须不是奴隶</RoleRequirementLabelNotSlave>
+	<RoleRequirementLabelSlaveStage>奴隶必须已同化至定居点</RoleRequirementLabelSlaveStage>
 
 	<!-- ===== 项圈 — 充电 / 电磁干扰 / Gizmo ===== -->
 	<SSC_Collar_Disrupted>EM Disrupted</SSC_Collar_Disrupted>

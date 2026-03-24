@@ -16,6 +16,7 @@
 	<SSC_Collar_RemoteOnly_Reason>Can only be operated from the console.</SSC_Collar_RemoteOnly_Reason>
 	<SSC_Explosive_Armed_Reason>Explosive collar was armed to detonate.</SSC_Explosive_Armed_Reason>
 	<RoleRequirementLabelNotSlave>Must not be a slave</RoleRequirementLabelNotSlave>
+	<RoleRequirementLabelSlaveStage>Must be at least slave stage 5</RoleRequirementLabelSlaveStage>
 	<SSC_Collar_Disrupted>EM Disrupted</SSC_Collar_Disrupted>
 	<SSC_Collar_Unlimited>Unlimited</SSC_Collar_Unlimited>
 	<SSC_Collar_Arm>Arm</SSC_Collar_Arm>

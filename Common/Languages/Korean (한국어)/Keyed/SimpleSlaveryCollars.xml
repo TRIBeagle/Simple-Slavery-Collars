@@ -23,6 +23,7 @@
 
 	<!-- ===== 역할 요구조건 (XML labelKey) ===== -->
 	<RoleRequirementLabelNotSlave>노예가 아니어야 함</RoleRequirementLabelNotSlave>
+	<RoleRequirementLabelSlaveStage>노예가 정착지에 동화되어야 함</RoleRequirementLabelSlaveStage>
 
 	<!-- ===== 칼라 — 충전 / 전자기 교란 / 기즈모 ===== -->
 	<SSC_Collar_Disrupted>전자기 교란</SSC_Collar_Disrupted>
