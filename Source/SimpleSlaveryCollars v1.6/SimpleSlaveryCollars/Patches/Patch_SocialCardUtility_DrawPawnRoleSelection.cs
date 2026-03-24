@@ -7,7 +7,6 @@
 using HarmonyLib;
 using RimWorld;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 using Verse;
@@ -47,7 +46,7 @@ namespace SimpleSlaveryCollars.Patches
 
             var currentRole = pawn.Ideo?.GetRole(pawn);
             var primaryIdeo = Faction.OfPlayer?.ideos?.PrimaryIdeo;
-            bool active = CachedRoles.Any() && pawn.Ideo != null;
+            bool active = CachedRoles.Count > 0 && pawn.Ideo != null;
 
             // 버튼 위치 계산
             float y = rect.y + rect.height / 2f - 14f;

@@ -7,7 +7,6 @@
 
 using HarmonyLib;
 using System.Collections.Generic;
-using System.Linq;
 using Verse;
 using SimpleSlaveryCollars.Utilities;
 
@@ -21,34 +20,29 @@ namespace SimpleSlaveryCollars.Patches
     public static class Patch_Pawn_GetGizmos
     {
         /// <summary>
-        /// Postfix: 원래 Gizmos + SlaveGizmos 병합.
+        /// Postfix: 원래 Gizmos + SlaveGizmos 병합. LINQ Concat 제거 → yield 체이닝.
         /// </summary>
-        static void Postfix(Pawn __instance, ref IEnumerable<Gizmo> __result)
+        static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> __result, Pawn __instance)
         {
-            var baseGizmos = __result ?? Enumerable.Empty<Gizmo>();
-            var slaveGizmos = SlaveGizmos(__instance) ?? Enumerable.Empty<Gizmo>();
+            if (__result != null)
+            {
+                foreach (var g in __result)
+                    yield return g;
+            }
 
-            __result = baseGizmos.Concat(slaveGizmos);
-        }
-
-        /// <summary>
-        /// Pawn이 착용한 SlaveApparel의 Gizmo를 순회하며 반환.
-        /// Colony Pawn이 아닐 경우 비활성.
-        /// </summary>
-        internal static IEnumerable<Gizmo> SlaveGizmos(Pawn pawn)
-        {
-            if (!SimpleSlaveryUtility.IsColonyMember(pawn))
+            if (!SimpleSlaveryUtility.IsColonyMember(__instance))
                 yield break;
 
-            if (pawn.apparel != null)
+            if (__instance.apparel == null)
+                yield break;
+
+            var worn = __instance.apparel.WornApparel;
+            for (int i = 0; i < worn.Count; i++)
             {
-                foreach (var apparel in pawn.apparel.WornApparel)
+                if (worn[i] is SlaveApparel slaveApparel)
                 {
-                    if (apparel is SlaveApparel slaveApparel)
-                    {
-                        foreach (var g in slaveApparel.SlaveGizmos())
-                            yield return g;
-                    }
+                    foreach (var g in slaveApparel.SlaveGizmos())
+                        yield return g;
                 }
             }
         }

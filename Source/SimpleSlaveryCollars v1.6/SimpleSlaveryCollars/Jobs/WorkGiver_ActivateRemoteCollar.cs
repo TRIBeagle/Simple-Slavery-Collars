@@ -7,7 +7,6 @@
 
 using RimWorld;
 using System.Collections.Generic;
-using System.Linq;
 using Verse;
 using Verse.AI;
 using SimpleSlaveryCollars.Utilities;
@@ -60,27 +59,24 @@ namespace SimpleSlaveryCollars.Jobs
             if (!pawn.CanReserveAndReach(t, PathEndMode.InteractionCell, pawn.NormalMaxDanger(), 1, -1, null, forced))
                 return false;
 
-            // [Job] 예약 리스트 1회 캐싱
-            var reservedList = comp.GetAllReservedPawns().ToList();
-
             // [Job] 그룹 예약이 있으면 자기 자신 제외 시 true
             if (comp.groupJobPending)
             {
-                if (reservedList.Contains(pawn))
+                if (comp.IsPawnReserved(pawn))
                     return false;
-                if (reservedList.Count > 0)
-                    return true;
+                // 자기 외에 예약된 Pawn이 있으면 true
+                foreach (var rp in comp.GetAllReservedPawns())
+                {
+                    if (rp != pawn) return true;
+                }
             }
 
             // [Job] 개별 예약 확인: 자기 자신 제외, Pawn/콘솔 둘 다 예약 가능해야 함
-            foreach (var targetPawn in reservedList)
+            foreach (var targetPawn in comp.GetAllReservedPawns())
             {
-                if (targetPawn == pawn)
-                    continue;
-                if (!pawn.CanReserve(t, 1, -1, null, forced))
-                    continue;
-                if (!pawn.CanReserve(targetPawn, 1, -1, null, forced))
-                    continue;
+                if (targetPawn == pawn) continue;
+                if (!pawn.CanReserve(t, 1, -1, null, forced)) continue;
+                if (!pawn.CanReserve(targetPawn, 1, -1, null, forced)) continue;
                 return true;
             }
             return false;
@@ -100,15 +96,16 @@ namespace SimpleSlaveryCollars.Jobs
             // [Job] 그룹 Job 생성
             if (comp.groupJobPending)
             {
-                var reservedList = comp.GetAllReservedPawns().ToList();
-                if (reservedList.Contains(pawn))
+                if (comp.IsPawnReserved(pawn))
                     return null;
-                if (reservedList.Count > 0)
+
+                var targets = new List<LocalTargetInfo>();
+                foreach (var rp in comp.GetAllReservedPawns())
+                    targets.Add(new LocalTargetInfo(rp));
+
+                if (targets.Count > 0)
                 {
                     var groupJob = JobMaker.MakeJob(SimpleSlaveryDefOf.ActivateRemoteCollarGroup, t);
-                    var targets = new List<LocalTargetInfo>(reservedList.Count);
-                    for (int i = 0; i < reservedList.Count; i++)
-                        targets.Add(new LocalTargetInfo(reservedList[i]));
                     groupJob.targetQueueA = targets;
                     groupJob.count = (int)comp.groupJobActionType;
 
@@ -119,8 +116,16 @@ namespace SimpleSlaveryCollars.Jobs
                 }
             }
 
-            // [Job] 개별 Job 생성
-            var targetPawn = comp.GetAllReservedPawns().FirstOrDefault(p => p != pawn && !p.Dead && p.Spawned);
+            // [Job] 개별 Job 생성 — 자기 자신 제외, 생존+스폰 중인 첫 Pawn
+            Pawn targetPawn = null;
+            foreach (var rp in comp.GetAllReservedPawns())
+            {
+                if (rp != pawn && !rp.Dead && rp.Spawned)
+                {
+                    targetPawn = rp;
+                    break;
+                }
+            }
             if (targetPawn == null) return null;
 
             if (!pawn.CanReserveAndReach(t, PathEndMode.InteractionCell, pawn.NormalMaxDanger(), 1, -1, null, forced))
