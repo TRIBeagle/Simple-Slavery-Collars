@@ -21,7 +21,7 @@
 	<SSC_Collar_Disarm>Disarm</SSC_Collar_Disarm>
 	<SSC_Collar_Emp_Tooltip>Disabled by EMP (remaining: {0})</SSC_Collar_Emp_Tooltip>
 	<SSC_Collar_Unlimited_Tooltip>Charging system disabled — unlimited operation</SSC_Collar_Unlimited_Tooltip>
-	<SSC_Collar_Charge_Tooltip>Charge: {0}%</SSC_Collar_Charge_Tooltip>
+	<SSC_Collar_Charge_Tooltip>Charge: {0} / {1} Wd</SSC_Collar_Charge_Tooltip>
 	<SSC_Collar_RechargeThreshold>Recharge Threshold</SSC_Collar_RechargeThreshold>
 	<SSC_Collar_SelfRecharge_Toggle>Toggle self-recharge (Stage5 slaves/colonists only)</SSC_Collar_SelfRecharge_Toggle>
 	<SSC_Collar_SelfRecharge_On>Self-recharge: Allowed</SSC_Collar_SelfRecharge_On>
@@ -115,4 +115,13 @@
 	<SSC_Setting_DrainMultiplier_Title>Collar drain global multiplier</SSC_Setting_DrainMultiplier_Title>
 	<SSC_Setting_DrainMultiplier_Desc>Multiplied to all collar power drain. 1 = default, 0.5 = half, 2 = double. Default: 1</SSC_Setting_DrainMultiplier_Desc>
 	<SSC_Setting_ResetAll_Title>Reset All Setting</SSC_Setting_ResetAll_Title>
+
+	<SSC_Stat_BatteryCapacity>Max Battery Capacity</SSC_Stat_BatteryCapacity>
+	<SSC_Stat_BatteryCapacity_Desc>Maximum battery capacity of this collar. Varies by quality.</SSC_Stat_BatteryCapacity_Desc>
+	<SSC_Stat_IdleDrain>Idle Drain Rate</SSC_Stat_IdleDrain>
+	<SSC_Stat_IdleDrain_Desc>Power drain when the collar is in standby (unarmed).</SSC_Stat_IdleDrain_Desc>
+	<SSC_Stat_ActiveDrain>Active Drain Rate</SSC_Stat_ActiveDrain>
+	<SSC_Stat_ActiveDrain_Desc>Power drain when the collar is armed (active).</SSC_Stat_ActiveDrain_Desc>
+	<SSC_Stat_Day>day</SSC_Stat_Day>
+	<SSC_Inspect_Shackled>Restrained (slowed)</SSC_Inspect_Shackled>
 </LanguageData>

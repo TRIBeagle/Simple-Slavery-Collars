@@ -28,7 +28,7 @@
 	<SSC_Collar_Disarm>Disarm</SSC_Collar_Disarm>
 	<SSC_Collar_Emp_Tooltip>Disabled by EMP (remaining: {0})</SSC_Collar_Emp_Tooltip>
 	<SSC_Collar_Unlimited_Tooltip>Charging system disabled — unlimited operation</SSC_Collar_Unlimited_Tooltip>
-	<SSC_Collar_Charge_Tooltip>Charge: {0}%</SSC_Collar_Charge_Tooltip>
+	<SSC_Collar_Charge_Tooltip>Charge: {0} / {1} Wd</SSC_Collar_Charge_Tooltip>
 	<SSC_Collar_RechargeThreshold>Recharge Threshold</SSC_Collar_RechargeThreshold>
 	<SSC_Collar_SelfRecharge_Toggle>Toggle self-recharge (Stage5 slaves/colonists only)</SSC_Collar_SelfRecharge_Toggle>
 	<SSC_Collar_SelfRecharge_On>Self-recharge: Allowed</SSC_Collar_SelfRecharge_On>
@@ -142,4 +142,13 @@
 	<SSC_Setting_DrainMultiplier_Title>Collar drain global multiplier</SSC_Setting_DrainMultiplier_Title>
 	<SSC_Setting_DrainMultiplier_Desc>Multiplied to all collar power drain. 1 = default, 0.5 = half, 2 = double. Default: 1</SSC_Setting_DrainMultiplier_Desc>
 	<SSC_Setting_ResetAll_Title>重置设置</SSC_Setting_ResetAll_Title>
+
+	<SSC_Stat_BatteryCapacity>最大电池容量</SSC_Stat_BatteryCapacity>
+	<SSC_Stat_BatteryCapacity_Desc>此项圈的最大电池容量。随品质而变。</SSC_Stat_BatteryCapacity_Desc>
+	<SSC_Stat_IdleDrain>待机消耗</SSC_Stat_IdleDrain>
+	<SSC_Stat_IdleDrain_Desc>项圈待机（未激活）时的耗电量。</SSC_Stat_IdleDrain_Desc>
+	<SSC_Stat_ActiveDrain>激活消耗</SSC_Stat_ActiveDrain>
+	<SSC_Stat_ActiveDrain_Desc>项圈激活（武装）时的耗电量。</SSC_Stat_ActiveDrain_Desc>
+	<SSC_Stat_Day>天</SSC_Stat_Day>
+	<SSC_Inspect_Shackled>被束缚（减速）</SSC_Inspect_Shackled>
 </LanguageData>

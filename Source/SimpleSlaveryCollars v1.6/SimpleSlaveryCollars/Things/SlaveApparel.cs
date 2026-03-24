@@ -201,6 +201,42 @@ namespace SimpleSlaveryCollars
         /// <summary>충전량 퍼센트 (0~100).</summary>
         public int ChargePercent => Mathf.RoundToInt(charge * 100f);
 
+        /// <summary>의상 정보창에 배터리 용량/소모 속도를 보호막 벨트 스타일로 표기.</summary>
+        public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
+        {
+            foreach (var s in base.SpecialDisplayStats())
+                yield return s;
+
+            if (!SimpleSlaveryCollarsSetting.CollarChargeEnable)
+                yield break;
+
+            // 최대 용량
+            yield return new StatDrawEntry(
+                StatCategoryDefOf.Apparel,
+                "SSC_Stat_BatteryCapacity".Translate(),
+                BatteryCapacityWd.ToString("F1") + " Wd",
+                "SSC_Stat_BatteryCapacity_Desc".Translate(),
+                displayPriorityWithinCategory: 1000);
+
+            // 대기 소모 (Wd/일)
+            float idleDrain = (BatteryExt?.idleDrain ?? 10f) * SimpleSlaveryCollarsSetting.CollarDrainMultiplier;
+            yield return new StatDrawEntry(
+                StatCategoryDefOf.Apparel,
+                "SSC_Stat_IdleDrain".Translate(),
+                idleDrain.ToString("F1") + " Wd/" + "SSC_Stat_Day".Translate(),
+                "SSC_Stat_IdleDrain_Desc".Translate(),
+                displayPriorityWithinCategory: 999);
+
+            // 활성 소모 (Wd/일)
+            float activeDrain = (BatteryExt?.activeDrain ?? 30f) * SimpleSlaveryCollarsSetting.CollarDrainMultiplier;
+            yield return new StatDrawEntry(
+                StatCategoryDefOf.Apparel,
+                "SSC_Stat_ActiveDrain".Translate(),
+                activeDrain.ToString("F1") + " Wd/" + "SSC_Stat_Day".Translate(),
+                "SSC_Stat_ActiveDrain_Desc".Translate(),
+                displayPriorityWithinCategory: 998);
+        }
+
         #region 레지스트리 통합
         /// <summary>착용 시 SlaveCollarRegistry에 등록.</summary>
         public override void Notify_Equipped(Pawn pawn)

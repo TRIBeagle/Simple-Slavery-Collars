@@ -28,7 +28,7 @@
 	<SSC_Collar_Disarm>해제</SSC_Collar_Disarm>
 	<SSC_Collar_Emp_Tooltip>EMP로 비활성화 중 (남은 시간: {0})</SSC_Collar_Emp_Tooltip>
 	<SSC_Collar_Unlimited_Tooltip>충전 시스템 꺼짐 — 무제한 작동</SSC_Collar_Unlimited_Tooltip>
-	<SSC_Collar_Charge_Tooltip>충전량: {0}%</SSC_Collar_Charge_Tooltip>
+	<SSC_Collar_Charge_Tooltip>충전량: {0} / {1} Wd</SSC_Collar_Charge_Tooltip>
 	<SSC_Collar_RechargeThreshold>충전 임계값</SSC_Collar_RechargeThreshold>
 	<SSC_Collar_SelfRecharge_Toggle>자가 충전 허용 토글 (Stage5 노예/식민자만 가능)</SSC_Collar_SelfRecharge_Toggle>
 	<SSC_Collar_SelfRecharge_On>자가 충전: 허용</SSC_Collar_SelfRecharge_On>
@@ -142,4 +142,16 @@
 	<SSC_Setting_DrainMultiplier_Title>칼라 소모량 글로벌 배율</SSC_Setting_DrainMultiplier_Title>
 	<SSC_Setting_DrainMultiplier_Desc>모든 칼라의 전력 소모량에 곱해지는 배율. 1 = 기본, 0.5 = 절반, 2 = 두 배. 기본: 1</SSC_Setting_DrainMultiplier_Desc>
 	<SSC_Setting_ResetAll_Title>설정 리셋</SSC_Setting_ResetAll_Title>
+
+	<!-- ===== 의상 정보 스탯 ===== -->
+	<SSC_Stat_BatteryCapacity>최대 충전 용량</SSC_Stat_BatteryCapacity>
+	<SSC_Stat_BatteryCapacity_Desc>이 목걸이의 최대 배터리 용량입니다. 품질에 따라 달라집니다.</SSC_Stat_BatteryCapacity_Desc>
+	<SSC_Stat_IdleDrain>대기 소모량</SSC_Stat_IdleDrain>
+	<SSC_Stat_IdleDrain_Desc>목걸이가 비활성 상태일 때의 전력 소모량입니다.</SSC_Stat_IdleDrain_Desc>
+	<SSC_Stat_ActiveDrain>활성 소모량</SSC_Stat_ActiveDrain>
+	<SSC_Stat_ActiveDrain_Desc>목걸이가 무장(활성) 상태일 때의 전력 소모량입니다.</SSC_Stat_ActiveDrain_Desc>
+	<SSC_Stat_Day>일</SSC_Stat_Day>
+
+	<!-- ===== 인스펙트 — 구속 ===== -->
+	<SSC_Inspect_Shackled>구속됨 (느려짐)</SSC_Inspect_Shackled>
 </LanguageData>

@@ -130,7 +130,7 @@ namespace SimpleSlaveryCollars.Gizmos
                     ThresholdMarkers, 20, 0.1f, 0.95f);
 
                 collar.rechargeThreshold = threshold;
-                DrawBarLabel(barRect, $"{collar.ChargePercent}%");
+                DrawBarLabel(barRect, $"{collar.ChargeWd:F0} / {collar.BatteryCapacityWd:F0}");
             }
 
             // ── 툴팁 ──
@@ -161,11 +161,12 @@ namespace SimpleSlaveryCollars.Gizmos
             if (!chargeEnabled)
                 return "SSC_Collar_Unlimited_Tooltip".Translate();
 
+            float thresholdWd = collar.rechargeThreshold * collar.BatteryCapacityWd;
             int thresholdPct = Mathf.RoundToInt(collar.rechargeThreshold * 100f);
             string selfStatus = collar.selfRechargeAllowed
                 ? "SSC_Collar_SelfRecharge_On".Translate()
                 : "SSC_Collar_SelfRecharge_Off".Translate();
-            return $"{"SSC_Collar_Charge_Tooltip".Translate(collar.ChargePercent)}\n{"SSC_Collar_RechargeThreshold".Translate()}: {thresholdPct}%\n{selfStatus}";
+            return $"{"SSC_Collar_Charge_Tooltip".Translate(collar.ChargeWd.ToString("F1"), collar.BatteryCapacityWd.ToString("F1"))}\n{"SSC_Collar_RechargeThreshold".Translate()}: {thresholdWd:F1} Wd ({thresholdPct}%)\n{selfStatus}";
         }
     }
 }

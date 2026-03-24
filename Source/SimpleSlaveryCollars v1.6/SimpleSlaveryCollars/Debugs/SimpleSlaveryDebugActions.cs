@@ -97,6 +97,90 @@ namespace SimpleSlaveryCollars.Debugs
             Find.WindowStack.Add(new FloatMenu(opts));
         }
 
+        /// <summary>
+        /// Pawn이 착용한 노예 칼라의 배터리 충전량을 조정하는 디버그 액션.
+        /// - 만충 / 방전 / 직접 입력(Wd) / 현재 상태 표시
+        /// </summary>
+        [DebugAction(
+            category = "Simple Slavery Collars",
+            name = "Adjust Collar Charge...",
+            actionType = DebugActionType.ToolMapForPawns,
+            allowedGameStates = AllowedGameStates.PlayingOnMap
+        )]
+        private static void AdjustCollarCharge(Pawn pawn)
+        {
+            if (pawn == null || pawn.DestroyedOrNull()) return;
+            if (!Prefs.DevMode) return;
+
+            var collar = SimpleSlaveryUtility.GetSlaveCollar(pawn) as SlaveApparel;
+            if (collar == null)
+            {
+                Toast($"{pawn.LabelShort}: 노예 칼라를 착용하고 있지 않습니다.");
+                return;
+            }
+
+            float capacity = collar.BatteryCapacityWd;
+            float currentWd = collar.ChargeWd;
+
+            var opts = new List<FloatMenuOption>
+            {
+                new FloatMenuOption($"Current: {currentWd:F1} / {capacity:F1} Wd ({collar.ChargePercent}%)", null)
+            };
+
+            // [UI] 만충
+            opts.Add(new FloatMenuOption("Full Charge (100%)", () =>
+            {
+                collar.charge = 1f;
+                Toast($"{pawn.LabelShort}: 만충 ({capacity:F1} Wd)");
+            }));
+
+            // [UI] 방전
+            opts.Add(new FloatMenuOption("Deplete (0%)", () =>
+            {
+                collar.charge = 0f;
+                Toast($"{pawn.LabelShort}: 방전 (0 Wd)");
+            }));
+
+            // [UI] 50%
+            opts.Add(new FloatMenuOption("Set to 50%", () =>
+            {
+                collar.charge = 0.5f;
+                Toast($"{pawn.LabelShort}: 50% ({capacity * 0.5f:F1} Wd)");
+            }));
+
+            // [UI] 임계값 바로 위 (6%)
+            opts.Add(new FloatMenuOption($"Set to just above threshold ({SlaveApparel.ChargeThreshold * 100f + 1f:F0}%)", () =>
+            {
+                collar.charge = SlaveApparel.ChargeThreshold + 0.01f;
+                Toast($"{pawn.LabelShort}: 임계값 직상 ({collar.ChargeWd:F1} Wd)");
+            }));
+
+            // [UI] 임계값 바로 아래 (4%)
+            opts.Add(new FloatMenuOption($"Set to below threshold ({SlaveApparel.ChargeThreshold * 100f - 1f:F0}%)", () =>
+            {
+                collar.charge = Mathf.Max(0f, SlaveApparel.ChargeThreshold - 0.01f);
+                Toast($"{pawn.LabelShort}: 임계값 이하 ({collar.ChargeWd:F1} Wd)");
+            }));
+
+            // [UI] 직접 입력 (Wd)
+            opts.Add(new FloatMenuOption("Set exact (Wd)...", () =>
+            {
+                int curWdInt = Mathf.RoundToInt(collar.ChargeWd);
+                int maxWdInt = Mathf.Max(1, Mathf.RoundToInt(capacity));
+                Find.WindowStack.Add(new Dialog_SSCIntInput(
+                    title: $"Set Charge (0~{maxWdInt} Wd)",
+                    initialValue: curWdInt,
+                    min: 0, max: maxWdInt,
+                    onConfirm: wd =>
+                    {
+                        collar.charge = Mathf.Clamp01((float)wd / capacity);
+                        Toast($"{pawn.LabelShort}: {collar.ChargeWd:F1} / {capacity:F1} Wd");
+                    }));
+            }));
+
+            Find.WindowStack.Add(new FloatMenu(opts));
+        }
+
         // ---------- helpers ----------
 
         /// <summary>Stage 경계선 옵션 추가.</summary>
