@@ -9,6 +9,7 @@ using HarmonyLib;
 using System.Reflection;
 using Verse;
 using SimpleSlaveryCollars.Utilities;
+using SimpleSlaveryCollars.Compat;
 
 namespace SimpleSlaveryCollars
 {
@@ -22,6 +23,9 @@ namespace SimpleSlaveryCollars
         {
             new Harmony("TRIBeagle.simpleslaverycollars")
                 .PatchAll(Assembly.GetExecutingAssembly());
+
+            // 호환 패치 (HAR 등) — Def 로딩 완료 후 실행
+            LongEventHandler.ExecuteWhenFinished(CompatManager.ReportAllOnce);
         }
     }
 
