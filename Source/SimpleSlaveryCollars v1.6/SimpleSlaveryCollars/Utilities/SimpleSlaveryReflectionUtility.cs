@@ -20,7 +20,7 @@ namespace SimpleSlaveryCollars.Utilities
     {
         private static FieldInfo _defMapField;
         private static MethodInfo _defMapSetItem;
-        private static bool _searched;
+        private static volatile bool _searched;
 
         /// <summary>
         /// DefMap 필드와 set_Item이 사용 가능한지 여부.

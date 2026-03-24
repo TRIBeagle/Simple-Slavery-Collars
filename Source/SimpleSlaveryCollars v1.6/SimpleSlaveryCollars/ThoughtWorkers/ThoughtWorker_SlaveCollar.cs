@@ -24,8 +24,8 @@ namespace SimpleSlaveryCollars
         /// <summary>
         /// Pawn의 특성/소속/노예 경과시간 및 칼라 종류에 따라 ThoughtState를 반환한다.
         /// </summary>
-        // TraitDef.Named 반복 호출 방지 — 1회 캐싱
-        private static TraitDef _masochistTraitDef;
+        // TraitDef.Named 반복 호출 방지 — 1회 캐싱. volatile로 스레드 안전성 보장
+        private static volatile TraitDef _masochistTraitDef;
         private static TraitDef MasochistTrait => _masochistTraitDef ?? (_masochistTraitDef = TraitDef.Named("Masochist"));
 
         protected override ThoughtState CurrentStateInternal(Pawn pawn)

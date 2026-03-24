@@ -112,9 +112,10 @@ namespace SimpleSlaveryCollars.Patches
 
                     string label2 = role.LabelForPawn(pawn) + (pawn.Ideo.classicMode ? "" : $" ({role.def.label})");
 
-                    if (role.ChosenPawnSingle() != null && role.ChosenPawnSingle() != pawn)
+                    var chosenPawn = role.ChosenPawnSingle();
+                    if (chosenPawn != null && chosenPawn != pawn)
                     {
-                        label2 += ": " + role.ChosenPawnSingle().LabelShort;
+                        label2 += ": " + chosenPawn.LabelShort;
                         canSelect = false;
                     }
                     else if (!role.RequirementsMet(pawn))

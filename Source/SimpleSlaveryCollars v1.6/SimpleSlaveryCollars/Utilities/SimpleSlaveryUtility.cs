@@ -171,8 +171,8 @@ namespace SimpleSlaveryCollars.Utilities
         /// <summary>
         /// Pawn이 Steadfast(의지 강함)인지 판정합니다. Wimp면 false, Nerves의 Degree>0이면 true.
         /// </summary>
-        // TraitDef.Named 반복 호출 방지 — 1회 캐싱
-        private static TraitDef _wimpTraitDef;
+        // TraitDef.Named 반복 호출 방지 — 1회 캐싱. volatile로 스레드 안전성 보장
+        private static volatile TraitDef _wimpTraitDef;
         private static TraitDef WimpTrait => _wimpTraitDef ?? (_wimpTraitDef = TraitDef.Named("Wimp"));
 
         public static bool IsSteadfast(Pawn pawn)
