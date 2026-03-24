@@ -505,44 +505,79 @@ namespace SimpleSlaveryCollars.Gizmos
             InvalidateCache();
         }
 
-        /// <summary>일괄 무장/해제 드롭다운 메뉴. 칼라 종류별 항목 + 대상 수 표시.</summary>
+        /// <summary>일괄 무장/해제 드롭다운 메뉴. [전체] + 칼라 종류별 항목.</summary>
         private void OpenBulkMenu(bool arm)
         {
             var pawns = GetFilteredPawns();
             var options = new List<FloatMenuOption>();
+            System.Func<SlaveApparel, RemoteCollarAction?> getAction = arm ? (System.Func<SlaveApparel, RemoteCollarAction?>)GetArmAction : GetDisarmAction;
 
-            // 칼라 종류별 집계 및 메뉴 항목 생성
-            var collarTypes = new (System.Type type, string labelKey, System.Func<SlaveApparel, RemoteCollarAction?> getAction)[]
+            // ── [전체] 항목 — 모든 칼라 종류 일괄 ──
+            var allEligible = new List<PawnCollarInfo>();
+            for (int i = 0; i < pawns.Count; i++)
             {
-                (typeof(SlaveCollar_Explosive), "SSC_Console_CollarExplosive", arm ? (System.Func<SlaveApparel, RemoteCollarAction?>)GetArmAction : GetDisarmAction),
-                (typeof(SlaveCollar_Electric),  "SSC_Console_CollarElectric",  arm ? (System.Func<SlaveApparel, RemoteCollarAction?>)GetArmAction : GetDisarmAction),
-                (typeof(SlaveCollar_Crypto),    "SSC_Console_CollarCrypto",    arm ? (System.Func<SlaveApparel, RemoteCollarAction?>)GetArmAction : GetDisarmAction),
-            };
+                var info = pawns[i];
+                if (comp.IsPawnReserved(info.pawn)) continue;
+                if (arm && info.collar.IsArmed) continue;
+                if (!arm && !info.collar.IsArmed) continue;
+                if (!getAction(info.collar).HasValue) continue;
+                allEligible.Add(info);
+            }
 
-            for (int t = 0; t < collarTypes.Length; t++)
+            string allLabel = "SSC_Console_FilterAll".Translate() + $" ({allEligible.Count})";
+            if (allEligible.Count == 0)
             {
-                var ct = collarTypes[t];
-                // 대상 폰 집계
+                options.Add(new FloatMenuOption(allLabel, null));
+            }
+            else
+            {
+                var capturedAll = allEligible;
+                options.Add(new FloatMenuOption(allLabel, () =>
+                {
+                    int count = 0;
+                    for (int i = 0; i < capturedAll.Count; i++)
+                    {
+                        var action = getAction(capturedAll[i].collar);
+                        if (!action.HasValue) continue;
+                        comp.ReserveJobForPawn(capturedAll[i].pawn, action.Value);
+                        count++;
+                    }
+                    if (count > 0)
+                    {
+                        string actionLabel = arm
+                            ? "SSC_Collar_Arm".Translate().ToString()
+                            : "SSC_Collar_Disarm".Translate().ToString();
+                        Messages.Message(
+                            "SSC_Remote_GroupReserved".Translate(count, actionLabel),
+                            MessageTypeDefOf.TaskCompletion);
+                    }
+                    InvalidateCache();
+                }));
+            }
+
+            // ── 칼라 종류별 항목 ──
+            for (int t = 0; t < KnownCollarTypes.Length; t++)
+            {
+                var ct = KnownCollarTypes[t];
                 var eligible = new List<PawnCollarInfo>();
                 for (int i = 0; i < pawns.Count; i++)
                 {
                     var info = pawns[i];
                     if (comp.IsPawnReserved(info.pawn)) continue;
                     if (!ct.type.IsInstanceOfType(info.collar)) continue;
-                    if (arm && info.collar.IsArmed) continue;     // 무장: 비무장만
-                    if (!arm && !info.collar.IsArmed) continue;   // 해제: 무장만
+                    if (arm && info.collar.IsArmed) continue;
+                    if (!arm && !info.collar.IsArmed) continue;
                     eligible.Add(info);
                 }
 
-                string label = ct.labelKey.Translate() + $" ({eligible.Count})";
+                string label = "    " + ct.labelKey.Translate() + $" ({eligible.Count})";
                 if (eligible.Count == 0)
                 {
-                    options.Add(new FloatMenuOption(label, null)); // 비활성
+                    options.Add(new FloatMenuOption(label, null));
                 }
                 else
                 {
                     var captured = eligible;
-                    var getAction = ct.getAction;
                     options.Add(new FloatMenuOption(label, () =>
                     {
                         int count = 0;
