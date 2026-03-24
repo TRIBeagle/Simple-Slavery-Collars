@@ -15,6 +15,5 @@
   <v1.6>
     <li>Common</li>
     <li>1.6</li>
-    <!-- HAR 호환은 메인 DLL에 통합 (리플렉션). 별도 DLL 불필요 -->
   </v1.6>
 </loadFolders>
