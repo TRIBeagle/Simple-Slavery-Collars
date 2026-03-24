@@ -4,7 +4,7 @@
 // 주의 : EMP 비활성화 중에는 바 회색 + "EMP 비활성화" 텍스트
 //        드래그 중 collar.rechargeThreshold 실시간 갱신 → 세이브에 반영
 
-using System.Collections.Generic;
+using RimWorld;
 using UnityEngine;
 using Verse;
 using Verse.Sound;

@@ -3,6 +3,7 @@
 // 용도 : WorkGiver_SelfRechargeCollar에서 생성. TargetA = 충전소(건물)
 // 주의 : Warden 충전과 달리 에스코트 없음 — 본인이 직접 이동/대기/충전
 
+using RimWorld;
 using System.Collections.Generic;
 using Verse;
 using Verse.AI;

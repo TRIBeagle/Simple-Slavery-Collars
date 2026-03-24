@@ -3,9 +3,11 @@
 // 용도 : WorkGiver_Warden_RechargeCollar에서 생성
 // 주의 : TargetA = 노예, TargetB = 콘솔. 콘솔 전원 OFF 시 실패
 
+using RimWorld;
 using System.Collections.Generic;
 using Verse;
 using Verse.AI;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Jobs
 {
