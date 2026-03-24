@@ -26,6 +26,8 @@ namespace SimpleSlaveryCollars
         public static bool Stage5SlaveWorkUnlockEnable = true;
         public static bool AssimilationSlaveEnable = true;
         public static bool RemoteOnlyOnConsoleEnable = true;
+        public static bool CollarChargeEnable = true;
+        public static bool CollarEmpEnable = true;
 
         public static float Slavestage1Period = 15f;
         public static float Slavestage2Period = 15f;
@@ -48,6 +50,8 @@ namespace SimpleSlaveryCollars
             Scribe_Values.Look(ref Stage5SlaveWorkUnlockEnable, "Stage5SlaveWorkUnlockEnable", true);
             Scribe_Values.Look(ref AssimilationSlaveEnable, "AssimilationSlaveEnable", true);
             Scribe_Values.Look(ref RemoteOnlyOnConsoleEnable, "RemoteOnlyOnConsoleEnable", true);
+            Scribe_Values.Look(ref CollarChargeEnable, "CollarChargeEnable", true);
+            Scribe_Values.Look(ref CollarEmpEnable, "CollarEmpEnable", true);
             Scribe_Values.Look(ref Slavestage1Period, "Slavestage1Period", 15f);
             Scribe_Values.Look(ref Slavestage2Period, "Slavestage2Period", 15f);
             Scribe_Values.Look(ref Slavestage3Period, "Slavestage3Period", 15f);
@@ -70,6 +74,8 @@ namespace SimpleSlaveryCollars
             listingStandard.CheckboxLabeled("stage5SlaveWorkUnlockEnableSetting_title".Translate(), ref Stage5SlaveWorkUnlockEnable, "stage5SlaveWorkUnlockEnableSetting_desc".Translate());
             listingStandard.CheckboxLabeled("assimilationslaveEnableSetting_title".Translate(), ref AssimilationSlaveEnable, "assimilationslaveEnableSetting_desc".Translate());
             listingStandard.CheckboxLabeled("remoteOnlyOnConsoleEnableSetting_title".Translate(), ref RemoteOnlyOnConsoleEnable, "remoteOnlyOnConsoleEnableSetting_desc".Translate());
+            listingStandard.CheckboxLabeled("collarChargeEnableSetting_title".Translate(), ref CollarChargeEnable, "collarChargeEnableSetting_desc".Translate());
+            listingStandard.CheckboxLabeled("collarEmpEnableSetting_title".Translate(), ref CollarEmpEnable, "collarEmpEnableSetting_desc".Translate());
 
             listingStandard.Label("slavestage1Period_title".Translate(), -1f, "slavestage1Period_desc".Translate());
             listingStandard.TextFieldNumeric(ref Slavestage1Period, ref Slavestage1PeriodBuffer);
@@ -93,6 +99,8 @@ namespace SimpleSlaveryCollars
                 Stage5SlaveWorkUnlockEnable = true;
                 AssimilationSlaveEnable = true;
                 RemoteOnlyOnConsoleEnable = true;
+                CollarChargeEnable = true;
+                CollarEmpEnable = true;
 
                 Slavestage1Period = 15f;
                 Slavestage2Period = 15f;
