@@ -29,12 +29,17 @@ namespace SimpleSlaveryCollars
         public static bool CollarChargeEnable = true;
         public static bool CollarEmpEnable = true;
         public static float CollarBatteryDays = 3f; // 대기 상태 만충 지속 일수
+        public static float CollarElectricDrainMultiplier = 3f;
+        public static float CollarCryptoDrainMultiplier = 5f;
 
         public static float Slavestage1Period = 15f;
         public static float Slavestage2Period = 15f;
         public static float Slavestage3Period = 15f;
         public static float Slavestage4Period = 15f;
 
+        private string CollarBatteryDaysBuffer;
+        private string CollarElectricDrainMultiplierBuffer;
+        private string CollarCryptoDrainMultiplierBuffer;
         private string Slavestage1PeriodBuffer;
         private string Slavestage2PeriodBuffer;
         private string Slavestage3PeriodBuffer;
@@ -54,6 +59,8 @@ namespace SimpleSlaveryCollars
             Scribe_Values.Look(ref CollarChargeEnable, "CollarChargeEnable", true);
             Scribe_Values.Look(ref CollarEmpEnable, "CollarEmpEnable", true);
             Scribe_Values.Look(ref CollarBatteryDays, "CollarBatteryDays", 3f);
+            Scribe_Values.Look(ref CollarElectricDrainMultiplier, "CollarElectricDrainMultiplier", 3f);
+            Scribe_Values.Look(ref CollarCryptoDrainMultiplier, "CollarCryptoDrainMultiplier", 5f);
             Scribe_Values.Look(ref Slavestage1Period, "Slavestage1Period", 15f);
             Scribe_Values.Look(ref Slavestage2Period, "Slavestage2Period", 15f);
             Scribe_Values.Look(ref Slavestage3Period, "Slavestage3Period", 15f);
@@ -81,8 +88,12 @@ namespace SimpleSlaveryCollars
 
             if (CollarChargeEnable)
             {
-                listingStandard.Label("collarBatteryDays_title".Translate() + ": " + CollarBatteryDays.ToString("0.#") + " " + "DaysLower".Translate(), -1f, "collarBatteryDays_desc".Translate());
-                CollarBatteryDays = listingStandard.Slider(CollarBatteryDays, 1f, 10f);
+                listingStandard.Label("collarBatteryDays_title".Translate(), -1f, "collarBatteryDays_desc".Translate());
+                listingStandard.TextFieldNumeric(ref CollarBatteryDays, ref CollarBatteryDaysBuffer, 1f, 60f);
+                listingStandard.Label("collarElectricDrain_title".Translate(), -1f, "collarElectricDrain_desc".Translate());
+                listingStandard.TextFieldNumeric(ref CollarElectricDrainMultiplier, ref CollarElectricDrainMultiplierBuffer, 1f, 20f);
+                listingStandard.Label("collarCryptoDrain_title".Translate(), -1f, "collarCryptoDrain_desc".Translate());
+                listingStandard.TextFieldNumeric(ref CollarCryptoDrainMultiplier, ref CollarCryptoDrainMultiplierBuffer, 1f, 20f);
             }
 
             listingStandard.Label("slavestage1Period_title".Translate(), -1f, "slavestage1Period_desc".Translate());
@@ -110,6 +121,8 @@ namespace SimpleSlaveryCollars
                 CollarChargeEnable = true;
                 CollarEmpEnable = true;
                 CollarBatteryDays = 3f;
+                CollarElectricDrainMultiplier = 3f;
+                CollarCryptoDrainMultiplier = 5f;
 
                 Slavestage1Period = 15f;
                 Slavestage2Period = 15f;

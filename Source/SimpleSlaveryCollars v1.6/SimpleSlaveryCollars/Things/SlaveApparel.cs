@@ -20,8 +20,8 @@ namespace SimpleSlaveryCollars
         private float IdleChargePerTick =>
             1f / (SimpleSlaveryCollarsSetting.CollarBatteryDays * 60000f);
 
-        /// <summary>작동(armed) 소모율 (틱당). 서브클래스에서 오버라이드. 기본 = 대기의 5배.</summary>
-        protected virtual float ActiveChargeMultiplier => 5f;
+        /// <summary>작동(armed) 소모 배율. 서브클래스에서 오버라이드.</summary>
+        protected virtual float ActiveChargeMultiplier => 1f;
 
         /// <summary>충전 임계값. 이 이하면 armed 불가.</summary>
         public const float ChargeThreshold = 0.05f;
