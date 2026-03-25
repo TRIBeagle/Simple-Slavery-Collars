@@ -59,6 +59,13 @@ namespace SimpleSlaveryCollars.Patches
                 {
                     foreach (var g in slaveApparel.SlaveGizmos())
                         result.Add(g);
+
+                    // DevMode 전용 충전 조작 기즈모 (바닐라 쉴드벨트 패턴)
+                    if (Prefs.DevMode)
+                    {
+                        foreach (var g in slaveApparel.DevChargeGizmos())
+                            result.Add(g);
+                    }
                 }
             }
             return result.Count > 0 ? result : null;

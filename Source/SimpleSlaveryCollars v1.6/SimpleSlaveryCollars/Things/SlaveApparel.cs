@@ -147,6 +147,45 @@ namespace SimpleSlaveryCollars
         /// <summary>칼라 전용 기즈모 반환. Pawn 선택 시 UI에 노출.</summary>
         public abstract IEnumerable<Gizmo> SlaveGizmos();
 
+        /// <summary>
+        /// DevMode 전용 충전 조작 기즈모. Prefs.DevMode일 때만 호출.
+        /// 바닐라 쉴드벨트의 DevMode 리셋 버튼 패턴.
+        /// </summary>
+        public IEnumerable<Gizmo> DevChargeGizmos()
+        {
+            if (!SimpleSlaveryCollarsSetting.CollarChargeEnable) yield break;
+
+            float capacity = BatteryCapacityWd;
+
+            // 만충
+            yield return new Command_Action
+            {
+                defaultLabel = "DEV: Full",
+                action = () => charge = 1f
+            };
+
+            // 방전
+            yield return new Command_Action
+            {
+                defaultLabel = "DEV: Deplete",
+                action = () => charge = 0f
+            };
+
+            // +20 Wd
+            yield return new Command_Action
+            {
+                defaultLabel = "DEV: +20 Wd",
+                action = () => charge = Mathf.Clamp01(charge + 20f / capacity)
+            };
+
+            // -20 Wd
+            yield return new Command_Action
+            {
+                defaultLabel = "DEV: -20 Wd",
+                action = () => charge = Mathf.Clamp01(charge - 20f / capacity)
+            };
+        }
+
         /// <summary>이 칼라가 armed 상태인지. 서브클래스에서 구현.</summary>
         public abstract bool IsArmed { get; }
 
