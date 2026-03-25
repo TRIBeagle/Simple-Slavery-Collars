@@ -29,9 +29,7 @@ namespace SimpleSlaveryCollars.Patches
                     || !SimpleSlaveryCollarsSetting.RemoveWorkspeedDebuffEnable)
                     return;
 
-                if (t is Pawn pawn
-                    && SimpleSlaveryUtility.TimeAsSlave(pawn) >= SimpleSlaveryUtility.SlaveStage4
-                    && !SimpleSlaveryUtility.IsSteadfast(pawn))
+                if (t is Pawn pawn && SimpleSlaveryUtility.IsStage5Slave(pawn))
                 {
                     __result = false;
                 }

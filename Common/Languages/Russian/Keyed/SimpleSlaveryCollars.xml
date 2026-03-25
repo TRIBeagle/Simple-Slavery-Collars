@@ -48,7 +48,9 @@
 	<SSC_Console_CollarExplosive>Explosive</SSC_Console_CollarExplosive>
 	<SSC_Console_CollarElectric>Electric</SSC_Console_CollarElectric>
 	<SSC_Console_CollarCrypto>Crypto</SSC_Console_CollarCrypto>
+	<SSC_Console_FilterAll>Все</SSC_Console_FilterAll>
 	<SSC_Console_ArmAll>Arm All</SSC_Console_ArmAll>
+	<SSC_Console_DetonateAll>Взорвать все</SSC_Console_DetonateAll>
 	<SSC_Console_DisarmAll>Disarm All</SSC_Console_DisarmAll>
 	<SSC_Console_CancelAllReservations>Cancel All</SSC_Console_CancelAllReservations>
 	<SSC_Console_AllCancelledCount>All scheduled operations for {0} pawn(s) have been cancelled.</SSC_Console_AllCancelledCount>

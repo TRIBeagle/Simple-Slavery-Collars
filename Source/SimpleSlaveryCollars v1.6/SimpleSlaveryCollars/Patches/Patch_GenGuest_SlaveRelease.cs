@@ -35,8 +35,7 @@ namespace SimpleSlaveryCollars.Patches
                 var mood = p.needs?.mood;
                 if (mood == null) return;
 
-                if (SimpleSlaveryUtility.TimeAsSlave(p) >= SimpleSlaveryUtility.SlaveStage4 &&
-                    !SimpleSlaveryUtility.IsSteadfast(p))
+                if (SimpleSlaveryUtility.IsStage5Slave(p))
                 {
                     mood.thoughts.memories.RemoveMemoriesOfDef(ThoughtDefOf.WasEnslaved);
                     mood.thoughts.memories.TryGainMemory(SimpleSlaveryDefOf.WasEnslaved_Assimilation);

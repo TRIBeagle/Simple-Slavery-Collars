@@ -33,8 +33,7 @@ namespace SimpleSlaveryCollars.Patches
                     !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable)
                     return;
 
-                if (SimpleSlaveryUtility.TimeAsSlave(pawn) >= SimpleSlaveryUtility.SlaveStage4 &&
-                    !SimpleSlaveryUtility.IsSteadfast(pawn))
+                if (SimpleSlaveryUtility.IsStage5Slave(pawn))
                 {
                     __result = false;
                 }

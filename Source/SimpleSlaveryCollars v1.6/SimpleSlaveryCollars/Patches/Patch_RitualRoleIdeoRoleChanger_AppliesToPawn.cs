@@ -39,6 +39,14 @@ namespace SimpleSlaveryCollars.Patches
                 yield break;
             }
 
+            if (replacement == null)
+            {
+                Log.Warning("[SSC] Transpiler: IsEligibleForRitualRole method not found. Skipping patch.");
+                foreach (var inst in instructions)
+                    yield return inst;
+                yield break;
+            }
+
             bool patched = false;
             foreach (var inst in instructions)
             {
@@ -62,6 +70,7 @@ namespace SimpleSlaveryCollars.Patches
         /// </summary>
         public static bool IsEligibleForRitualRole(Pawn pawn)
         {
+            if (pawn == null) return false;
             if (pawn.IsFreeNonSlaveColonist) return true;
             return pawn.IsSlaveOfColony;
         }
