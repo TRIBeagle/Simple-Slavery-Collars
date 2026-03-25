@@ -2,8 +2,8 @@
 <Defs>
 	<HediffDef>
 		<defName>Enslaved</defName>
-		<label>enslaved (hidden)</label>
-		<description>hidden</description>
+		<label>enslaved (legacy - unused)</label>
+		<description>Removed after migration</description>
 		<hediffClass>SimpleSlaveryCollars.Hediff_Enslaved</hediffClass>
 		<defaultLabelColor>(0.65, 0.3, 0.9)</defaultLabelColor>
 		<isBad>false</isBad>

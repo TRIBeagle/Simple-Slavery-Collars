@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
 
-  <Enslaved.label>escravizado(a) (oculto)</Enslaved.label>
-  <Enslaved.description>hidden</Enslaved.description>
+  <Enslaved.label>Escravizado (legado - não utilizado)</Enslaved.label>
+  <Enslaved.description>Removido após migração</Enslaved.description>
 
   <Crypto_Stasis.label>crypto stasis</Crypto_Stasis.label>
   <Crypto_Stasis.description>crypto stasis</Crypto_Stasis.description>

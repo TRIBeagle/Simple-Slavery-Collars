@@ -1,4 +1,4 @@
-﻿// SimpleSlaveryCollars | Core | RemoteCollarTypes.cs
+﻿// SimpleSlaveryCollars | Enums | SimpleSlaveryCollarType.cs
 // 목적   : 원격 칼라(Remote Collar) 제어에 사용되는 명령 및 Pawn 그룹 열거형 정의
 // 용도   : RemoteCollar 관련 JobDriver, WorkGiver, Gizmo 등에서 참조
 // 변경   : 2025-09-22 주석 규칙(v4.2) 적용

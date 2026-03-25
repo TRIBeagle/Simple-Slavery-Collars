@@ -5,6 +5,7 @@
 // 주의   : Stage5 = ( x ≥ SlaveStage4 ) && !Steadfast / Stage4 = (SlaveStage3 < x < SlaveStage4) 또는 ( x ≥ SlaveStage4 && Steadfast )
 // 저장   : 반란 참여 여부는 Pawn 세이브에 간접 반영됨
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -26,14 +27,20 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void CanParticipateInSlaveRebellion_Patch(ref Pawn pawn, ref bool __result)
         {
-            if (!SimpleSlaveryCollarsSetting.SlavestageEnable ||
-                !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable)
-                return;
-
-            if (SimpleSlaveryUtility.TimeAsSlave(pawn) >= SimpleSlaveryUtility.SlaveStage4 &&
-                !SimpleSlaveryUtility.IsSteadfast(pawn))
+            try
             {
-                __result = false;
+                if (!SimpleSlaveryCollarsSetting.SlavestageEnable ||
+                    !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable)
+                    return;
+
+                if (SimpleSlaveryUtility.IsStage5Slave(pawn))
+                {
+                    __result = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[SSC] Patch_SlaveRebellionUtility_CanParticipateInSlaveRebellion.CanParticipateInSlaveRebellion_Patch error: {ex}");
             }
         }
     }

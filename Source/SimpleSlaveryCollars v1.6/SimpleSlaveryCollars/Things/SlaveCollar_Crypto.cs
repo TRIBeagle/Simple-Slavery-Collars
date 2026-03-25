@@ -1,31 +1,48 @@
-﻿using RimWorld;
+﻿// SimpleSlaveryCollars | Things | SlaveCollar_Crypto.cs
+// 목적 : 동결 노예 칼라. 무장(armed) 시 착용자를 정신동결(CryptoStasis) 상태로 고정
+// 용도 : 직접 토글 또는 원격 콘솔에서 제어. 비폭력 제압 수단
+// 주의 : RevertMentalState()에서 이전 정신상태 복원. mindState null 방어 필수
+
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using SimpleSlaveryCollars.Gizmos;
 
 namespace SimpleSlaveryCollars
 {
     public class SlaveCollar_Crypto : SlaveApparel
     {
         public bool armed = false;
+        // 이펙트 쿨다운 — 저장 불필요 (시각 효과 전용)
+        private int _fleckCooldown;
+        // 로드 후 1회 일관성 검증 플래그 — 저장 불필요
+        private bool _postLoadValidated;
+
+        public override bool IsArmed => armed;
+
 
         public override IEnumerable<Gizmo> SlaveGizmos()
         {
+            // 충전 기즈모 (충전 ON일 때만)
+            if (SimpleSlaveryCollarsSetting.CollarChargeEnable)
+                yield return new Gizmo_SlaveCollarStatus { collar = this };
+
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {
-                var status = armed ? "CollarState_Armed".Translate() : "CollarState_Unarmed".Translate();
+                var status = armed ? "SSC_Collar_StateArmed".Translate() : "SSC_Collar_StateUnarmed".Translate();
                 var disabled = new Command_Action
                 {
                     defaultLabel = status,
-                    defaultDesc = "Desc_CollarRemoteOnly".Translate(),
+                    defaultDesc = "SSC_Collar_RemoteOnly_Desc".Translate(),
                     icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Crypto", true),
                     action = () =>
                     {
-                        Messages.Message("Reason_CollarRemoteOnly".Translate(), MessageTypeDefOf.RejectInput);
+                        Messages.Message("SSC_Collar_RemoteOnly_Reason".Translate(), MessageTypeDefOf.RejectInput);
                     }
                 };
-                disabled.Disable("Reason_CollarRemoteOnly".Translate());
+                disabled.Disable("SSC_Collar_RemoteOnly_Reason".Translate());
 
                 yield return disabled;
                 yield break;
@@ -34,8 +51,8 @@ namespace SimpleSlaveryCollars
             var armCollar = new Command_Toggle();
             Func<bool> isArmed = () => armed;
             armCollar.isActive = isArmed;
-            armCollar.defaultLabel = "Label_CollarCrypto_Arm".Translate();
-            armCollar.defaultDesc = "Desc_CollarCrypto_Arm".Translate();
+            armCollar.defaultLabel = "SSC_Crypto_Arm".Translate();
+            armCollar.defaultDesc = "SSC_Crypto_Arm_Desc".Translate();
             armCollar.toggleAction = delegate
             {
                 armed = !armed;
@@ -44,16 +61,15 @@ namespace SimpleSlaveryCollars
             };
             armCollar.activateSound = SoundDefOf.Click;
             armCollar.icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Crypto", true);
+            if (!IsOperational)
+                armCollar.Disable("SSC_Collar_Inoperable".Translate());
             yield return armCollar;
 
         }
 
         public void RevertMentalState()
         {
-            if (Wearer == null || Wearer.health == null)
-                return;
-
-            var hediffSet = Wearer.health.hediffSet;
+            var hediffSet = Wearer?.health?.hediffSet;
             if (hediffSet == null)
                 return;
 
@@ -61,34 +77,22 @@ namespace SimpleSlaveryCollars
             if (cryptoStasis == null)
                 return;
 
-            var stasis = cryptoStasis as Hediff_CryptoStasis;
-            var memory = stasis != null ? stasis.revertMentalStateDef : null;
+            // 이전 정신상태 복원 시도
+            var stasisHediff = cryptoStasis as Hediff_CryptoStasis;
+            var savedMentalState = stasisHediff?.revertMentalStateDef;
 
-            if (Wearer.mindState != null && Wearer.mindState.mentalStateHandler != null)
+            if (Wearer.mindState?.mentalStateHandler != null)
             {
-                if (memory != null)
-                {
-                    Wearer.mindState.mentalStateHandler.TryStartMentalState(memory, reason: null, forceWake: true, causedByMood: false, otherPawn: null, transitionSilently: true);
-                    Wearer.health.RemoveHediff(cryptoStasis);
-                    if (Rand.Value > 0.66f)
-                    {
-                        Wearer.health.AddHediff(HediffDefOf.CryptosleepSickness);
-                    }
-                }
+                if (savedMentalState != null)
+                    Wearer.mindState.mentalStateHandler.TryStartMentalState(savedMentalState, reason: null, forceWake: true, causedByMood: false, otherPawn: null, transitionSilently: true);
                 else
-                {
-                    Wearer.health.RemoveHediff(cryptoStasis);
                     Wearer.mindState.mentalStateHandler.Reset();
-                    if (Rand.Value > 0.66f)
-                    {
-                        Wearer.health.AddHediff(HediffDefOf.CryptosleepSickness);
-                    }
-                }
             }
-            else
-            {
-                Wearer.health.RemoveHediff(cryptoStasis);
-            }
+
+            // Hediff 제거 + 크립토슬립 후유증 (33%)
+            Wearer.health.RemoveHediff(cryptoStasis);
+            if (Rand.Value > 0.66f)
+                Wearer.health.AddHediff(HediffDefOf.CryptosleepSickness);
         }
 
 
@@ -98,13 +102,13 @@ namespace SimpleSlaveryCollars
         /// </summary>
         public void CryptoStasis()
         {
-            Hediff_CryptoStasis revertMentalState = null;
+            Hediff_CryptoStasis stasisHediff = null;
             if (!Wearer.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Crypto_Stasis))
             {
                 Wearer.health.AddHediff(SimpleSlaveryDefOf.Crypto_Stasis);
-                revertMentalState = Wearer.health.hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Crypto_Stasis) as Hediff_CryptoStasis;
+                stasisHediff = Wearer.health.hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Crypto_Stasis) as Hediff_CryptoStasis;
                 // 캐스트 실패 방어 — XML에서 hediffClass가 Hediff_CryptoStasis가 아니면 null
-                revertMentalState?.SaveMemory();
+                stasisHediff?.SaveMemory();
             }
             if (Wearer.InBed())
             {
@@ -112,23 +116,51 @@ namespace SimpleSlaveryCollars
                 RevertMentalState();
                 return;
             }
+            // mindState/mentalStateHandler null 방어 — 로딩 중, 디스폰 직후 등
+            if (Wearer.mindState?.mentalStateHandler == null) return;
             if (Wearer.mindState.mentalStateHandler.CurStateDef != SimpleSlaveryDefOf.CryptoStasis)
                 Wearer.mindState.mentalStateHandler.TryStartMentalState(SimpleSlaveryDefOf.CryptoStasis, reason: null, forceWake: true, causedByMood: false, otherPawn: null, transitionSilently: true);
-            if (Rand.Value < 0.33f)
+            // 이펙트 빈도 조절: 매 틱 33% → 10틱 간격 (성능 개선, 시각 차이 미미)
+            if (_fleckCooldown <= 0 && Wearer.Map != null)
             {
                 FleckMaker.ThrowTornadoDustPuff(Wearer.TrueCenter() + Vector3Utility.RandomHorizontalOffset(0.5f), Wearer.Map, Rand.Range(0.25f, 1f), new Color(0.65f, 0.9f, 0.93f));
+                _fleckCooldown = 10;
+            }
+            else
+            {
+                _fleckCooldown--;
             }
         }
 
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<bool>(ref armed, "armed", false);
+            Scribe_Values.Look(ref armed, "armed", false);
         }
 
         protected override void TickInterval(int delta)
         {
+            // [FIX] 로드 후 armed=true + CryptoStasis Hediff 누락 좀비 상태 검증
+            if (!_postLoadValidated)
+            {
+                _postLoadValidated = true;
+                if (armed && Wearer != null
+                    && Wearer.health?.hediffSet != null
+                    && !Wearer.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Crypto_Stasis))
+                {
+                    Log.Warning($"[SSC] {Wearer.LabelShort}: armed=true but CryptoStasis Hediff missing. Will be reapplied next tick.");
+                }
+            }
+
             base.TickInterval(delta);
+
+            // 충전 부족 or EMP → 강제 해제 + 정신상태 복원
+            if (armed && !IsOperational)
+            {
+                armed = false;
+                RevertMentalState();
+            }
+
             if (!armed) return;
 
             CryptoStasis();

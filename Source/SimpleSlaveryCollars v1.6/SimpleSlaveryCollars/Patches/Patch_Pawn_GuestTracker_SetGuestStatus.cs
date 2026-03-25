@@ -1,15 +1,12 @@
-﻿// SimpleSlaveryCollars | Patches | Patch_Pawn_GuestTracker_SetGuestStatus.cs
-// 목적   : SetGuestStatus 실행 시 Enslaved Hediff 부여/제거 및 Stage5 동화를 일괄 처리
+// SimpleSlaveryCollars | Patches | Patch_Pawn_GuestTracker_SetGuestStatus.cs
+// 목적   : SetGuestStatus 실행 시 노예 상태 전환에 따른 CompSlave 조작 및 Stage5 동화 처리
 // 용도   : Harmony Postfix 패치 (단일 통합)
-// 변경   : [FIX] 기존 3개의 독립 Postfix를 1개로 통합하여 실행 순서 보장.
-//           - EnsureEnslavedHediff: Slave + Player Host → Hediff 부여
-//           - Assimilation: Stage5 노예 → SlaveFaction을 Player로 전환
-//           - RemoveEnslavedHediff: Slave 해제 → Hediff 제거
-// 주의   : 기존 파일 3개 삭제 필요:
-//           - Patch_Pawn_GuestTracker_SetGuestStatus_EnsureEnslavedHediff.cs
-//           - Patch_Pawn_GuestTracker_SetGuestStatus_RemoveEnslavedHediff.cs
-//           (이 파일이 기존 Patch_Pawn_GuestTracker_SetGuestStatus.cs를 대체)
+// 변경   : [리팩터] Hediff_Enslaved 추가/제거 로직 제거. CompSlave 직접 조작으로 변경.
+//           - 노예화 시: ShacklesDefault 옵션 반영
+//           - 비노예 전환 시: CompSlave.ResetSlaveState() 호출
+//           - Stage5 동화: CompSlave 필드 직접 참조
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -32,48 +29,45 @@ namespace SimpleSlaveryCollars.Patches
             GuestStatus guestStatus,
             Pawn ___pawn)
         {
-            if (___pawn == null) return;
-            if (___pawn.Dead || ___pawn.DestroyedOrNull()) return;
-
-            if (guestStatus == GuestStatus.Slave && newHost == Faction.OfPlayer)
+            try
             {
-                // === 1) Enslaved Hediff 부여 (기존 EnsureEnslavedHediff) ===
-                EnsureEnslavedHediff(___pawn);
+                if (___pawn == null) return;
+                if (___pawn.Dead || ___pawn.DestroyedOrNull()) return;
 
-                // === 2) Stage5 동화 (기존 Assimilation) ===
-                TryAssimilation(__instance, ref ___slaveFactionInt, ___pawn);
+                if (guestStatus == GuestStatus.Slave && newHost == Faction.OfPlayer)
+                {
+                    // === 1) 노예화 시 ShacklesDefault 반영 ===
+                    try { ApplyShacklesDefault(___pawn); }
+                    catch (Exception ex) { Log.Error($"[SSC] ApplyShacklesDefault error: {ex}"); }
+
+                    // === 2) Stage5 동화 ===
+                    try { TryAssimilation(__instance, ref ___slaveFactionInt, ___pawn); }
+                    catch (Exception ex) { Log.Error($"[SSC] TryAssimilation error: {ex}"); }
+                }
+                else if (guestStatus != GuestStatus.Slave)
+                {
+                    // === 3) 비노예 전환 시 CompSlave 리셋 ===
+                    try { TryResetSlaveState(__instance, newHost, ___pawn); }
+                    catch (Exception ex) { Log.Error($"[SSC] TryResetSlaveState error: {ex}"); }
+                }
             }
-            else if (guestStatus != GuestStatus.Slave)
+            catch (Exception ex)
             {
-                // === 3) Enslaved Hediff 제거 (기존 RemoveEnslavedHediff) ===
-                TryRemoveEnslavedHediff(__instance, newHost, ___pawn);
+                Log.Error($"[SSC] Patch_Pawn_GuestTracker_SetGuestStatus.Postfix error: {ex}");
             }
         }
 
         /// <summary>
-        /// Slave + Player Host 시 Enslaved Hediff가 없으면 추가.
-        /// DevMode AddGuest/AddSlave 경로도 커버.
+        /// 노예화 시 ShacklesDefault 옵션 반영.
         /// </summary>
-        private static void EnsureEnslavedHediff(Pawn pawn)
+        private static void ApplyShacklesDefault(Pawn pawn)
         {
             if (!pawn.RaceProps.Humanlike) return;
+            if (SimpleSlaveryCollarsSetting.ShacklesDefault) return;
 
-            var hs = pawn.health?.hediffSet;
-            if (hs == null) return;
-            if (SimpleSlaveryDefOf.Enslaved == null) return;
-
-            if (!hs.HasHediff(SimpleSlaveryDefOf.Enslaved))
-            {
-                pawn.health.AddHediff(SimpleSlaveryDefOf.Enslaved);
-            }
-
-            // ShacklesDefault 옵션 반영
-            if (!SimpleSlaveryCollarsSetting.ShacklesDefault)
-            {
-                var enslaved = SimpleSlaveryUtility.GetEnslavedHediff(pawn);
-                if (enslaved != null)
-                    enslaved.shackledGoal = false;
-            }
+            var comp = pawn.GetComp<CompSlave>();
+            if (comp != null)
+                comp.ShackledGoal = false;
         }
 
         /// <summary>
@@ -88,22 +82,23 @@ namespace SimpleSlaveryCollars.Patches
             if (!SimpleSlaveryCollarsSetting.AssimilationSlaveEnable) return;
 
             if (!pawn.IsSlaveOfColony) return;
-            if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage4) return;
+            float time = SimpleSlaveryUtility.TimeAsSlave(pawn);
+            if (time < SimpleSlaveryUtility.SlaveStage4) return;
             if (SimpleSlaveryUtility.IsSteadfast(pawn)) return;
             if (guest.SlaveFaction == Faction.OfPlayer) return;
 
             slaveFactionInt = Faction.OfPlayer;
             Messages.Message(
-                "MessageAssimilationSlave".Translate().AdjustedFor(pawn),
+                "SSC_Message_Assimilation".Translate().AdjustedFor(pawn),
                 (LookTargets)pawn,
                 MessageTypeDefOf.NeutralEvent);
         }
 
         /// <summary>
-        /// Slave가 아닌 상태로 전환 시 Enslaved Hediff 제거.
-        /// Player 관련 Pawn만 대상 (타 팩션/퀘스트 Pawn 오염 방지).
+        /// 비노예 전환 시 CompSlave 상태 리셋.
+        /// 플레이어가 관여한 노예만 대상 (타 팩션/퀘스트 Pawn 오염 방지).
         /// </summary>
-        private static void TryRemoveEnslavedHediff(
+        private static void TryResetSlaveState(
             Pawn_GuestTracker guest,
             Faction newHost,
             Pawn pawn)
@@ -116,13 +111,9 @@ namespace SimpleSlaveryCollars.Patches
 
             if (!playerContext) return;
 
-            var hs = pawn.health?.hediffSet;
-            if (hs == null) return;
-            if (SimpleSlaveryDefOf.Enslaved == null) return;
-
-            var enslaved = hs.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved);
-            if (enslaved != null)
-                pawn.health.RemoveHediff(enslaved);
+            var comp = pawn.GetComp<CompSlave>();
+            if (comp != null)
+                comp.ResetSlaveState();
         }
     }
 }

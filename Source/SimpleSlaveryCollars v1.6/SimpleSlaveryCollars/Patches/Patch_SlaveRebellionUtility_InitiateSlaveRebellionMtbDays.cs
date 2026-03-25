@@ -4,6 +4,7 @@
 // 변경   : 2025-09-22 주석 규칙(v4.2) 적용 — Stage4/5 조건 및 Steadfast 예외 처리 명시
 // 주의   : Stage5 = ( x ≥ SlaveStage4 ) && !Steadfast / Stage4 = (SlaveStage3 < x < SlaveStage4) 또는 ( x ≥ SlaveStage4 && Steadfast )
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -21,27 +22,36 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void InitiateSlaveRebellionMtbDays_Patch(ref Pawn pawn, ref float __result)
         {
-            if (SimpleSlaveryCollarsSetting.SlavestageEnable == false
-                || SimpleSlaveryCollarsSetting.RebelCycleChangeEnable == false
-                || __result == -1f)
-                return;
+            try
+            {
+                if (SimpleSlaveryCollarsSetting.SlavestageEnable == false
+                    || SimpleSlaveryCollarsSetting.RebelCycleChangeEnable == false
+                    || __result == -1f)
+                    return;
 
-            if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage1)
-            {
-                __result *= 1f;
+                float time = SimpleSlaveryUtility.TimeAsSlave(pawn);
+
+                if (time < SimpleSlaveryUtility.SlaveStage1)
+                {
+                    // Stage1: 바닐라 MTB 그대로 유지
+                }
+                else if (time < SimpleSlaveryUtility.SlaveStage2)
+                {
+                    __result *= 1.5f;
+                }
+                else if (time < SimpleSlaveryUtility.SlaveStage3)
+                {
+                    __result *= 1.75f;
+                }
+                else if (time < SimpleSlaveryUtility.SlaveStage4
+                      || SimpleSlaveryUtility.IsSteadfast(pawn))
+                {
+                    __result *= 2f;
+                }
             }
-            else if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage2)
+            catch (Exception ex)
             {
-                __result *= 1.5f;
-            }
-            else if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage3)
-            {
-                __result *= 1.75f;
-            }
-            else if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage4
-                  || (SimpleSlaveryUtility.TimeAsSlave(pawn) >= SimpleSlaveryUtility.SlaveStage3 && SimpleSlaveryUtility.IsSteadfast(pawn)))
-            {
-                __result *= 2f;
+                Log.Error($"[SSC] Patch_SlaveRebellionUtility_InitiateSlaveRebellionMtbDays.InitiateSlaveRebellionMtbDays_Patch error: {ex}");
             }
         }
     }

@@ -5,9 +5,9 @@
 // 주의   : Colony Pawn만 적용, Colonist/Prisoner는 제외
 // 성능   : Pawn.apparel.WornApparel 순회. 보통 5개 이하 아이템이라 부담 미미
 
-using HarmonyLib;
+using System;
 using System.Collections.Generic;
-using System.Linq;
+using HarmonyLib;
 using Verse;
 using SimpleSlaveryCollars.Utilities;
 
@@ -22,35 +22,53 @@ namespace SimpleSlaveryCollars.Patches
     {
         /// <summary>
         /// Postfix: 원래 Gizmos + SlaveGizmos 병합.
+        /// iterator 메서드이므로 SSC 로직은 별도 헬퍼에서 try-catch 처리.
         /// </summary>
-        static void Postfix(Pawn __instance, ref IEnumerable<Gizmo> __result)
+        static IEnumerable<Gizmo> Postfix(IEnumerable<Gizmo> __result, Pawn __instance)
         {
-            var baseGizmos = __result ?? Enumerable.Empty<Gizmo>();
-            var slaveGizmos = SlaveGizmos(__instance) ?? Enumerable.Empty<Gizmo>();
+            if (__result != null)
+            {
+                foreach (var g in __result)
+                    yield return g;
+            }
 
-            __result = baseGizmos.Concat(slaveGizmos);
+            List<Gizmo> extras = null;
+            try { extras = GetSlaveGizmosSafe(__instance); }
+            catch (Exception ex) { Log.Error($"[SSC] Patch_Pawn_GetGizmos error: {ex}"); }
+
+            if (extras != null)
+            {
+                foreach (var g in extras)
+                    yield return g;
+            }
         }
 
         /// <summary>
-        /// Pawn이 착용한 SlaveApparel의 Gizmo를 순회하며 반환.
-        /// Colony Pawn이 아닐 경우 비활성.
+        /// SSC Gizmo 수집 헬퍼. iterator 외부에서 try-catch 가능하도록 분리.
         /// </summary>
-        internal static IEnumerable<Gizmo> SlaveGizmos(Pawn pawn)
+        private static List<Gizmo> GetSlaveGizmosSafe(Pawn pawn)
         {
-            if (!SimpleSlaveryUtility.IsColonyMember(pawn))
-                yield break;
+            if (!SimpleSlaveryUtility.IsColonyMember(pawn)) return null;
+            if (pawn.apparel?.WornApparel == null) return null;
 
-            if (pawn.apparel != null)
+            var result = new List<Gizmo>();
+            var worn = pawn.apparel.WornApparel;
+            for (int i = 0; i < worn.Count; i++)
             {
-                foreach (var apparel in pawn.apparel.WornApparel)
+                if (worn[i] is SlaveApparel slaveApparel)
                 {
-                    if (apparel is SlaveApparel slaveApparel)
+                    foreach (var g in slaveApparel.SlaveGizmos())
+                        result.Add(g);
+
+                    // DevMode 전용 충전 조작 기즈모 (바닐라 쉴드벨트 패턴)
+                    if (Prefs.DevMode)
                     {
-                        foreach (var g in slaveApparel.SlaveGizmos())
-                            yield return g;
+                        foreach (var g in slaveApparel.DevChargeGizmos())
+                            result.Add(g);
                     }
                 }
             }
+            return result.Count > 0 ? result : null;
         }
     }
 }

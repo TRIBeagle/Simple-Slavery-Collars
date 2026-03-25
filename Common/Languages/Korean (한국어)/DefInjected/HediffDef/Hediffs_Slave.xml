@@ -1,8 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
 
-  <Enslaved.label>노예됨 (숨겨짐)</Enslaved.label>
-  <Enslaved.description>노예됨 (숨겨짐)</Enslaved.description>
+  <Enslaved.label>노예됨 (미사용 - 레거시)</Enslaved.label>
+  <Enslaved.description>마이그레이션 후 자동 제거됨</Enslaved.description>
 
   <Crypto_Stasis.label>정지 암호화 상태</Crypto_Stasis.label>
   <Crypto_Stasis.description>정지 암호화 상태</Crypto_Stasis.description>

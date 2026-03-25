@@ -1,4 +1,4 @@
-﻿// SimpleSlaveryCollars | Thoughts | ThoughtWorker_ExplosiveCollar.cs
+﻿// SimpleSlaveryCollars | ThoughtWorkers | ThoughtWorker_ExplosiveCollar.cs
 // 목적   : 노예가 폭발 칼라(Explosive Collar)를 착용했을 때 정신 사상(Thought)을 부여
 // 용도   : RimWorld ThoughtWorker 확장
 // 변경   : 2025-09-22 주석 규칙(v4.2) 적용
@@ -25,10 +25,9 @@ namespace SimpleSlaveryCollars
         /// </summary>
         protected override ThoughtState CurrentStateInternal(Pawn pawn)
         {
-            if (SimpleSlaveryUtility.HasSlaveCollar(pawn)
-                && SimpleSlaveryUtility.GetSlaveCollar(pawn).def.thingClass == typeof(SlaveCollar_Explosive))
+            // GetSlaveCollar 1회 호출 + is 패턴매칭으로 null/타입 동시 체크
+            if (SimpleSlaveryUtility.GetSlaveCollar(pawn) is SlaveCollar_Explosive collar)
             {
-                var collar = SimpleSlaveryUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive;
                 if (collar.armed)
                     return ThoughtState.ActiveAtStage(1); // armed 상태
                 return pawn.IsSlaveOfColony

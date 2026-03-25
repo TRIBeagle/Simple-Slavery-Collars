@@ -4,6 +4,7 @@
 // 변경   : 2025-09-22 주석 규칙(v4.2) 적용 — Stage5 조건 및 Steadfast 예외 명시
 // 주의   : Stage5 = (x ≥ SlaveStage4 && !Steadfast), 그 외는 디버프 유지
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -21,16 +22,21 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void ActiveFor_Patch(Thing t, ref bool __result)
         {
-            if (!SimpleSlaveryCollarsSetting.SlavestageEnable
-                || !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable
-                || !SimpleSlaveryCollarsSetting.RemoveWorkspeedDebuffEnable)
-                return;
-
-            if (t is Pawn pawn
-                && SimpleSlaveryUtility.TimeAsSlave(pawn) >= SimpleSlaveryUtility.SlaveStage4
-                && !SimpleSlaveryUtility.IsSteadfast(pawn))
+            try
             {
-                __result = false;
+                if (!SimpleSlaveryCollarsSetting.SlavestageEnable
+                    || !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable
+                    || !SimpleSlaveryCollarsSetting.RemoveWorkspeedDebuffEnable)
+                    return;
+
+                if (t is Pawn pawn && SimpleSlaveryUtility.IsStage5Slave(pawn))
+                {
+                    __result = false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[SSC] Patch_StatPartSlave_ActiveFor.ActiveFor_Patch error: {ex}");
             }
         }
     }

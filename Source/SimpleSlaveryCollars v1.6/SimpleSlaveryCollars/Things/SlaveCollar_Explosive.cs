@@ -1,8 +1,14 @@
-﻿using RimWorld;
+﻿// SimpleSlaveryCollars | Things | SlaveCollar_Explosive.cs
+// 목적 : 폭발 노예 칼라. 무장(armed) 시 폭발로 착용자 즉사
+// 용도 : 직접 토글 또는 원격 콘솔(CompRemoteSlaveCollar)에서 제어
+// 주의 : GoBoom() 실행 시 Wearer 사망 가능 → Position/Map 선캐싱 필수
+
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using SimpleSlaveryCollars.Gizmos;
 using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars
@@ -11,27 +17,34 @@ namespace SimpleSlaveryCollars
     public class SlaveCollar_Explosive : SlaveApparel
     {
         public bool armed = false;
-        public int arm_cooldown = 0;
+        public int arm_cooldown = 0; // 무장 직후 정신붕괴 방지 쿨다운 (틱)
+
+        public override bool IsArmed => armed;
+
 
         public override IEnumerable<Gizmo> SlaveGizmos()
         {
+            // 충전 기즈모 (충전 ON일 때만)
+            if (SimpleSlaveryCollarsSetting.CollarChargeEnable)
+                yield return new Gizmo_SlaveCollarStatus { collar = this };
+
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {
-                var status = armed ? "CollarState_Armed".Translate() : "CollarState_Unarmed".Translate();
+                var status = armed ? "SSC_Collar_StateArmed".Translate() : "SSC_Collar_StateUnarmed".Translate();
                 var iconPath = armed
                     ? "UI/Commands/DetonateCollar_Explosive"
                     : "UI/Commands/ArmCollar_Explosive";
                 var disabled = new Command_Action
                 {
                     defaultLabel = status,
-                    defaultDesc = "Desc_CollarRemoteOnly".Translate(),
+                    defaultDesc = "SSC_Collar_RemoteOnly_Desc".Translate(),
                     icon = ContentFinder<Texture2D>.Get(iconPath, true),
                     action = () =>
                     {
-                        Messages.Message("Reason_CollarRemoteOnly".Translate(), MessageTypeDefOf.RejectInput);
+                        Messages.Message("SSC_Collar_RemoteOnly_Reason".Translate(), MessageTypeDefOf.RejectInput);
                     }
                 };
-                disabled.Disable("Reason_CollarRemoteOnly".Translate());
+                disabled.Disable("SSC_Collar_RemoteOnly_Reason".Translate());
 
                 yield return disabled;
                 yield break;
@@ -40,8 +53,8 @@ namespace SimpleSlaveryCollars
             var armCollar = new Command_Toggle();
             Func<bool> isArmed = () => armed;
             armCollar.isActive = isArmed;
-            armCollar.defaultLabel = "Label_CollarExplosive_Arm".Translate();
-            armCollar.defaultDesc = "Desc_CollarExplosive_Arm".Translate();
+            armCollar.defaultLabel = "SSC_Explosive_Arm".Translate();
+            armCollar.defaultDesc = "SSC_Explosive_Arm_Desc".Translate();
             armCollar.toggleAction = delegate
             {
                 armed = !armed;
@@ -49,27 +62,31 @@ namespace SimpleSlaveryCollars
                 {
                     if (arm_cooldown == 0)
                     {
-                        SimpleSlaveryUtility.TryInstantBreak(Wearer, Rand.Range(0.25f, 0.33f));
-                        arm_cooldown = 2500;
+                        SimpleSlaveryUtility.TryInstantBreak(Wearer, Rand.Range(0.25f, 0.33f)); // 25~33% 확률 정신붕괴
+                        arm_cooldown = 2500; // 약 42초 쿨다운 (2500틱)
                     }
                 }
             };
             armCollar.activateSound = SoundDefOf.Click;
             armCollar.icon = ContentFinder<Texture2D>.Get("UI/Commands/ArmCollar_Explosive", true);
+            if (!IsOperational)
+                armCollar.Disable("SSC_Collar_Inoperable".Translate());
             yield return armCollar;
 
             // 2. Detonate the collar
             if (armed)
             {
                 var detonate = new Command_Action();
-                detonate.defaultLabel = "Label_CollarExplosive_Detonate".Translate();
-                detonate.defaultDesc = "Desc_CollarExplosive_Detonate".Translate();
+                detonate.defaultLabel = "SSC_Explosive_Detonate".Translate();
+                detonate.defaultDesc = "SSC_Explosive_Detonate_Desc".Translate();
                 detonate.action = delegate
                 {
                     GoBoom();
                 };
                 detonate.activateSound = SoundDefOf.Click;
                 detonate.icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Explosive", true);
+                if (!IsOperational)
+                    detonate.Disable("SSC_Collar_Inoperable".Translate());
                 yield return detonate;
             }
         }
@@ -105,15 +122,19 @@ namespace SimpleSlaveryCollars
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<bool>(ref armed, "armed", false);
-            Scribe_Values.Look<int>(ref arm_cooldown, "arm_cooldown", 0);
+            Scribe_Values.Look(ref armed, "armed", false);
+            Scribe_Values.Look(ref arm_cooldown, "arm_cooldown", 0);
         }
 
         protected override void TickInterval(int delta)
         {
             base.TickInterval(delta);
-            if (!armed || arm_cooldown <= 0) return;
 
+            // 충전 부족 or EMP → 강제 해제
+            if (armed && !IsOperational)
+                armed = false;
+
+            if (!armed || arm_cooldown <= 0) return;
             arm_cooldown = Math.Max(arm_cooldown - delta, 0);
         }
     }

@@ -1,8 +1,14 @@
-﻿using RimWorld;
+﻿// SimpleSlaveryCollars | Things | SlaveCollar_Electric.cs
+// 목적 : 감전 노예 칼라. 무장(armed) 시 주기적 전기 충격으로 착용자 제압
+// 용도 : 직접 토글 또는 원격 콘솔에서 제어
+// 주의 : Zap() 실행 시 Dead/Downed 체크 → 연쇄 크래시 방지
+
+using RimWorld;
 using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
+using SimpleSlaveryCollars.Gizmos;
 using Verse.Sound;
 using SimpleSlaveryCollars.Utilities;
 
@@ -12,24 +18,31 @@ namespace SimpleSlaveryCollars
     {
         public bool armed = false;
         public int zap_cooldown = 0;
-        public const int zap_period = 50;
+        public const int zap_period = 50; // 감전 간격 (틱). 50틱 ≈ 0.83초
+
+        public override bool IsArmed => armed;
+
 
         public override IEnumerable<Gizmo> SlaveGizmos()
         {
+            // 충전 기즈모 (충전 ON일 때만)
+            if (SimpleSlaveryCollarsSetting.CollarChargeEnable)
+                yield return new Gizmo_SlaveCollarStatus { collar = this };
+
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {
-                var status = armed ? "CollarState_Armed".Translate() : "CollarState_Unarmed".Translate();
+                var status = armed ? "SSC_Collar_StateArmed".Translate() : "SSC_Collar_StateUnarmed".Translate();
                 var disabled = new Command_Action
                 {
                     defaultLabel = status,
-                    defaultDesc = "Desc_CollarRemoteOnly".Translate(),
+                    defaultDesc = "SSC_Collar_RemoteOnly_Desc".Translate(),
                     icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Electric", true),
                     action = () =>
                     {
-                        Messages.Message("Reason_CollarRemoteOnly".Translate(), MessageTypeDefOf.RejectInput);
+                        Messages.Message("SSC_Collar_RemoteOnly_Reason".Translate(), MessageTypeDefOf.RejectInput);
                     }
                 };
-                disabled.Disable("Reason_CollarRemoteOnly".Translate());
+                disabled.Disable("SSC_Collar_RemoteOnly_Reason".Translate());
 
                 yield return disabled;
                 yield break;
@@ -38,26 +51,33 @@ namespace SimpleSlaveryCollars
             var armCollar = new Command_Toggle();
             Func<bool> isArmed = () => armed;
             armCollar.isActive = isArmed;
-            armCollar.defaultLabel = "Label_CollarElectric_Arm".Translate();
-            armCollar.defaultDesc = "Desc_CollarElectric_Arm".Translate();
+            armCollar.defaultLabel = "SSC_Electric_Arm".Translate();
+            armCollar.defaultDesc = "SSC_Electric_Arm_Desc".Translate();
             armCollar.toggleAction = delegate
             {
                 armed = !armed;
             };
             armCollar.activateSound = SoundDefOf.Click;
             armCollar.icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Electric", true);
+            if (!IsOperational)
+                armCollar.Disable("SSC_Collar_Inoperable".Translate());
             yield return armCollar;
         }
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look<bool>(ref armed, "armed", false);
-            Scribe_Values.Look<int>(ref zap_cooldown, "zap_cooldown", 0);
+            Scribe_Values.Look(ref armed, "armed", false);
+            Scribe_Values.Look(ref zap_cooldown, "zap_cooldown", 0);
         }
 
         protected override void TickInterval(int delta)
         {
             base.TickInterval(delta);
+
+            // 충전 부족 or EMP → 강제 해제
+            if (armed && !IsOperational)
+                armed = false;
+
             if (!armed) return;
 
             zap_cooldown -= delta;

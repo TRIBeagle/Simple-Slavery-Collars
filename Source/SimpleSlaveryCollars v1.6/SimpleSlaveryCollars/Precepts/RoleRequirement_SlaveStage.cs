@@ -1,4 +1,4 @@
-﻿// SimpleSlaveryCollars | Roles | RoleRequirement_SlaveStage.cs
+﻿// SimpleSlaveryCollars | Precepts | RoleRequirement_SlaveStage.cs
 // 목적   : Precept_Role 조건에서 Pawn의 Slavery Stage에 따라 역할 허용/차단
 // 용도   : RimWorld RoleRequirement 확장
 // 변경   : 2025-09-22 주석 규칙(v4.2) 적용 — Stage4/5 조건 반영
@@ -25,8 +25,9 @@ namespace SimpleSlaveryCollars
             if (!pawn.IsSlaveOfColony)
                 return false;
 
-            // 2. Stage 5 조건 (Stage 4 미만이거나 Steadfast 특성이 있으면 불가)
-            if (SimpleSlaveryUtility.TimeAsSlave(pawn) < SimpleSlaveryUtility.SlaveStage4 || SimpleSlaveryUtility.IsSteadfast(pawn))
+            // 2. Stage5 조건: SlaveStage4 이상 && !Steadfast 일 때만 충족
+            float time = SimpleSlaveryUtility.TimeAsSlave(pawn);
+            if (time < SimpleSlaveryUtility.SlaveStage4 || SimpleSlaveryUtility.IsSteadfast(pawn))
                 return false;
 
             return true;

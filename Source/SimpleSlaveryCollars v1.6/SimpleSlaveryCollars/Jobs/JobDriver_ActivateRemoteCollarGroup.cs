@@ -121,8 +121,8 @@ namespace SimpleSlaveryCollars.Jobs
                         {
                             for (int i = 0; i < left.Count; i++)
                             {
-                                var p2 = left[i].Thing as Pawn;
-                                if (p2 != null) comp.ReleaseReservation(p2);
+                                var remainingPawn = left[i].Thing as Pawn;
+                                if (remainingPawn != null) comp.ReleaseReservation(remainingPawn);
                             }
                         }
 

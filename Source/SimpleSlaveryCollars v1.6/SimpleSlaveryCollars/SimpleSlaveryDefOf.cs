@@ -1,4 +1,4 @@
-﻿// SimpleSlaveryCollars | Core | SSC_DefOf.cs
+﻿// SimpleSlaveryCollars | Core | SimpleSlaveryDefOf.cs
 // 목적   : 모드에서 사용하는 Hediff, Job, MentalState, Thought, Record, BodyPart, Trait 정의를 DefOf로 캐싱
 // 용도   : RimWorld DefOf 시스템을 통해 XML 정의를 C#에서 직접 참조 가능하게 함
 // 변경   : 2025-09-22 주석 규칙(v4.2) 적용
@@ -30,6 +30,8 @@ namespace SimpleSlaveryCollars
         public static JobDef ShackleSlave;
         public static JobDef ActivateRemoteCollar;
         public static JobDef ActivateRemoteCollarGroup;
+        public static JobDef RechargeSlaveCollar;
+        public static JobDef SelfRechargeSlaveCollar;
 
         // --- MentalStateDefs ---
         public static MentalStateDef CryptoStasis;
@@ -47,5 +49,8 @@ namespace SimpleSlaveryCollars
 
         // --- TraitDefOfs ---
         public static TraitDef Nerves;
+
+        // --- GameConditionDefs (바닐라 DefOf에 없는 것) ---
+        public static GameConditionDef SolarFlare;
     }
 }

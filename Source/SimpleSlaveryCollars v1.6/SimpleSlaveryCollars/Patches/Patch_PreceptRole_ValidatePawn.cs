@@ -4,6 +4,7 @@
 // 변경   : 2026-01-27 Stage5 조건 명시 — IsFreeColonist 기반(우연 통과) 제거, SlaveUtility.IsStage5Slave(p)로 고정
 // 주의   : __result가 false인 경우에만 true로 뒤집음(기존 성공 케이스는 건드리지 않음)
 
+using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
@@ -24,22 +25,29 @@ namespace SimpleSlaveryCollars.Patches
         [HarmonyPostfix]
         public static void Postfix(Precept_Role __instance, Pawn p, ref bool __result)
         {
-            if (__result) return; // 이미 통과면 손대지 않음
+            try
+            {
+                if (__result) return; // 이미 통과면 손대지 않음
 
-            if (!SimpleSlaveryCollarsSetting.SlavestageEnable ||
-                !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable ||
-                !SimpleSlaveryCollarsSetting.Stage5SlaveWorkUnlockEnable)
-                return;
+                if (!SimpleSlaveryCollarsSetting.SlavestageEnable ||
+                    !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable ||
+                    !SimpleSlaveryCollarsSetting.Stage5SlaveWorkUnlockEnable)
+                    return;
 
-            if (p == null) return;
-            if (p.DestroyedOrNull()) return;
-            if (p.Dead) return;
+                if (p == null) return;
+                if (p.DestroyedOrNull()) return;
+                if (p.Dead) return;
 
-            if (!SimpleSlaveryUtility.IsStage5Slave(p)) return;
+                if (!SimpleSlaveryUtility.IsStage5Slave(p)) return;
 
-            if (!__instance.RequirementsMet(p)) return;
+                if (!__instance.RequirementsMet(p)) return;
 
-            __result = true;
+                __result = true;
+            }
+            catch (Exception ex)
+            {
+                Log.Error($"[SSC] Patch_PreceptRole_ValidatePawn.Postfix error: {ex}");
+            }
         }
     }
 }

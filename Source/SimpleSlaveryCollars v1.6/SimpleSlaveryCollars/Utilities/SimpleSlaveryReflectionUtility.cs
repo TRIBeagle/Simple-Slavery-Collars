@@ -4,7 +4,6 @@
 // 변경   : [FIX] 기존 CompSlave + DebugActions에 복사되어 있던 동일 코드를 단일 캐시로 통합
 // 성능   : 1회 탐색 후 static 캐시. 실패 시 재탐색 없음.
 
-using System.Linq;
 using System.Reflection;
 using RimWorld;
 using Verse;
@@ -20,7 +19,7 @@ namespace SimpleSlaveryCollars.Utilities
     {
         private static FieldInfo _defMapField;
         private static MethodInfo _defMapSetItem;
-        private static bool _searched;
+        private static volatile bool _searched;
 
         /// <summary>
         /// DefMap 필드와 set_Item이 사용 가능한지 여부.
@@ -76,9 +75,12 @@ namespace SimpleSlaveryCollars.Utilities
             if (_defMapField == null)
             {
                 var dmType = typeof(DefMap<RecordDef, float>);
-                _defMapField = typeof(Pawn_RecordsTracker)
-                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public)
-                    .FirstOrDefault(f => f.FieldType == dmType);
+                var fields = typeof(Pawn_RecordsTracker)
+                    .GetFields(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public);
+                for (int i = 0; i < fields.Length; i++)
+                {
+                    if (fields[i].FieldType == dmType) { _defMapField = fields[i]; break; }
+                }
             }
 
             if (_defMapField == null)
@@ -99,15 +101,19 @@ namespace SimpleSlaveryCollars.Utilities
             // 폴백: 시그니처 매칭
             if (_defMapSetItem == null)
             {
-                _defMapSetItem = mapType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic)
-                    .FirstOrDefault(m =>
+                var methods = mapType.GetMethods(BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic);
+                for (int i = 0; i < methods.Length; i++)
+                {
+                    if (methods[i].Name != "set_Item") continue;
+                    var ps = methods[i].GetParameters();
+                    if (ps.Length == 2
+                        && typeof(RecordDef).IsAssignableFrom(ps[0].ParameterType)
+                        && ps[1].ParameterType == typeof(float))
                     {
-                        if (m.Name != "set_Item") return false;
-                        var ps = m.GetParameters();
-                        return ps.Length == 2
-                               && typeof(RecordDef).IsAssignableFrom(ps[0].ParameterType)
-                               && ps[1].ParameterType == typeof(float);
-                    });
+                        _defMapSetItem = methods[i];
+                        break;
+                    }
+                }
             }
 
             if (_defMapSetItem == null)

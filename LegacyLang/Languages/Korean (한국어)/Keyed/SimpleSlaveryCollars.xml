@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<LanguageData>
+	<LabelWordShackle>족쇄</LabelWordShackle>
+	<CommandDescriptionShackle>{0}에게 족쇄를 걸지의 여부를 표시합니다. 족쇄가 걸린 노예는 빠르게 움직일 수 없어서, 쉽게 붙잡을 수 있지만 생산성이 줄어듭니다.</CommandDescriptionShackle>
+	<Label_CollarExplosive_Arm>목걸이 무장</Label_CollarExplosive_Arm>
+	<Desc_CollarExplosive_Arm>노예 목걸이의 폭발물을 폭발시킬 준비를 합니다.</Desc_CollarExplosive_Arm>
+	<Label_CollarExplosive_Detonate>폭발</Label_CollarExplosive_Detonate>
+	<Desc_CollarExplosive_Detonate>착용자를 즉사시키는, 목걸이에 있는 폭발물을 폭발시킵니다.</Desc_CollarExplosive_Detonate>
+	<ReasonArmedExplosiveCollar>목에 걸린 폭발성 목걸이에 전원이 들어와 폭발가능한 상태가 되었습니다.</ReasonArmedExplosiveCollar>
+	<Label_CollarElectric_Arm>제압</Label_CollarElectric_Arm>
+	<Desc_CollarElectric_Arm>의식불명 상태가 될 때까지 착용자를 감전시킵니다.</Desc_CollarElectric_Arm>
+	<LetterIncidentECHeartAttack>{0}(이)가 감전으로 인해 심장마비를 겪고 있습니다!</LetterIncidentECHeartAttack>
+	<LetterLabelECHeartAttack>심장마비</LetterLabelECHeartAttack>
+	<Label_CollarCrypto_Arm>동결</Label_CollarCrypto_Arm>
+	<Desc_CollarCrypto_Arm>착용자를 제자리에서 얼려버립니다.</Desc_CollarCrypto_Arm>
+	<TargetSetSlaveCollar>{0}이(가) {1}에게 노예 목걸이를 착용시켰습니다.</TargetSetSlaveCollar>
+	<ReasonFailedSetSlaveCollar>{0}이(가) {1}에게 노예 목걸이를 착용시키려고 함.</ReasonFailedSetSlaveCollar>
+	<shacklesDefaultSetting_title>족쇄 기본값</shacklesDefaultSetting_title>
+	<shacklesDefaultSetting_desc>폰을 노예화했을 때, 기본적으로 족쇄를 채울 지 결정합니다. 기본값: 활성화</shacklesDefaultSetting_desc>
+	<slavestageEnableSetting_title>노예 감정변화</slavestageEnableSetting_title>
+	<slavestageEnableSetting_desc>노예의 감정 변화를 활성화할지 선택합니다. 기본값: 활성화</slavestageEnableSetting_desc>
+	<rebelcyclechangeEnableSetting_title>반란 주기 변화</rebelcyclechangeEnableSetting_title>
+	<rebelcyclechangeEnableSetting_desc>노예의 감정변화에 따른 반란 주기 변화를 사용할지 선택합니다. 노예 감정변화가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</rebelcyclechangeEnableSetting_desc>
+	<removeworkspeeddebuffEnableSetting_title>전역 작업 속도 디버프 제거</removeworkspeeddebuffEnableSetting_title>
+	<removeworkspeeddebuffEnableSetting_desc>노예의 감정변화에 따른 전역 작업 속도 디버프 제거 기능을 사용할지 선택합니다. 노예 감정변화나 반란 주기 감소가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</removeworkspeeddebuffEnableSetting_desc>
+	<assignslaveEnableSetting_title>노예 역할 할당</assignslaveEnableSetting_title>
+	<assignslaveEnableSetting_desc>노예에게 역할을 할당하는 것을 허용할지 선택합니다. 노예 감정변화나 반란 주기 감소가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</assignslaveEnableSetting_desc>
+	<stage5SlaveWorkUnlockEnableSetting_title>노예 5단계 작업 제한 해제</stage5SlaveWorkUnlockEnableSetting_title>
+	<stage5SlaveWorkUnlockEnableSetting_desc>노예가 5단계에 도달하면 모든 작업 제한이 해제되어 일반 식민지민과 동일하게 모든 작업을 할 수 있습니다. 노예 감정변화나 반란 주기 감소가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</stage5SlaveWorkUnlockEnableSetting_desc>
+	<assimilationslaveEnableSetting_title>노예 정착지 합류</assimilationslaveEnableSetting_title>
+	<assimilationslaveEnableSetting_desc>노예의 감정변화가 5단계가 되었을 때, 노예의 출신세력을 플레이어의 세력으로 변경하는 것을 허용할지 선택합니다. 플레이어의 세력이 된 노예를 풀어주면 정착지로 합류합니다. 노예 감정변화가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</assimilationslaveEnableSetting_desc>
+	<remoteOnlyOnConsoleEnableSetting_title>통신기에서만 목걸이 작동 허용</remoteOnlyOnConsoleEnableSetting_title>
+	<remoteOnlyOnConsoleEnableSetting_desc>노예 목걸이 원격 작동 버튼이 노예에게 직접 활성화되지 않고, 통신기에서만 조작할 수 있도록 변경됩니다. 원격 작동 시 정착민이 통신기로 이동해 직접 활성화해야 합니다. 기본값: 활성화</remoteOnlyOnConsoleEnableSetting_desc>
+	<slavestage1Period_title>감정 변화 1단계</slavestage1Period_title>
+	<slavestage1Period_desc>감정 변화 1단계가 적용되는 기간을 설정합니다. 기본값: 15일</slavestage1Period_desc>
+	<slavestage2Period_title>감정 변화 2단계</slavestage2Period_title>
+	<slavestage2Period_desc>감정 변화 2단계가 적용되는 기간을 설정합니다. 기본값: 15일</slavestage2Period_desc>
+	<slavestage3Period_title>감정 변화 3단계</slavestage3Period_title>
+	<slavestage3Period_desc>감정 변화 3단계가 적용되는 기간을 설정합니다. 기본값: 15일</slavestage3Period_desc>
+	<slavestage4Period_title>감정 변화 4단계</slavestage4Period_title>
+	<slavestage4Period_desc>감정 변화 4단계가 적용되는 기간을 설정합니다. 기본값: 15일</slavestage4Period_desc>
+	<resetAllSetting_title>설정 리셋</resetAllSetting_title>
+	<SuppressionSlavestageFactor>노예의 감정변화</SuppressionSlavestageFactor>
+	<RoleRequirementLabelNotSlave>노예가 아니어야 함</RoleRequirementLabelNotSlave>
+	<RoleRequirementLabelSlaveStage>노예가 정착지에 동화되어야 함</RoleRequirementLabelSlaveStage>
+	<Label_CollarExplosive_Arm_Remote>원격 목걸이 무장</Label_CollarExplosive_Arm_Remote>
+	<Desc_CollarExplosive_Arm_Remote>지도상의 모든 노예 목걸이의 폭발물을 폭발시킬 준비를 합니다.</Desc_CollarExplosive_Arm_Remote>
+	<Label_CollarExplosive_Detonate_Remote>원격 폭발</Label_CollarExplosive_Detonate_Remote>
+	<Desc_CollarExplosive_Detonate_Remote>지도상의 모든 폭발성 목걸이 착용자를 즉사시키는, 목걸이에 있는 폭발물을 폭발시킵니다.</Desc_CollarExplosive_Detonate_Remote>
+	<Label_CollarElectric_Arm_Remote>원격 제압</Label_CollarElectric_Arm_Remote>
+	<Desc_CollarElectric_Arm_Remote>의식불명 상태가 될 때까지 지도상의 모든 전기 목걸이 착용자를 감전시킵니다.</Desc_CollarElectric_Arm_Remote>
+	<Label_CollarCrypto_Arm_Remote>원격 동결</Label_CollarCrypto_Arm_Remote>
+	<Desc_CollarCrypto_Arm_Remote>지도상의 모든 암호화 목걸이 착용자를 제자리에서 얼려버립니다.</Desc_CollarCrypto_Arm_Remote>
+	<Label_CollarExplosive_Arm_Console>원격 목걸이 무장 (선택)</Label_CollarExplosive_Arm_Console>
+	<Desc_CollarExplosive_Arm_Console>폭발성 목걸이를 착용한 인원 목록에서 대상을 선택해 무장 명령을 내립니다.</Desc_CollarExplosive_Arm_Console>
+	<Label_CollarExplosive_Disarm_Console>원격 목걸이 무장 해제 (선택)</Label_CollarExplosive_Disarm_Console>
+	<Desc_CollarExplosive_Disarm_Console>폭발성 목걸이를 착용한 인원 목록에서 대상을 선택해 해제 명령을 내립니다.</Desc_CollarExplosive_Disarm_Console>
+	<Label_CollarExplosive_Detonate_Console>원격 폭발 (선택)</Label_CollarExplosive_Detonate_Console>
+	<Desc_CollarExplosive_Detonate_Console>폭발성 목걸이 장전 상태인 인원 목록에서 대상을 선택해 폭발 명령을 내립니다.</Desc_CollarExplosive_Detonate_Console>
+	<Label_CollarElectric_Arm_Console>원격 제압 (선택)</Label_CollarElectric_Arm_Console>
+	<Desc_CollarElectric_Arm_Console>전기 목걸이를 착용한 인원 목록에서 대상을 선택해 제압 명령을 내립니다.</Desc_CollarElectric_Arm_Console>
+	<Label_CollarElectric_Disarm_Console>원격 제압 해제 (선택)</Label_CollarElectric_Disarm_Console>
+	<Desc_CollarElectric_Disarm_Console>전기 목걸이를 착용한 인원 목록에서 대상을 선택해 해제 명령을 내립니다.</Desc_CollarElectric_Disarm_Console>
+	<Label_CollarCrypto_Arm_Console>원격 동결 (선택)</Label_CollarCrypto_Arm_Console>
+	<Desc_CollarCrypto_Arm_Console>암호화 목걸이를 착용한 인원 목록에서 대상을 선택해 동결 명령을 내립니다.</Desc_CollarCrypto_Arm_Console>
+	<Label_CollarCrypto_Disarm_Console>원격 동결 해제 (선택)</Label_CollarCrypto_Disarm_Console>
+	<Desc_CollarCrypto_Disarm_Console>암호화 목걸이를 착용한 인원 목록에서 대상을 선택해 해제 명령을 내립니다.</Desc_CollarCrypto_Disarm_Console>
+	<MessageAssimilationSlave>[PAWN_nameDef](은)는 정착지에 동화되어 정착지를 [PAWN_possessive] 집으로 여깁니다.</MessageAssimilationSlave>
+	<SimpleSlaveryCollars_NoAssignableRole>해당 노예에게 할당 가능한 역할이 없습니다.</SimpleSlaveryCollars_NoAssignableRole>
+	<RemoteCollar_Group_All>모든 인원</RemoteCollar_Group_All>
+	<RemoteCollar_Group_Slaves>노예</RemoteCollar_Group_Slaves>
+	<RemoteCollar_Group_Prisoners>죄수</RemoteCollar_Group_Prisoners>
+	<RemoteCollar_Group_Colonists>정착민</RemoteCollar_Group_Colonists>
+	<RemoteCollar_Group_SlavesAndPrisoners>노예+죄수</RemoteCollar_Group_SlavesAndPrisoners>
+	<RemoteCollar_ExecuteForGroup>선택한 그룹 전체 실행</RemoteCollar_ExecuteForGroup>
+	<RemoteCollar_CancelAllReservations>선택한 그룹 전체 취소</RemoteCollar_CancelAllReservations>
+	<RemoteCollar_NoEligiblePawn>선택한 그룹에 대해 작업을 지정할 수 있는 대상이 없습니다.</RemoteCollar_NoEligiblePawn>
+	<CollarState_Armed>상태: 활성화됨</CollarState_Armed>
+	<CollarState_Unarmed>상태: 비활성화됨</CollarState_Unarmed>
+	<Desc_CollarRemoteOnly>이 명령은 통신기에서만 사용할 수 있습니다.</Desc_CollarRemoteOnly>
+	<Reason_CollarRemoteOnly>통신기에서만 조작할 수 있습니다.</Reason_CollarRemoteOnly>
+	<RemoteCollar_ReservedJob>{0}에 대해 {1} 작업을 예약했습니다. (자기 자신에게는 실행할 수 없습니다.)</RemoteCollar_ReservedJob>
+	<RemoteCollar_GroupReserved>{0}명에 대해 {1} 작업을 예약했습니다.</RemoteCollar_GroupReserved>
+	<RemoteCollar_AlreadyReserved>이미 예약된 작업입니다.</RemoteCollar_AlreadyReserved>
+	<RemoteCollar_AlreadyReservedShort>(예약됨)</RemoteCollar_AlreadyReservedShort>
+	<RemoteCollar_AllReservationsCancelled>{0}명에 대한 {1} 작업이 모두 취소되었습니다.</RemoteCollar_AllReservationsCancelled>
+	<RemoteCollarAction_ArmExplosive>폭발성 목걸이 무장</RemoteCollarAction_ArmExplosive>
+	<RemoteCollarAction_DisarmExplosive>폭발성 목걸이 해제</RemoteCollarAction_DisarmExplosive>
+	<RemoteCollarAction_DetonateExplosive>폭발성 목걸이 폭발</RemoteCollarAction_DetonateExplosive>
+	<RemoteCollarAction_ArmElectric>전기 목걸이 제압</RemoteCollarAction_ArmElectric>
+	<RemoteCollarAction_DisarmElectric>전기 목걸이 해제</RemoteCollarAction_DisarmElectric>
+	<RemoteCollarAction_ArmCrypto>암호화 목걸이 동결</RemoteCollarAction_ArmCrypto>
+	<RemoteCollarAction_DisarmCrypto>암호화 목걸이 해제</RemoteCollarAction_DisarmCrypto>
+	<SimpleSlaveryCollars_SlaveTime_HoursOnly>노예 기간: {0}시간</SimpleSlaveryCollars_SlaveTime_HoursOnly>
+	<SimpleSlaveryCollars_SlaveTime_DaysOnly>노예 기간: {0}일째</SimpleSlaveryCollars_SlaveTime_DaysOnly>
+	<SimpleSlaveryCollars_SlaveTime_QuadrumDays>노예 기간: {0}분기 {1}일째</SimpleSlaveryCollars_SlaveTime_QuadrumDays>
+	<SimpleSlaveryCollars_SlaveTime_YearQuadrumDays>노예 기간: {0}년 {1}분기 {2}일째</SimpleSlaveryCollars_SlaveTime_YearQuadrumDays>
+	<SimpleSlaveryCollars_SlaveStageSuffix>(노예 {0}단계)</SimpleSlaveryCollars_SlaveStageSuffix>
+	<SimpleSlaveryCollars_MigrationDone>{0}: 기존 노예 기간 기록을 Comp로 이전했습니다</SimpleSlaveryCollars_MigrationDone>
+</LanguageData>

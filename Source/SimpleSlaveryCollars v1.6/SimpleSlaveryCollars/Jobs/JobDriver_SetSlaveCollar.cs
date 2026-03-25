@@ -88,15 +88,16 @@ namespace SimpleSlaveryCollars.Jobs
                     bool success = true;
 
                     // [조건] Victim이 깨어있고, Wimp 아님, 정신이상/다운 아님일 때만 저항 발생
-                    if (!Victim.jobs.curDriver.asleep &&
-                        !Victim.story.traits.HasTrait(TraitDef.Named("Wimp")) &&
+                    if (Victim.jobs?.curDriver?.asleep != true &&
+                        Victim.story?.traits != null &&
+                        !Victim.story.traits.HasTrait(SimpleSlaveryUtility.WimpTrait) &&
                         !Victim.InMentalState &&
                         !Victim.Downed)
                     {
                         if ((Victim.story.traits.HasTrait(SimpleSlaveryDefOf.Nerves) &&
                              Victim.story.traits.GetTrait(SimpleSlaveryDefOf.Nerves).Degree == -2 &&
                              Rand.Value > 0.66f)
-                            || Victim.needs.mood.CurInstantLevelPercentage < Rand.Range(0f, 0.33f))
+                            || (Victim.needs.mood.CurInstantLevelPercentage < Rand.Range(0f, 0.33f)))
                         {
                             success = false;
                         }
@@ -106,15 +107,16 @@ namespace SimpleSlaveryCollars.Jobs
                     {
                         SimpleSlaveryUtility.GiveSlaveCollar(Victim, collar);
                         Messages.Message(
-                            "TargetSetSlaveCollar".Translate(pawn.Name.ToStringShort, Victim.Name.ToStringShort),
+                            "SSC_Job_SetCollar".Translate(pawn.Name.ToStringShort, Victim.Name.ToStringShort),
                             MessageTypeDefOf.PositiveEvent);
                         AddEndCondition(() => JobCondition.Succeeded);
                     }
                     else
                     {
-                        Victim.mindState.mentalStateHandler.TryStartMentalState(
+                        // [Safety] mindState/mentalStateHandler null 가드
+                        Victim.mindState?.mentalStateHandler?.TryStartMentalState(
                             MentalStateDefOf.Berserk,
-                            "ReasonFailedSetSlaveCollar".Translate(pawn.Name.ToStringShort, Victim.Name.ToStringShort));
+                            "SSC_Job_SetCollarFailed".Translate(pawn.Name.ToStringShort, Victim.Name.ToStringShort));
                         AddEndCondition(() => JobCondition.Incompletable);
                     }
                 },

@@ -1,4 +1,4 @@
-﻿// SimpleSlaveryCollars | Utilities | SlaveUtility.cs
+﻿// SimpleSlaveryCollars | Utilities | SimpleSlaveryUtility.cs
 // 목적   : 노예 관련 공용 유틸 함수 집합
 // 용도   : Stage 판정, 칼라 제어, 정신붕괴/심장발작 유발, 시간 기록 관리, UI 표시 문자열 처리
 // 변경   : 2025-09-22 주석 규칙(v4.2) 적용 — 기존 주석 제거 후 요약 주석 추가
@@ -23,9 +23,7 @@ namespace SimpleSlaveryCollars.Utilities
         /// </summary>
         public static bool IsColonyMember(Pawn pawn)
         {
-            if (pawn.IsColonist || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony)
-                return true;
-            return false;
+            return pawn.IsColonist || pawn.IsPrisonerOfColony || pawn.IsSlaveOfColony;
         }
 
         /// <summary>
@@ -51,16 +49,7 @@ namespace SimpleSlaveryCollars.Utilities
         /// </summary>
         public static bool IsSlaveCollar(Apparel apparel)
         {
-            if (apparel
-                == null) return false;
-
-            if (apparel.def == null) return false;
-
-            if (apparel.def.apparel == null) return false;
-
-            if (apparel.def.apparel.defaultOutfitTags == null) return false;
-
-            return apparel.def.apparel.defaultOutfitTags.Contains("SlaveCollar");
+            return apparel?.def?.apparel?.defaultOutfitTags?.Contains("SlaveCollar") ?? false;
         }
 
         /// <summary>
@@ -84,9 +73,22 @@ namespace SimpleSlaveryCollars.Utilities
         /// </summary>
         public static Apparel GetSlaveCollar(Pawn pawn)
         {
-            if (HasSlaveCollar(pawn))
+            // O(1) 캐시 조회 우선
+            var cached = SlaveCollarRegistry.GetCached(pawn);
+            if (cached != null) return cached;
+
+            // 폴백: WornApparel 순회
+            if (pawn?.apparel == null) return null;
+            var worn = pawn.apparel.WornApparel;
+            for (int i = 0; i < worn.Count; i++)
             {
-                return pawn.apparel.WornApparel.Find(IsSlaveCollar);
+                if (IsSlaveCollar(worn[i]))
+                {
+                    // 폴백에서 찾으면 레지스트리에 자가 복구 등록
+                    if (worn[i] is SlaveApparel sa)
+                        SlaveCollarRegistry.Register(pawn, sa);
+                    return worn[i];
+                }
             }
             return null;
         }
@@ -113,25 +115,18 @@ namespace SimpleSlaveryCollars.Utilities
         }
 
         /// <summary>
-        /// Pawn의 Hediff_Enslaved를 반환합니다. 없으면 null입니다.
-        /// </summary>
-        public static Hediff_Enslaved GetEnslavedHediff(Pawn pawn)
-        {
-            return pawn.health.hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved) as Hediff_Enslaved;
-        }
-
-        /// <summary>
         /// 지정 확률로 즉시 정신붕괴를 유발합니다. 기본 메시지는 폭발 칼라 무장 사유를 사용합니다.
         /// </summary>
         public static void TryInstantBreak(Pawn pawn, float chance, MentalStateDef breakDef)
         {
             if (pawn.Downed) return;
-            if (pawn.jobs.curDriver.asleep) return;
+            if (pawn.jobs?.curDriver?.asleep == true) return;
             if (pawn.InMentalState) return;
+            if (pawn.mindState?.mentalStateHandler == null) return;
 
             if (Rand.Chance(chance))
             {
-                pawn.mindState.mentalStateHandler.TryStartMentalState(breakDef, "ReasonArmedExplosiveCollar".Translate(pawn.Name.ToStringShort));
+                pawn.mindState.mentalStateHandler.TryStartMentalState(breakDef, "SSC_Explosive_Armed_Reason".Translate(pawn.Name.ToStringShort));
             }
         }
 
@@ -163,17 +158,22 @@ namespace SimpleSlaveryCollars.Utilities
             {
                 pawn.health.AddHediff(HediffDef.Named("HeartAttack"), heart);
 
-                string text = "LetterIncidentECHeartAttack".Translate(pawn.Name.ToString());
-                Find.LetterStack.ReceiveLetter("LetterLabelECHeartAttack".Translate(), text, LetterDefOf.NegativeEvent);
+                string text = "SSC_Letter_HeartAttack".Translate(pawn.Name.ToString());
+                Find.LetterStack.ReceiveLetter("SSC_Letter_HeartAttackLabel".Translate(), text, LetterDefOf.NegativeEvent);
             }
         }
 
         /// <summary>
         /// Pawn이 Steadfast(의지 강함)인지 판정합니다. Wimp면 false, Nerves의 Degree>0이면 true.
         /// </summary>
+        // TraitDef.Named 반복 호출 방지 — 1회 캐싱. volatile로 스레드 안전성 보장
+        private static volatile TraitDef _wimpTraitDef;
+        internal static TraitDef WimpTrait => _wimpTraitDef ?? (_wimpTraitDef = TraitDef.Named("Wimp"));
+
         public static bool IsSteadfast(Pawn pawn)
         {
-            if (pawn.story.traits.HasTrait(TraitDef.Named("Wimp")))
+            if (pawn?.story?.traits == null) return false;
+            if (pawn.story.traits.HasTrait(WimpTrait))
             {
                 return false;
             }
@@ -195,18 +195,8 @@ namespace SimpleSlaveryCollars.Utilities
         public static bool EverBeenSlave(Pawn pawn)
         {
             CompSlave comp = pawn?.TryGetComp<CompSlave>();
-
-            if (comp != null)
-            {
-                if (comp.TimeAsSlaveTicks > 0f) return true;
-            }
-
-            if (pawn?.records.GetAsInt(SimpleSlaveryDefOf.TimeAsSlave) > 0)
-            {
-                return true;
-            }
-
-            return false;
+            if (comp?.TimeAsSlaveTicks > 0f) return true;
+            return pawn?.records.GetAsInt(SimpleSlaveryDefOf.TimeAsSlave) > 0;
         }
 
         /// <summary>
@@ -215,13 +205,7 @@ namespace SimpleSlaveryCollars.Utilities
         public static float TimeAsSlave(Pawn pawn)
         {
             CompSlave comp = pawn?.TryGetComp<CompSlave>();
-
-            if (comp != null)
-            {
-                return comp.TimeAsSlaveTicks;
-            }
-
-            // GetValue는 float(값 타입)를 반환하므로 널 병합 연산자(??)로 깔끔하게 처리
+            if (comp != null) return comp.TimeAsSlaveTicks;
             return pawn?.records?.GetValue(SimpleSlaveryDefOf.TimeAsSlave) ?? 0f;
         }
 
@@ -233,12 +217,7 @@ namespace SimpleSlaveryCollars.Utilities
             if (pawn == null) return;
 
             CompSlave comp = pawn.TryGetComp<CompSlave>();
-
-            if (comp != null)
-            {
-                comp.SetTimeAsSlaveTicks(ticks);
-                return;
-            }
+            if (comp != null) { comp.SetTimeAsSlaveTicks(ticks); return; }
 
             // 길고 복잡했던 리플렉션 코드를 SSC_ReflectionCache 호출 한 줄로 대체
             if (pawn.records != null)
@@ -265,19 +244,19 @@ namespace SimpleSlaveryCollars.Utilities
             if (totalDays < 1)
             {
                 int hours = Mathf.FloorToInt(ticks / (float)TicksPerHour);
-                return AddSlaveStageSuffix(pawn, "SimpleSlaveryCollars_SlaveTime_HoursOnly".Translate(hours), ticks);
+                return AddSlaveStageSuffix(pawn, "SSC_SlaveTime_Hours".Translate(hours), ticks);
             }
 
             if (totalDays < 15)
             {
-                return AddSlaveStageSuffix(pawn, "SimpleSlaveryCollars_SlaveTime_DaysOnly".Translate(totalDays), ticks);
+                return AddSlaveStageSuffix(pawn, "SSC_SlaveTime_Days".Translate(totalDays), ticks);
             }
 
             if (totalDays < 60)
             {
                 int quadrum = totalDays / 15;
                 int dayInQuadrum = totalDays % 15;
-                return AddSlaveStageSuffix(pawn, "SimpleSlaveryCollars_SlaveTime_QuadrumDays".Translate(quadrum, dayInQuadrum), ticks);
+                return AddSlaveStageSuffix(pawn, "SSC_SlaveTime_QuadrumDays".Translate(quadrum, dayInQuadrum), ticks);
             }
 
             int years = totalDays / 60;
@@ -285,7 +264,7 @@ namespace SimpleSlaveryCollars.Utilities
             int quadrumY = remainder / 15;
             int dayInQuadrumY = remainder % 15;
 
-            return AddSlaveStageSuffix(pawn, "SimpleSlaveryCollars_SlaveTime_YearQuadrumDays".Translate(years, quadrumY, dayInQuadrumY), ticks);
+            return AddSlaveStageSuffix(pawn, "SSC_SlaveTime_YearQuadrumDays".Translate(years, quadrumY, dayInQuadrumY), ticks);
         }
 
         /// <summary>
@@ -312,28 +291,40 @@ namespace SimpleSlaveryCollars.Utilities
 
             if (stage >= 5 && pawn != null && IsSteadfast(pawn)) stage = 4;
 
-            string tail = "SimpleSlaveryCollars_SlaveStageSuffix".Translate(stage);
+            string tail = "SSC_Stage_Suffix".Translate(stage);
             return $"{baseText} {tail}";
         }
 
-        /// <summary>
-        /// Stage1 경계 틱 값입니다.
-        /// </summary>
-        public static float SlaveStage1 => GenDate.TicksPerDay * SimpleSlaveryCollarsSetting.Slavestage1Period;
+        #region Stage 경계값 틱 캐시
+        // 설정은 게임 중 변경 안됨. 같은 틱 내 반복 곱셈 제거
+        private static int _stageCacheTick = -1;
+        private static float _cachedS1, _cachedS2, _cachedS3, _cachedS4;
 
-        /// <summary>
-        /// Stage2 경계 틱 값입니다.
-        /// </summary>
-        public static float SlaveStage2 => SlaveStage1 + (GenDate.TicksPerDay * SimpleSlaveryCollarsSetting.Slavestage2Period);
+        /// <summary>틱 단위 캐시 갱신. 같은 틱이면 스킵.</summary>
+        private static void RefreshStageCacheIfNeeded()
+        {
+            int tick = Find.TickManager.TicksGame;
+            if (tick == _stageCacheTick) return;
+            _stageCacheTick = tick;
 
-        /// <summary>
-        /// Stage3 경계 틱 값입니다.
-        /// </summary>
-        public static float SlaveStage3 => SlaveStage2 + (GenDate.TicksPerDay * SimpleSlaveryCollarsSetting.Slavestage3Period);
+            float tpd = GenDate.TicksPerDay;
+            _cachedS1 = tpd * SimpleSlaveryCollarsSetting.Slavestage1Period;
+            _cachedS2 = _cachedS1 + tpd * SimpleSlaveryCollarsSetting.Slavestage2Period;
+            _cachedS3 = _cachedS2 + tpd * SimpleSlaveryCollarsSetting.Slavestage3Period;
+            _cachedS4 = _cachedS3 + tpd * SimpleSlaveryCollarsSetting.Slavestage4Period;
+        }
 
-        /// <summary>
-        /// Stage4 경계 틱 값입니다. Stage5는 x ≥ Stage4 && !Steadfast 입니다.
-        /// </summary>
-        public static float SlaveStage4 => SlaveStage3 + (GenDate.TicksPerDay * SimpleSlaveryCollarsSetting.Slavestage4Period);
+        /// <summary>Stage1 경계 틱 값입니다.</summary>
+        public static float SlaveStage1 { get { RefreshStageCacheIfNeeded(); return _cachedS1; } }
+
+        /// <summary>Stage2 경계 틱 값입니다.</summary>
+        public static float SlaveStage2 { get { RefreshStageCacheIfNeeded(); return _cachedS2; } }
+
+        /// <summary>Stage3 경계 틱 값입니다.</summary>
+        public static float SlaveStage3 { get { RefreshStageCacheIfNeeded(); return _cachedS3; } }
+
+        /// <summary>Stage4 경계 틱 값입니다. Stage5는 x ≥ Stage4 && !Steadfast 입니다.</summary>
+        public static float SlaveStage4 { get { RefreshStageCacheIfNeeded(); return _cachedS4; } }
+        #endregion
     }
 }
