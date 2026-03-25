@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LanguageData>
 
-  <Enslaved.label>被奴役（隐藏）</Enslaved.label>
-  <Enslaved.description>被奴役（隐藏）</Enslaved.description>
+  <Enslaved.label>被奴役 (未使用 - 旧版)</Enslaved.label>
+  <Enslaved.description>迁移后自动移除</Enslaved.description>
 
   <Crypto_Stasis.label>冷冻停滞状态</Crypto_Stasis.label>
   <Crypto_Stasis.description>冷冻停滞状态</Crypto_Stasis.description>

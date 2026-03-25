@@ -1,19 +1,18 @@
-﻿// SimpleSlaveryCollars | Patches | Patch_GenGuest_TryEnslavePrisoner.cs
+// SimpleSlaveryCollars | Patches | Patch_GenGuest_TryEnslavePrisoner.cs
 // 목적 : 노예화 성공 시 족쇄 기본값 적용
-// 용도 : ShacklesDefault 옵션이 false면 shackledGoal을 false로 초기화
-// 주의 : Hediff 추가는 SetGuestStatus 패치에서 처리 — 여기서는 족쇄만 담당
+// 용도 : ShacklesDefault 옵션이 false면 CompSlave.ShackledGoal을 false로 초기화
+// 주의 : Hediff 추가는 더 이상 필요하지 않음 — CompSlave가 상시 존재
 
 using System;
 using HarmonyLib;
 using RimWorld;
 using Verse;
-using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Patches
 {
     /// <summary>
     /// GenGuest.TryEnslavePrisoner 후처리.
-    /// Hediff 부여는 SetGuestStatus 패치가 담당. 여기서는 족쇄 기본값만 처리.
+    /// 족쇄 기본값만 처리. CompSlave 직접 접근.
     /// </summary>
     [HarmonyPatch(typeof(GenGuest), "TryEnslavePrisoner")]
     public static class Patch_GenGuest_TryEnslavePrisoner
@@ -25,12 +24,12 @@ namespace SimpleSlaveryCollars.Patches
             {
                 if (!__result || prisoner == null) return;
 
-                // 족쇄 기본값: 설정이 OFF면 shackledGoal을 false로
+                // 족쇄 기본값: 설정이 OFF면 ShackledGoal을 false로
                 if (!SimpleSlaveryCollarsSetting.ShacklesDefault)
                 {
-                    var enslaved = SimpleSlaveryUtility.GetEnslavedHediff(prisoner);
-                    if (enslaved != null)
-                        enslaved.shackledGoal = false;
+                    var comp = prisoner.GetComp<CompSlave>();
+                    if (comp != null)
+                        comp.ShackledGoal = false;
                 }
             }
             catch (Exception ex)

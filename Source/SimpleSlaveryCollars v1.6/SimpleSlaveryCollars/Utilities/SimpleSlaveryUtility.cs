@@ -115,14 +115,6 @@ namespace SimpleSlaveryCollars.Utilities
         }
 
         /// <summary>
-        /// Pawn의 Hediff_Enslaved를 반환합니다. 없으면 null입니다.
-        /// </summary>
-        public static Hediff_Enslaved GetEnslavedHediff(Pawn pawn)
-        {
-            return pawn.health.hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved) as Hediff_Enslaved;
-        }
-
-        /// <summary>
         /// 지정 확률로 즉시 정신붕괴를 유발합니다. 기본 메시지는 폭발 칼라 무장 사유를 사용합니다.
         /// </summary>
         public static void TryInstantBreak(Pawn pawn, float chance, MentalStateDef breakDef)

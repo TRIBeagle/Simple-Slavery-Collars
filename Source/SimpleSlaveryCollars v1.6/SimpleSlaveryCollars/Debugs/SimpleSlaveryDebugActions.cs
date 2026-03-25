@@ -1,7 +1,7 @@
 ﻿// SimpleSlaveryCollars | Debugs | SimpleSlaveryCollars_DebugActions.cs
-// 목적   : DevMode DebugAction으로 Pawn의 TimeAsSlaveTicks를 손쉽게 조정
-// 용도   : Debug 메뉴에서 Reset/Stage 경계점/직접입력 실행 → CompSlave 및 레코드 동기화
-// 변경   : [FIX] 리플렉션 코드를 SSC_ReflectionCache로 교체하여 CompSlave과의 중복 제거
+// 목적   : DevMode DebugAction으로 Pawn의 노예 상태(시간/충전/족쇄)를 손쉽게 조정
+// 용도   : Debug 메뉴에서 Reset/Stage 경계점/직접입력/Hediff 마이그레이션/상태 리셋 실행
+// 변경   : [추가] Hediff 마이그레이션 강제, 노예 상태 리셋, 고아 Hediff 일괄 정리 액션
 // 주의   : RecordType.Time은 AddTo 금지 → 반드시 DefMap.set_Item(절대값) 경로 사용
 
 using LudeonTK;
@@ -179,6 +179,110 @@ namespace SimpleSlaveryCollars.Debugs
             }));
 
             Find.WindowStack.Add(new FloatMenu(opts));
+        }
+
+        /// <summary>
+        /// 선택한 Pawn에 Enslaved Hediff가 남아있으면 강제 마이그레이션 후 제거.
+        /// </summary>
+        [DebugAction(
+            category = "Simple Slavery Collars",
+            name = "Force Hediff Migration...",
+            actionType = DebugActionType.ToolMapForPawns,
+            allowedGameStates = AllowedGameStates.PlayingOnMap
+        )]
+        private static void ForceHediffMigration(Pawn pawn)
+        {
+            if (pawn == null || pawn.DestroyedOrNull()) return;
+            if (!Prefs.DevMode) return;
+
+            var hs = pawn.health?.hediffSet;
+            if (hs == null) { Toast($"{pawn.LabelShort}: health/hediffSet 없음"); return; }
+
+            var hediff = hs.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved) as Hediff_Enslaved;
+            if (hediff == null)
+            {
+                Toast($"{pawn.LabelShort}: 마이그레이션 대상 Enslaved Hediff 없음");
+                return;
+            }
+
+            var comp = pawn.GetComp<CompSlave>();
+            if (comp != null)
+            {
+                comp.ShackledGoal = hediff.shackledGoal;
+                comp.Shackled = hediff.shackled;
+                comp.AssimilatedAtStage4 = hediff.assimilatedAtStage4;
+                comp.UiRefreshedAtStage4 = hediff.uiRefreshedAtStage4;
+            }
+
+            pawn.health.RemoveHediff(hediff);
+            Toast($"{pawn.LabelShort}: Hediff→Comp 마이그레이션 완료, Hediff 제거됨");
+        }
+
+        /// <summary>
+        /// 선택한 Pawn의 CompSlave 족쇄/동화 상태를 기본값으로 리셋.
+        /// </summary>
+        [DebugAction(
+            category = "Simple Slavery Collars",
+            name = "Reset Slave State...",
+            actionType = DebugActionType.ToolMapForPawns,
+            allowedGameStates = AllowedGameStates.PlayingOnMap
+        )]
+        private static void ResetSlaveState(Pawn pawn)
+        {
+            if (pawn == null || pawn.DestroyedOrNull()) return;
+            if (!Prefs.DevMode) return;
+
+            var comp = pawn.GetComp<CompSlave>();
+            if (comp == null) { Toast($"{pawn.LabelShort}: CompSlave 없음"); return; }
+
+            comp.ResetSlaveState();
+            Toast($"{pawn.LabelShort}: ShackledGoal=true, Shackled=true, Assimilation/UI 플래그 초기화");
+        }
+
+        /// <summary>
+        /// 맵 전체 Pawn을 스캔하여 Enslaved Hediff가 남아있는 폰에서 일괄 제거.
+        /// </summary>
+        [DebugAction(
+            category = "Simple Slavery Collars",
+            name = "Cleanup All Orphaned Hediffs",
+            actionType = DebugActionType.Action,
+            allowedGameStates = AllowedGameStates.PlayingOnMap
+        )]
+        private static void CleanupOrphanedHediffs()
+        {
+            if (!Prefs.DevMode) return;
+
+            int count = 0;
+            var map = Find.CurrentMap;
+            if (map == null) { Toast("현재 맵 없음"); return; }
+
+            // 순회 중 Hediff 제거로 인한 컬렉션 변경 방지 — 스냅샷 사용
+            var pawns = new List<Pawn>(map.mapPawns.AllPawnsSpawned);
+            for (int i = 0; i < pawns.Count; i++)
+            {
+                var pawn = pawns[i];
+                var hs = pawn.health?.hediffSet;
+                if (hs == null) continue;
+
+                var hediff = hs.GetFirstHediffOfDef(SimpleSlaveryDefOf.Enslaved);
+                if (hediff == null) continue;
+
+                // CompSlave가 있으면 마이그레이션도 시도
+                var enslaved = hediff as Hediff_Enslaved;
+                var comp = pawn.GetComp<CompSlave>();
+                if (comp != null && enslaved != null)
+                {
+                    comp.ShackledGoal = enslaved.shackledGoal;
+                    comp.Shackled = enslaved.shackled;
+                    comp.AssimilatedAtStage4 = enslaved.assimilatedAtStage4;
+                    comp.UiRefreshedAtStage4 = enslaved.uiRefreshedAtStage4;
+                }
+
+                pawn.health.RemoveHediff(hediff);
+                count++;
+            }
+
+            Toast($"고아 Hediff 정리 완료: {count}건 제거");
         }
 
         // ---------- helpers ----------
