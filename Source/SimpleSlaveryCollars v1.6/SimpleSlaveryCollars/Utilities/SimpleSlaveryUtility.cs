@@ -135,7 +135,6 @@ namespace SimpleSlaveryCollars.Utilities
         /// </summary>
         public static void TryInstantBreak(Pawn pawn, float chance)
         {
-            if (pawn.InMentalState) return;
             TryInstantBreak(pawn, chance, MentalStateDefOf.Berserk);
         }
 
@@ -156,7 +155,7 @@ namespace SimpleSlaveryCollars.Utilities
 
             if (heart != null && Rand.Chance(chance))
             {
-                pawn.health.AddHediff(HediffDef.Named("HeartAttack"), heart);
+                pawn.health.AddHediff(SimpleSlaveryDefOf.HeartAttack, heart);
 
                 string text = "SSC_Letter_HeartAttack".Translate(pawn.Name.ToString());
                 Find.LetterStack.ReceiveLetter("SSC_Letter_HeartAttackLabel".Translate(), text, LetterDefOf.NegativeEvent);

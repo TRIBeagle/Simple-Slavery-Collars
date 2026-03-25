@@ -80,10 +80,9 @@
     <Compile Include="Compat\Compat_HAR.cs" />
     <Compile Include="SimpleSlaveryDefOf.cs" />
     <Compile Include="HarmonyInit.cs" />
-    <Compile Include="Patches\Patch_WorkGiver_Warden_ExecuteSlave_JobOnThing.cs" />
-    <Compile Include="Patches\Patch_WorkGiver_Warden_ImprisonSlave_JobOnThing.cs" />
-    <Compile Include="Patches\Patch_WorkGiver_Warden_EmancipateSlave_JobOnThing.cs" />
-    <Compile Include="Patches\Patch_WorkGiver_Warden_SuppressSlave_JobOnThing.cs" />
+    <Compile Include="Patches\Patch_Game_FinalizeInit.cs" />
+    <Compile Include="Patches\Patch_Map_FinalizeInit.cs" />
+    <Compile Include="Patches\Patch_WorkGiver_Warden_SelfTarget_JobOnThing.cs" />
     <Compile Include="Patches\Patch_GuestUtility_GetDisabledWorkTypes.cs" />
     <Compile Include="Patches\Patch_Pawn_GetGizmos.cs" />
     <Compile Include="Patches\Patch_RestraintUtility_ShouldShowRestraintsInfo.cs" />

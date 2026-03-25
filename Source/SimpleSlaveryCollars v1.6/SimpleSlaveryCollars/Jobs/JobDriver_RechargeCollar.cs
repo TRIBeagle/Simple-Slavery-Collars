@@ -5,6 +5,7 @@
 
 using RimWorld;
 using System.Collections.Generic;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 using SimpleSlaveryCollars.Utilities;
@@ -79,8 +80,21 @@ namespace SimpleSlaveryCollars.Jobs
                         }
                         else
                         {
-                            // 콘솔 (전력망에서 소모 — 충전 비용은 칼라 용량만큼)
-                            collar.RechargeWd(neededWd);
+                            // 전력망 배터리 전체에서 순차 차감
+                            float usedWd = collar.RechargeWd(neededWd);
+                            var net = Console.TryGetComp<CompPowerTrader>()?.PowerNet;
+                            if (net != null)
+                            {
+                                var batts = net.batteryComps;
+                                float remaining = usedWd;
+                                for (int i = 0; i < batts.Count && remaining > 0f; i++)
+                                {
+                                    float draw = Mathf.Min(remaining, batts[i].StoredEnergy);
+                                    if (draw <= 0f) continue;
+                                    batts[i].DrawPower(draw);
+                                    remaining -= draw;
+                                }
+                            }
                         }
                     }
                 },

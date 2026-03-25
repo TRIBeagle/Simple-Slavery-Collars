@@ -8,7 +8,6 @@
 using HarmonyLib;
 using System.Reflection;
 using Verse;
-using SimpleSlaveryCollars.Utilities;
 using SimpleSlaveryCollars.Compat;
 
 namespace SimpleSlaveryCollars
@@ -26,19 +25,6 @@ namespace SimpleSlaveryCollars
 
             // 호환 패치 (HAR 등) — Def 로딩 완료 후 실행
             LongEventHandler.ExecuteWhenFinished(CompatManager.ReportAllOnce);
-        }
-    }
-
-    /// <summary>
-    /// 게임 로드/새 게임 시 SlaveCollarRegistry 초기화.
-    /// </summary>
-    [HarmonyPatch(typeof(Game), "FinalizeInit")]
-    public static class Patch_Game_FinalizeInit
-    {
-        [HarmonyPostfix]
-        public static void Postfix()
-        {
-            SlaveCollarRegistry.Clear();
         }
     }
 }

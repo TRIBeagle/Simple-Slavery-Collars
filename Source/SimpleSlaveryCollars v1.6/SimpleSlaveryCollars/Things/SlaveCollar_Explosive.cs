@@ -13,7 +13,6 @@ using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars
 {
-    [StaticConstructorOnStartup]
     public class SlaveCollar_Explosive : SlaveApparel
     {
         public bool armed = false;

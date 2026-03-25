@@ -43,7 +43,7 @@ namespace SimpleSlaveryCollars
                 return ThoughtState.ActiveAtStage(2);
 
             if (time < SimpleSlaveryUtility.SlaveStage4
-                || (time >= SimpleSlaveryUtility.SlaveStage3 && SimpleSlaveryUtility.IsSteadfast(pawn)))
+                || SimpleSlaveryUtility.IsSteadfast(pawn))
                 return ThoughtState.ActiveAtStage(3);
 
             // Stage5: x ≥ S4 && !Steadfast

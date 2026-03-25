@@ -70,11 +70,8 @@ namespace SimpleSlaveryCollars.Jobs
                 }
             }
 
-            // [Job] 개별 예약 확인: 자기 자신 제외, Pawn/콘솔 둘 다 예약 가능해야 함
-            // 콘솔 예약 가능 여부는 루프 전에 1회 체크
-            bool canReserveConsole = pawn.CanReserve(t, 1, -1, null, forced);
-            if (!canReserveConsole) return false;
-
+            // [Job] 개별 예약 확인: 자기 자신 제외, 대상 Pawn도 예약 가능해야 함
+            // 콘솔 예약 가능 여부는 이미 위 CanReserveAndReach에서 검증됨
             foreach (var targetPawn in comp.GetAllReservedPawns())
             {
                 if (targetPawn == pawn) continue;

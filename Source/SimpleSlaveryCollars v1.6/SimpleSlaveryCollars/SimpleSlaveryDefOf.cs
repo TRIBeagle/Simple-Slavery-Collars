@@ -24,6 +24,7 @@ namespace SimpleSlaveryCollars
         public static HediffDef Crypto_Stasis;
         public static HediffDef Electrocuted;
         public static HediffDef Enslaved;
+        public static HediffDef HeartAttack;
 
         // --- JobDefs ---
         public static JobDef SetSlaveCollar;

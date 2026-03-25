@@ -5,6 +5,7 @@
 
 using RimWorld;
 using System.Collections.Generic;
+using UnityEngine;
 using Verse;
 using Verse.AI;
 using SimpleSlaveryCollars.Utilities;
@@ -55,7 +56,7 @@ namespace SimpleSlaveryCollars.Jobs
                     float neededWd = (1f - collar.charge) * collar.BatteryCapacityWd;
                     if (neededWd <= 0f) return;
 
-                    // 배터리 우선, 없으면 전력망에서 소모
+                    // 배터리 우선, 없으면 전력망 배터리에서 순차 차감
                     var battery = Station.TryGetComp<CompPowerBattery>();
                     if (battery != null && battery.StoredEnergy > 0f)
                     {
@@ -64,7 +65,20 @@ namespace SimpleSlaveryCollars.Jobs
                     }
                     else
                     {
-                        collar.RechargeWd(neededWd);
+                        float usedWd = collar.RechargeWd(neededWd);
+                        var net = Station.TryGetComp<CompPowerTrader>()?.PowerNet;
+                        if (net != null)
+                        {
+                            var batts = net.batteryComps;
+                            float remaining = usedWd;
+                            for (int i = 0; i < batts.Count && remaining > 0f; i++)
+                            {
+                                float draw = Mathf.Min(remaining, batts[i].StoredEnergy);
+                                if (draw <= 0f) continue;
+                                batts[i].DrawPower(draw);
+                                remaining -= draw;
+                            }
+                        }
                     }
                 },
                 defaultCompleteMode = ToilCompleteMode.Instant
