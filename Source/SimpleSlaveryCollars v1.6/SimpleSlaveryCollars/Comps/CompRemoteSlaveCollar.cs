@@ -39,9 +39,9 @@ namespace SimpleSlaveryCollars
         #endregion
 
         #region 필드/상태 변수
-        public bool remotearmedExplosive = false;
-        public bool remotearmedElectric = false;
-        public bool remotearmedCrypto = false;
+        public bool remoteArmedExplosive = false;
+        public bool remoteArmedElectric = false;
+        public bool remoteArmedCrypto = false;
 
         private Dictionary<Pawn, RemoteCollarAction> reservedPawns = new Dictionary<Pawn, RemoteCollarAction>();
         public bool groupJobPending = false;
@@ -57,9 +57,9 @@ namespace SimpleSlaveryCollars
         public override void PostExposeData()
         {
             base.PostExposeData();
-            Scribe_Values.Look(ref remotearmedExplosive, "remotearmedExplosive", false);
-            Scribe_Values.Look(ref remotearmedElectric, "remotearmedElectric", false);
-            Scribe_Values.Look(ref remotearmedCrypto, "remotearmedCrypto", false);
+            Scribe_Values.Look(ref remoteArmedExplosive, "ssc_remoteArmedExplosive", false);
+            Scribe_Values.Look(ref remoteArmedElectric, "ssc_remoteArmedElectric", false);
+            Scribe_Values.Look(ref remoteArmedCrypto, "ssc_remoteArmedCrypto", false);
         }
         #endregion
 

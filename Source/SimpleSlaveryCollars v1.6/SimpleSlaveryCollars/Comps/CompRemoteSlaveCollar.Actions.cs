@@ -23,13 +23,13 @@ namespace SimpleSlaveryCollars
                 {
                     if (!SimpleSlaveryUtility.IsColonyMember(pawn)) continue;
                     var collar = SimpleSlaveryUtility.GetSlaveCollar(pawn) as SlaveCollar_Explosive;
-                    if (collar == null || collar.armed == remotearmedExplosive) continue;
+                    if (collar == null || collar.armed == remoteArmedExplosive) continue;
 
-                    collar.armed = remotearmedExplosive;
-                    if (collar.armed && collar.arm_cooldown == 0)
+                    collar.armed = remoteArmedExplosive;
+                    if (collar.armed && collar.armCooldown == 0)
                     {
                         SimpleSlaveryUtility.TryInstantBreak(pawn, Rand.Range(0.25f, 0.33f));
-                        collar.arm_cooldown = 2500;
+                        collar.armCooldown = 2500;
                     }
                 }
                 catch (Exception ex)
@@ -49,9 +49,9 @@ namespace SimpleSlaveryCollars
                 {
                     if (!SimpleSlaveryUtility.IsColonyMember(pawn)) continue;
                     var collar = SimpleSlaveryUtility.GetSlaveCollar(pawn) as SlaveCollar_Electric;
-                    if (collar == null || collar.armed == remotearmedElectric) continue;
+                    if (collar == null || collar.armed == remoteArmedElectric) continue;
 
-                    collar.armed = remotearmedElectric;
+                    collar.armed = remoteArmedElectric;
                 }
                 catch (Exception ex)
                 {
@@ -70,9 +70,9 @@ namespace SimpleSlaveryCollars
                 {
                     if (!SimpleSlaveryUtility.IsColonyMember(pawn)) continue;
                     var collar = SimpleSlaveryUtility.GetSlaveCollar(pawn) as SlaveCollar_Crypto;
-                    if (collar == null || collar.armed == remotearmedCrypto) continue;
+                    if (collar == null || collar.armed == remoteArmedCrypto) continue;
 
-                    collar.armed = remotearmedCrypto;
+                    collar.armed = remoteArmedCrypto;
                     if (!collar.armed)
                     {
                         collar.RevertMentalState();
@@ -121,10 +121,10 @@ namespace SimpleSlaveryCollars
             if (collar == null) return;
 
             collar.armed = active;
-            if (active && collar.arm_cooldown == 0)
+            if (active && collar.armCooldown == 0)
             {
                 SimpleSlaveryUtility.TryInstantBreak(targetPawn, Rand.Range(0.25f, 0.33f));
-                collar.arm_cooldown = 2500;
+                collar.armCooldown = 2500;
             }
         }
 

@@ -135,7 +135,43 @@ namespace SimpleSlaveryCollars
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref armed, "armed", false);
+            Scribe_Values.Look(ref armed, "ssc_armed", false);
+
+            // [마이그레이션] 구버전 키 폴백 — 1.7에서 삭제
+            if (Scribe.mode == LoadSaveMode.LoadingVars && !armed)
+                Scribe_Values.Look(ref armed, "armed", false);
+        }
+
+        public override void Notify_Unequipped(Pawn pawn)
+        {
+            base.Notify_Unequipped(pawn);
+            if (armed)
+            {
+                armed = false;
+                // Notify_Unequipped 시점에는 Wearer가 null일 수 있으므로 pawn 인자 사용
+                var hediffSet = pawn?.health?.hediffSet;
+                if (hediffSet != null)
+                {
+                    Hediff cryptoStasis = hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Crypto_Stasis);
+                    if (cryptoStasis != null)
+                    {
+                        var stasisHediff = cryptoStasis as Hediff_CryptoStasis;
+                        var savedMentalState = stasisHediff?.revertMentalStateDef;
+
+                        if (pawn.mindState?.mentalStateHandler != null)
+                        {
+                            if (savedMentalState != null)
+                                pawn.mindState.mentalStateHandler.TryStartMentalState(savedMentalState, reason: null, forceWake: true, causedByMood: false, otherPawn: null, transitionSilently: true);
+                            else
+                                pawn.mindState.mentalStateHandler.Reset();
+                        }
+
+                        pawn.health.RemoveHediff(cryptoStasis);
+                        if (Rand.Value > 0.66f)
+                            pawn.health.AddHediff(HediffDefOf.CryptosleepSickness);
+                    }
+                }
+            }
         }
 
         protected override void TickInterval(int delta)

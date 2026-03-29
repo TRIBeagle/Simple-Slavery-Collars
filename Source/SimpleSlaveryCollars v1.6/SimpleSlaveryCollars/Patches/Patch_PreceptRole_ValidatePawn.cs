@@ -30,7 +30,6 @@ namespace SimpleSlaveryCollars.Patches
                 if (__result) return; // 이미 통과면 손대지 않음
 
                 if (!SimpleSlaveryCollarsSetting.SlavestageEnable ||
-                    !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable ||
                     !SimpleSlaveryCollarsSetting.Stage5SlaveWorkUnlockEnable)
                     return;
 

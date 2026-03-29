@@ -164,7 +164,7 @@
 			<li Class="SimpleSlaveryCollars.CollarBatteryExtension">
 				<batteryCapacity>50</batteryCapacity>
 				<idleDrain>10</idleDrain>
-				<activeDrain>30</activeDrain>
+				<activeDrain>150</activeDrain>
 			</li>
 		</modExtensions>
 	</ThingDef>
@@ -208,8 +208,8 @@
 		<modExtensions>
 			<li Class="SimpleSlaveryCollars.CollarBatteryExtension">
 				<batteryCapacity>80</batteryCapacity>
-				<idleDrain>10</idleDrain>
-				<activeDrain>50</activeDrain>
+				<idleDrain>16</idleDrain>
+				<activeDrain>400</activeDrain>
 			</li>
 		</modExtensions>
 	</ThingDef>

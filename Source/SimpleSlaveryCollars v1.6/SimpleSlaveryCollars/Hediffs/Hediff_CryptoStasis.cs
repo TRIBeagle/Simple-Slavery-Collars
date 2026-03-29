@@ -40,7 +40,11 @@ namespace SimpleSlaveryCollars
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Defs.Look(ref revertMentalStateDef, "revertMentalStateDef");
+            Scribe_Defs.Look(ref revertMentalStateDef, "ssc_revertMentalStateDef");
+
+            // [마이그레이션] 구버전 키 폴백 — 1.7에서 삭제
+            if (Scribe.mode == LoadSaveMode.LoadingVars && revertMentalStateDef == null)
+                Scribe_Defs.Look(ref revertMentalStateDef, "revertMentalStateDef");
         }
     }
 }

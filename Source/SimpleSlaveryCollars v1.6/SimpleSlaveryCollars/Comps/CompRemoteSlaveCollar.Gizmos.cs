@@ -48,13 +48,13 @@ namespace SimpleSlaveryCollars
 
             // [UI] 1) 폭발 목걸이 장전(토글)
             var armCollarExplosive = new Command_Toggle();
-            Func<bool> isArmedExplosive = () => remotearmedExplosive;
+            Func<bool> isArmedExplosive = () => remoteArmedExplosive;
             armCollarExplosive.isActive = isArmedExplosive;
             armCollarExplosive.defaultLabel = "SSC_Remote_ExplosiveArm".Translate();
             armCollarExplosive.defaultDesc = "SSC_Remote_ExplosiveArm_Desc".Translate();
             armCollarExplosive.toggleAction = delegate
             {
-                remotearmedExplosive = !remotearmedExplosive;
+                remoteArmedExplosive = !remoteArmedExplosive;
                 DoRemoteCollarExplosive();
             };
             armCollarExplosive.activateSound = SoundDefOf.Click;
@@ -62,7 +62,7 @@ namespace SimpleSlaveryCollars
             yield return armCollarExplosive;
 
             // [UI] 2) 폭발 목걸이 폭발(Armed일 때만 노출)
-            if (remotearmedExplosive)
+            if (remoteArmedExplosive)
             {
                 var detonate = new Command_Action();
                 detonate.defaultLabel = "SSC_Remote_ExplosiveDetonate".Translate();
@@ -78,13 +78,13 @@ namespace SimpleSlaveryCollars
 
             // [UI] 3) 감전 목걸이 장전(토글)
             var armCollarElectric = new Command_Toggle();
-            Func<bool> isArmedElectric = () => remotearmedElectric;
+            Func<bool> isArmedElectric = () => remoteArmedElectric;
             armCollarElectric.isActive = isArmedElectric;
             armCollarElectric.defaultLabel = "SSC_Remote_ElectricArm".Translate();
             armCollarElectric.defaultDesc = "SSC_Remote_ElectricArm_Desc".Translate();
             armCollarElectric.toggleAction = delegate
             {
-                remotearmedElectric = !remotearmedElectric;
+                remoteArmedElectric = !remoteArmedElectric;
                 DoRemoteCollarElectric();
             };
             armCollarElectric.activateSound = SoundDefOf.Click;
@@ -93,13 +93,13 @@ namespace SimpleSlaveryCollars
 
             // [UI] 4) 크립토(동결) 목걸이 장전(토글)
             var armCollarCrypto = new Command_Toggle();
-            Func<bool> isArmedCrypto = () => remotearmedCrypto;
+            Func<bool> isArmedCrypto = () => remoteArmedCrypto;
             armCollarCrypto.isActive = isArmedCrypto;
             armCollarCrypto.defaultLabel = "SSC_Remote_CryptoArm".Translate();
             armCollarCrypto.defaultDesc = "SSC_Remote_CryptoArm_Desc".Translate();
             armCollarCrypto.toggleAction = delegate
             {
-                remotearmedCrypto = !remotearmedCrypto;
+                remoteArmedCrypto = !remoteArmedCrypto;
                 DoRemoteCollarCrypto();
             };
             armCollarCrypto.activateSound = SoundDefOf.Click;

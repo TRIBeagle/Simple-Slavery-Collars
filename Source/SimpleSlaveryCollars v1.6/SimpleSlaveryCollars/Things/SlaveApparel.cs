@@ -22,14 +22,8 @@ namespace SimpleSlaveryCollars
         /// <summary>충전 임계값. 이 이하면 armed 불가.</summary>
         public const float ChargeThreshold = 0.05f;
 
-        /// <summary>자가충전 허용 여부. Stage5 노예 또는 식민자가 직접 충전소에서 충전.</summary>
-        public bool selfRechargeAllowed = false;
-
         /// <summary>자동 충전 임계값. 이 이하면 자가충전/Warden 충전 트리거. Gizmo에서 드래그 조절 가능.</summary>
-        public float rechargeThreshold = 0.5f;
-
-        // 충전 시스템 마이그레이션 플래그 — 기존 세이브에서 false로 로드, 1회 메시지 후 true
-        private bool _chargeMigrated;
+        public float rechargeThreshold = SimpleSlaveryCollarsSetting.DefaultRechargeThreshold;
 
         // ── Extension 캐시 ──
         private CollarBatteryExtension _extCache;
@@ -94,25 +88,17 @@ namespace SimpleSlaveryCollars
             }
         }
 
+        /// <summary>대기 소모량 (Wd/일).</summary>
+        public float IdleDrainPerDay => BatteryExt?.idleDrain ?? 10f;
+
         /// <summary>대기 소모량 (Wd/틱).</summary>
-        private float IdleDrainPerTick
-        {
-            get
-            {
-                float wdPerDay = BatteryExt?.idleDrain ?? 10f;
-                return wdPerDay / 60000f;
-            }
-        }
+        private float IdleDrainPerTick => IdleDrainPerDay / 60000f;
+
+        /// <summary>작동(armed) 소모량 (Wd/일).</summary>
+        public float ActiveDrainPerDay => BatteryExt?.activeDrain ?? 30f;
 
         /// <summary>작동(armed) 소모량 (Wd/틱).</summary>
-        private float ActiveDrainPerTick
-        {
-            get
-            {
-                float wdPerDay = BatteryExt?.activeDrain ?? 30f;
-                return wdPerDay / 60000f;
-            }
-        }
+        private float ActiveDrainPerTick => ActiveDrainPerDay / 60000f;
 
         /// <summary>현재 충전량 (Wd).</summary>
         public float ChargeWd => charge * BatteryCapacityWd;
@@ -194,9 +180,7 @@ namespace SimpleSlaveryCollars
             base.ExposeData();
             Scribe_Values.Look(ref charge, "ssc_charge", 1f);
             Scribe_Values.Look(ref empDisabledTicks, "ssc_empDisabledTicks", 0);
-            Scribe_Values.Look(ref selfRechargeAllowed, "ssc_selfRechargeAllowed", false);
-            Scribe_Values.Look(ref rechargeThreshold, "ssc_rechargeThreshold", 0.5f);
-            Scribe_Values.Look(ref _chargeMigrated, "ssc_chargeMigrated", false);
+Scribe_Values.Look(ref rechargeThreshold, "ssc_rechargeThreshold", 0.5f);
         }
 
         /// <summary>
@@ -205,14 +189,6 @@ namespace SimpleSlaveryCollars
         /// </summary>
         protected override void TickInterval(int delta)
         {
-            // [FIX] 충전 시스템 마이그레이션 — 기존 세이브에서 첫 로드 시 1회 알림
-            if (!_chargeMigrated && SimpleSlaveryCollarsSetting.CollarChargeEnable)
-            {
-                _chargeMigrated = true;
-                if (Wearer != null)
-                    Log.Message($"[SSC] {Wearer.LabelShort}: Charge system first applied. Starting fully charged.");
-            }
-
             // EMP 쿨다운 감소
             if (empDisabledTicks > 0)
                 empDisabledTicks = Mathf.Max(0, empDisabledTicks - delta);

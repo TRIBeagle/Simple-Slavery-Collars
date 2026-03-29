@@ -35,7 +35,11 @@ namespace SimpleSlaveryCollars.Patches
                 var mood = p.needs?.mood;
                 if (mood == null) return;
 
-                if (SimpleSlaveryUtility.IsStage5Slave(p))
+                // 석방 후에는 IsSlaveOfColony=false이므로 IsStage5Slave 사용 불가
+                // CompSlave의 누적 시간으로 직접 판정
+                float timeAsSlave = SimpleSlaveryUtility.TimeAsSlave(p);
+                bool steadfast = SimpleSlaveryUtility.IsSteadfast(p);
+                if (timeAsSlave >= SimpleSlaveryUtility.SlaveStage4 && !steadfast)
                 {
                     mood.thoughts.memories.RemoveMemoriesOfDef(ThoughtDefOf.WasEnslaved);
                     mood.thoughts.memories.TryGainMemory(SimpleSlaveryDefOf.WasEnslaved_Assimilation);

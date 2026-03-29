@@ -15,14 +15,14 @@ namespace SimpleSlaveryCollars.Gizmos
     /// <summary>원격 칼라 관리 창. 콘솔 기즈모 클릭으로 열림.</summary>
     public class Dialog_RemoteCollarManager : Window
     {
-        private readonly CompRemoteSlaveCollar comp;
-        private Vector2 scrollPos;
+        private readonly CompRemoteSlaveCollar _comp;
+        private Vector2 _scrollPos;
 
         // ── 조합 필터 (모두 false = 전체) ──
-        private bool filterColonist;
-        private bool filterSlave;
-        private bool filterPrisoner;
-        private readonly HashSet<System.Type> filterCollarTypes = new HashSet<System.Type>();
+        private bool _filterColonist;
+        private bool _filterSlave;
+        private bool _filterPrisoner;
+        private readonly HashSet<System.Type> _filterCollarTypes = new HashSet<System.Type>();
 
         /// <summary>알려진 칼라 종류. 새 칼라 추가 시 여기만 확장.</summary>
         private static readonly (System.Type type, string labelKey)[] KnownCollarTypes =
@@ -33,16 +33,16 @@ namespace SimpleSlaveryCollars.Gizmos
         };
 
         // 캐시 — 매 프레임 재스캔 방지, 30틱마다 갱신
-        private List<PawnCollarInfo> cachedPawns;
-        private int lastCacheTick = -1;
-        private int lastFilterHash = -1;
+        private List<PawnCollarInfo> _cachedPawns;
+        private int _lastCacheTick = -1;
+        private int _lastFilterHash = -1;
         private const int CacheInterval = 30;
 
         // 정렬 상태
-        private SortColumn sortColumn = SortColumn.None;
-        private bool sortAscending = true;
-        private SortColumn lastSortColumn = SortColumn.None;
-        private bool lastSortAscending = true;
+        private SortColumn _sortColumn = SortColumn.None;
+        private bool _sortAscending = true;
+        private SortColumn _lastSortColumn = SortColumn.None;
+        private bool _lastSortAscending = true;
 
         // 레이아웃 상수
         private const float RowHeight = 36f;
@@ -50,30 +50,27 @@ namespace SimpleSlaveryCollars.Gizmos
         private const float BtnH = 24f;
         private const float PortraitSize = 32f;
 
-        // 컬럼 오프셋 (초상화 뒤)
+        // 컬럼 오프셋 (초상화 뒤) — 정렬 화살표(▲/▼) 포함 2줄 방지를 위해 여유 확보
         private const float ColPortrait = 2f;
         private const float ColName = 36f;
-        private const float NameWidth = 120f;
-        private const float ColType = 158f;
-        private const float TypeWidth = 44f;
-        private const float ColCollar = 204f;
-        private const float CollarWidth = 46f;
-        private const float ColStatus = 252f;
-        private const float StatusWidth = 40f;
-        private const float ColAction = 294f;
+        private const float NameWidth = 140f;
+        private const float ColType = 178f;
+        private const float TypeWidth = 54f;
+        private const float ColCollar = 234f;
+        private const float CollarWidth = 58f;
+        private const float ColStatus = 294f;
+        private const float StatusWidth = 50f;
+        private const float ColAction = 346f;
 
-        // 동적 창 크기
-        private const float WindowWidth = 500f;
-        private const float MinWindowHeight = 250f;
-        private const float MaxWindowHeight = 600f;
-        // 고정 영역 높이: 타이틀(40) + 필터2행(52) + 간격(6) + 헤더(26) + 하단(40) + 마진(36*2)
-        private const float FixedAreaHeight = 236f;
+        // 고정 창 크기 — 10명 표시 기준 (10 × 36 + 고정 영역)
+        private const float WindowWidth = 620f;
+        private const float WindowHeight = 564f;
 
-        public override Vector2 InitialSize => new Vector2(WindowWidth, MinWindowHeight);
+        public override Vector2 InitialSize => new Vector2(WindowWidth, WindowHeight);
 
         public Dialog_RemoteCollarManager(CompRemoteSlaveCollar comp)
         {
-            this.comp = comp;
+            this._comp = comp;
             doCloseButton = false;
             doCloseX = true;
             closeOnClickedOutside = true;
@@ -85,26 +82,10 @@ namespace SimpleSlaveryCollars.Gizmos
         public override void DoWindowContents(Rect inRect)
         {
             // 전원 꺼지면 닫기
-            if (comp == null || !comp.PowerOn)
+            if (_comp == null || !_comp.PowerOn)
             {
                 Close();
                 return;
-            }
-
-            // ── 동적 높이 계산: 폰 수에 맞춤 ──
-            var pawns = GetFilteredPawns();
-            float desiredHeight = FixedAreaHeight + pawns.Count * RowHeight;
-            desiredHeight = Mathf.Clamp(desiredHeight, MinWindowHeight, MaxWindowHeight);
-            if (Mathf.Abs(windowRect.height - desiredHeight) > 2f)
-            {
-                float centerX = windowRect.center.x;
-                float centerY = windowRect.center.y;
-                windowRect.height = desiredHeight;
-                windowRect.x = centerX - windowRect.width / 2f;
-                windowRect.y = centerY - windowRect.height / 2f;
-                // 화면 밖으로 나가지 않도록 클램프
-                windowRect.x = Mathf.Clamp(windowRect.x, 0f, UI.screenWidth - windowRect.width);
-                windowRect.y = Mathf.Clamp(windowRect.y, 0f, UI.screenHeight - windowRect.height);
             }
 
             float y = inRect.y;
@@ -144,26 +125,26 @@ namespace SimpleSlaveryCollars.Gizmos
             float btnW = (availW - gap * (typeCount - 1)) / typeCount;
             float btnX = x + labelW + 2f;
 
-            bool anyTypeOn = filterColonist || filterSlave || filterPrisoner;
+            bool anyTypeOn = _filterColonist || _filterSlave || _filterPrisoner;
             if (DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
                 "SSC_Console_FilterAll".Translate(), !anyTypeOn))
             {
                 if (anyTypeOn)
                 {
-                    filterColonist = false; filterSlave = false; filterPrisoner = false;
+                    _filterColonist = false; _filterSlave = false; _filterPrisoner = false;
                     InvalidateCache();
                 }
             }
             btnX += btnW + gap;
 
-            filterColonist = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
-                "SSC_Console_PawnType_Colonist".Translate(), filterColonist);
+            _filterColonist = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
+                "SSC_Console_PawnType_Colonist".Translate(), _filterColonist);
             btnX += btnW + gap;
-            filterSlave = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
-                "SSC_Console_PawnType_Slave".Translate(), filterSlave);
+            _filterSlave = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
+                "SSC_Console_PawnType_Slave".Translate(), _filterSlave);
             btnX += btnW + gap;
-            filterPrisoner = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
-                "SSC_Console_PawnType_Prisoner".Translate(), filterPrisoner);
+            _filterPrisoner = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
+                "SSC_Console_PawnType_Prisoner".Translate(), _filterPrisoner);
 
             y += BtnH + rowGap;
 
@@ -173,13 +154,13 @@ namespace SimpleSlaveryCollars.Gizmos
             btnW = (availW - gap * (collarCount - 1)) / collarCount;
             btnX = x + labelW + 2f;
 
-            bool allCollarOff = filterCollarTypes.Count == 0;
+            bool allCollarOff = _filterCollarTypes.Count == 0;
             if (DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
                 "SSC_Console_FilterAll".Translate(), allCollarOff))
             {
                 if (!allCollarOff)
                 {
-                    filterCollarTypes.Clear();
+                    _filterCollarTypes.Clear();
                     InvalidateCache();
                 }
             }
@@ -188,14 +169,14 @@ namespace SimpleSlaveryCollars.Gizmos
             for (int i = 0; i < KnownCollarTypes.Length; i++)
             {
                 var ct = KnownCollarTypes[i];
-                bool active = filterCollarTypes.Contains(ct.type);
+                bool active = _filterCollarTypes.Contains(ct.type);
                 bool newActive = DrawFilterToggle(new Rect(btnX, y, btnW, BtnH),
                     ct.labelKey.Translate(), active);
 
                 if (newActive != active)
                 {
-                    if (newActive) filterCollarTypes.Add(ct.type);
-                    else filterCollarTypes.Remove(ct.type);
+                    if (newActive) _filterCollarTypes.Add(ct.type);
+                    else _filterCollarTypes.Remove(ct.type);
                     InvalidateCache();
                 }
                 btnX += btnW + gap;
@@ -261,7 +242,7 @@ namespace SimpleSlaveryCollars.Gizmos
             float totalHeight = pawns.Count * RowHeight;
             Rect viewRect = new Rect(0f, 0f, scrollRect.width - 16f, Mathf.Max(totalHeight, scrollRect.height));
 
-            Widgets.BeginScrollView(scrollRect, ref scrollPos, viewRect);
+            Widgets.BeginScrollView(scrollRect, ref _scrollPos, viewRect);
 
             float rowY = 0f;
             for (int i = 0; i < pawns.Count; i++)
@@ -293,6 +274,10 @@ namespace SimpleSlaveryCollars.Gizmos
             DrawSortableHeaderLabel(new Rect(x + ColStatus, rect.y, StatusWidth, rect.height),
                 "SSC_Console_Header_Status".Translate(), SortColumn.Status);
 
+            // 액션 컬럼 — 정렬 불필요, 라벨만 표시
+            Widgets.Label(new Rect(x + ColAction, rect.y, rect.xMax - (x + ColAction), rect.height),
+                "SSC_Console_Header_Action".Translate());
+
             Text.Anchor = TextAnchor.UpperLeft;
             Text.Font = GameFont.Small;
 
@@ -306,8 +291,8 @@ namespace SimpleSlaveryCollars.Gizmos
         {
             // 정렬 방향 표시
             string displayLabel = label;
-            if (sortColumn == col)
-                displayLabel += sortAscending ? " \u25B2" : " \u25BC";
+            if (_sortColumn == col)
+                displayLabel += _sortAscending ? " \u25B2" : " \u25BC";
 
             // 마우스 하이라이트
             Widgets.DrawHighlightIfMouseover(rect);
@@ -315,12 +300,12 @@ namespace SimpleSlaveryCollars.Gizmos
 
             if (Widgets.ButtonInvisible(rect))
             {
-                if (sortColumn == col)
-                    sortAscending = !sortAscending;
+                if (_sortColumn == col)
+                    _sortAscending = !_sortAscending;
                 else
                 {
-                    sortColumn = col;
-                    sortAscending = true;
+                    _sortColumn = col;
+                    _sortAscending = true;
                 }
                 InvalidateCache();
             }
@@ -370,7 +355,7 @@ namespace SimpleSlaveryCollars.Gizmos
             // 액션 버튼 — 남은 폭을 채움
             float actionX = baseX + ColAction;
             float actionW = rowRect.xMax - actionX;
-            if (comp.IsPawnReserved(info.pawn))
+            if (_comp.IsPawnReserved(info.pawn))
             {
                 GUI.color = Color.gray;
                 Text.Anchor = TextAnchor.MiddleCenter;
@@ -400,6 +385,22 @@ namespace SimpleSlaveryCollars.Gizmos
         {
             float gap = 3f;
 
+            // 칼라 작동 불가(충전 0 / EMP) 시 비활성 표시
+            if (!info.collar.IsOperational)
+            {
+                GUI.color = Color.gray;
+                Text.Anchor = TextAnchor.MiddleCenter;
+                string inoperableText = "SSC_Collar_Inoperable".Translate();
+                Text.Font = GameFont.Small;
+                if (Text.CalcSize(inoperableText).x > totalW)
+                    Text.Font = GameFont.Tiny;
+                Widgets.Label(new Rect(x, y - (BtnH - BtnH) / 2f, totalW, BtnH), inoperableText);
+                Text.Anchor = TextAnchor.UpperLeft;
+                Text.Font = GameFont.Small;
+                GUI.color = Color.white;
+                return;
+            }
+
             if (!info.collar.IsArmed)
             {
                 // 비무장: [무장] 1개 — 전체 폭 사용
@@ -408,7 +409,7 @@ namespace SimpleSlaveryCollars.Gizmos
                 {
                     if (Widgets.ButtonText(new Rect(x, y, totalW, BtnH), "SSC_Collar_Arm".Translate()))
                     {
-                        comp.ReserveJobForPawn(info.pawn, armAction.Value);
+                        _comp.ReserveJobForPawn(info.pawn, armAction.Value);
                         InvalidateCache();
                     }
                 }
@@ -419,14 +420,14 @@ namespace SimpleSlaveryCollars.Gizmos
                 float btnW = (totalW - gap) / 2f;
                 if (Widgets.ButtonText(new Rect(x, y, btnW, BtnH), "SSC_Collar_Disarm".Translate()))
                 {
-                    comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DisarmExplosive);
+                    _comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DisarmExplosive);
                     InvalidateCache();
                 }
 
                 GUI.color = new Color(1f, 0.5f, 0.5f);
                 if (Widgets.ButtonText(new Rect(x + btnW + gap, y, btnW, BtnH), "SSC_Explosive_Detonate".Translate()))
                 {
-                    comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DetonateExplosive);
+                    _comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DetonateExplosive);
                     InvalidateCache();
                 }
                 GUI.color = Color.white;
@@ -439,7 +440,7 @@ namespace SimpleSlaveryCollars.Gizmos
                 {
                     if (Widgets.ButtonText(new Rect(x, y, totalW, BtnH), "SSC_Collar_Disarm".Translate()))
                     {
-                        comp.ReserveJobForPawn(info.pawn, disarmAction.Value);
+                        _comp.ReserveJobForPawn(info.pawn, disarmAction.Value);
                         InvalidateCache();
                     }
                 }
@@ -513,11 +514,11 @@ namespace SimpleSlaveryCollars.Gizmos
             for (int i = 0; i < pawns.Count; i++)
             {
                 var info = pawns[i];
-                if (comp.IsPawnReserved(info.pawn)) continue;
+                if (_comp.IsPawnReserved(info.pawn)) continue;
                 if (!(info.collar is SlaveCollar_Explosive)) continue;
                 if (!info.collar.IsArmed) continue;
 
-                comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DetonateExplosive);
+                _comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DetonateExplosive);
                 count++;
             }
             if (count > 0)
@@ -545,7 +546,7 @@ namespace SimpleSlaveryCollars.Gizmos
             for (int i = 0; i < pawns.Count; i++)
             {
                 var info = pawns[i];
-                if (comp.IsPawnReserved(info.pawn)) continue;
+                if (_comp.IsPawnReserved(info.pawn)) continue;
                 if (arm && info.collar.IsArmed) continue;
                 if (!arm && !info.collar.IsArmed) continue;
                 if (!getAction(info.collar).HasValue) continue;
@@ -567,7 +568,7 @@ namespace SimpleSlaveryCollars.Gizmos
                     {
                         var action = getAction(capturedAll[i].collar);
                         if (!action.HasValue) continue;
-                        comp.ReserveJobForPawn(capturedAll[i].pawn, action.Value);
+                        _comp.ReserveJobForPawn(capturedAll[i].pawn, action.Value);
                         count++;
                     }
                     if (count > 0)
@@ -591,7 +592,7 @@ namespace SimpleSlaveryCollars.Gizmos
                 for (int i = 0; i < pawns.Count; i++)
                 {
                     var info = pawns[i];
-                    if (comp.IsPawnReserved(info.pawn)) continue;
+                    if (_comp.IsPawnReserved(info.pawn)) continue;
                     if (!ct.type.IsInstanceOfType(info.collar)) continue;
                     if (arm && info.collar.IsArmed) continue;
                     if (!arm && !info.collar.IsArmed) continue;
@@ -613,7 +614,7 @@ namespace SimpleSlaveryCollars.Gizmos
                         {
                             var action = getAction(captured[i].collar);
                             if (!action.HasValue) continue;
-                            comp.ReserveJobForPawn(captured[i].pawn, action.Value);
+                            _comp.ReserveJobForPawn(captured[i].pawn, action.Value);
                             count++;
                         }
                         if (count > 0)
@@ -636,15 +637,15 @@ namespace SimpleSlaveryCollars.Gizmos
         /// <summary>모든 예약을 해제 (필터 무관).</summary>
         private void CancelAllReservations()
         {
-            var allReserved = new List<Pawn>(comp.GetAllReservedPawns());
+            var allReserved = new List<Pawn>(_comp.GetAllReservedPawns());
             int count = allReserved.Count;
 
             for (int i = 0; i < allReserved.Count; i++)
-                comp.ReleaseReservation(allReserved[i]);
+                _comp.ReleaseReservation(allReserved[i]);
 
             // 그룹 Job 대기 중이면 함께 해제
-            if (comp.groupJobPending)
-                comp.groupJobPending = false;
+            if (_comp.groupJobPending)
+                _comp.groupJobPending = false;
 
             if (count > 0)
             {
@@ -658,7 +659,7 @@ namespace SimpleSlaveryCollars.Gizmos
         /// <summary>맵에 Warden 작업이 활성화된 식민자가 있는지.</summary>
         private bool HasWardenOnMap()
         {
-            var colonists = comp.parent.Map.mapPawns.FreeColonistsSpawned;
+            var colonists = _comp.parent.Map.mapPawns.FreeColonistsSpawned;
             for (int i = 0; i < colonists.Count; i++)
             {
                 var p = colonists[i];
@@ -688,61 +689,67 @@ namespace SimpleSlaveryCollars.Gizmos
         {
             int tick = Find.TickManager.TicksGame;
             int curFilterHash = ComputeFilterHash();
-            bool sortChanged = sortColumn != lastSortColumn || sortAscending != lastSortAscending;
+            bool sortChanged = _sortColumn != _lastSortColumn || _sortAscending != _lastSortAscending;
 
-            if (cachedPawns != null && curFilterHash == lastFilterHash
-                && !sortChanged && tick - lastCacheTick < CacheInterval)
-                return cachedPawns;
+            if (_cachedPawns != null && curFilterHash == _lastFilterHash
+                && !sortChanged && tick - _lastCacheTick < CacheInterval)
+                return _cachedPawns;
 
-            lastCacheTick = tick;
-            lastFilterHash = curFilterHash;
-            lastSortColumn = sortColumn;
-            lastSortAscending = sortAscending;
+            _lastCacheTick = tick;
+            _lastFilterHash = curFilterHash;
+            _lastSortColumn = _sortColumn;
+            _lastSortAscending = _sortAscending;
 
-            if (cachedPawns == null)
-                cachedPawns = new List<PawnCollarInfo>();
+            if (_cachedPawns == null)
+                _cachedPawns = new List<PawnCollarInfo>();
             else
-                cachedPawns.Clear();
+                _cachedPawns.Clear();
 
-            bool anyTypeFilter = filterColonist || filterSlave || filterPrisoner;
-            bool anyCollarFilter = filterCollarTypes.Count > 0;
+            bool anyTypeFilter = _filterColonist || _filterSlave || _filterPrisoner;
+            bool anyCollarFilter = _filterCollarTypes.Count > 0;
 
-            var allPawns = comp.parent.Map.mapPawns.AllPawnsSpawned;
+            var allPawns = _comp.parent.Map.mapPawns.AllPawnsSpawned;
             for (int i = 0; i < allPawns.Count; i++)
             {
                 var p = allPawns[i];
                 if (p.Dead || !p.Spawned) continue;
 
-                // 신분 필터 (모두 꺼짐 = 전체 통과)
-                if (anyTypeFilter)
-                {
-                    bool pass = false;
-                    // 노예 판정을 먼저 (IsColonist은 노예도 true이므로)
-                    if (filterSlave && p.IsSlaveOfColony) pass = true;
-                    if (!pass && filterPrisoner && p.IsPrisonerOfColony) pass = true;
-                    if (!pass && filterColonist && p.IsColonist && !p.IsSlaveOfColony) pass = true;
-                    if (!pass) continue;
-                }
+                // 소속 필터 — 내 정착민/노예/죄수만 (반란 중 소속 변경 대응)
+                if (!p.IsColonist && !p.IsPrisonerOfColony && !p.IsSlaveOfColony
+                    && p.Faction != Faction.OfPlayer && p.HostFaction != Faction.OfPlayer)
+                    continue;
 
                 var collar = SimpleSlaveryUtility.GetSlaveCollar(p) as SlaveApparel;
                 if (collar == null) continue;
 
+                // 신분 필터 (모두 꺼짐 = 전체 통과)
+                if (anyTypeFilter)
+                {
+                    bool pass = false;
+                    if (_filterSlave && p.IsSlaveOfColony) pass = true;
+                    if (!pass && _filterPrisoner && p.IsPrisonerOfColony) pass = true;
+                    if (!pass && _filterColonist && p.IsColonist && !p.IsSlaveOfColony) pass = true;
+                    // 반란 등으로 소속 불명인 칼라 착용자 — 노예 필터 ON이면 통과
+                    if (!pass && _filterSlave && !p.IsColonist && !p.IsPrisonerOfColony) pass = true;
+                    if (!pass) continue;
+                }
+
                 // 칼라 종류 필터 (모두 꺼짐 = 전체 통과)
-                if (anyCollarFilter && !filterCollarTypes.Contains(collar.GetType()))
+                if (anyCollarFilter && !_filterCollarTypes.Contains(collar.GetType()))
                     continue;
 
-                cachedPawns.Add(new PawnCollarInfo { pawn = p, collar = collar });
+                _cachedPawns.Add(new PawnCollarInfo { pawn = p, collar = collar });
             }
 
-            ApplySort(cachedPawns);
-            return cachedPawns;
+            ApplySort(_cachedPawns);
+            return _cachedPawns;
         }
 
         /// <summary>필터 상태 해시 (캐시 무효화 판정용).</summary>
         private int ComputeFilterHash()
         {
-            int h = (filterColonist ? 1 : 0) | (filterSlave ? 2 : 0) | (filterPrisoner ? 4 : 0);
-            foreach (var t in filterCollarTypes)
+            int h = (_filterColonist ? 1 : 0) | (_filterSlave ? 2 : 0) | (_filterPrisoner ? 4 : 0);
+            foreach (var t in _filterCollarTypes)
                 h ^= t.GetHashCode();
             return h;
         }
@@ -750,10 +757,10 @@ namespace SimpleSlaveryCollars.Gizmos
         /// <summary>리스트 정렬 적용.</summary>
         private void ApplySort(List<PawnCollarInfo> list)
         {
-            if (sortColumn == SortColumn.None || list.Count < 2) return;
+            if (_sortColumn == SortColumn.None || list.Count < 2) return;
 
             Comparison<PawnCollarInfo> comparison;
-            switch (sortColumn)
+            switch (_sortColumn)
             {
                 case SortColumn.Name:
                     comparison = (a, b) => string.Compare(a.pawn.LabelShort, b.pawn.LabelShort, StringComparison.Ordinal);
@@ -771,7 +778,7 @@ namespace SimpleSlaveryCollars.Gizmos
                     return;
             }
 
-            if (sortAscending)
+            if (_sortAscending)
                 list.Sort(comparison);
             else
                 list.Sort((a, b) => comparison(b, a));
@@ -780,7 +787,7 @@ namespace SimpleSlaveryCollars.Gizmos
         /// <summary>캐시 강제 무효화.</summary>
         private void InvalidateCache()
         {
-            lastCacheTick = -1;
+            _lastCacheTick = -1;
         }
 
         #endregion

@@ -30,11 +30,21 @@ namespace SimpleSlaveryCollars.Jobs
         protected override IEnumerable<Toil> MakeNewToils()
         {
             this.FailOnDespawnedNullOrForbidden(TargetIndex.A);
-            // 콘솔 전원 OFF 시 실패
+            // 충전소 유효성: 콘솔이면 전원 ON 확인, 배터리면 저장량 확인
             this.FailOn(() =>
             {
-                var comp = Station.TryGetComp<CompRemoteSlaveCollar>();
-                return comp != null && !comp.PowerOn;
+                var s = Station;
+                if (s == null) return true;
+
+                var remoteComp = s.TryGetComp<CompRemoteSlaveCollar>();
+                if (remoteComp != null)
+                    return !remoteComp.PowerOn;
+
+                var battery = s.TryGetComp<CompPowerBattery>();
+                if (battery != null)
+                    return battery.StoredEnergy < 1f;
+
+                return true;
             });
 
             // 1) 충전소로 이동

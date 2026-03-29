@@ -9,6 +9,7 @@ using System.Reflection.Emit;
 using HarmonyLib;
 using RimWorld;
 using Verse;
+using SimpleSlaveryCollars.Utilities;
 
 namespace SimpleSlaveryCollars.Patches
 {
@@ -66,13 +67,15 @@ namespace SimpleSlaveryCollars.Patches
         }
 
         /// <summary>
-        /// FreeNonSlaveColonist 또는 Colony 노예면 true.
+        /// FreeNonSlaveColonist 또는 Stage5 동화 노예면 true.
         /// </summary>
         public static bool IsEligibleForRitualRole(Pawn pawn)
         {
             if (pawn == null) return false;
             if (pawn.IsFreeNonSlaveColonist) return true;
-            return pawn.IsSlaveOfColony;
+            if (!SimpleSlaveryCollarsSetting.SlavestageEnable) return false;
+            if (!SimpleSlaveryCollarsSetting.Stage5SlaveWorkUnlockEnable) return false;
+            return SimpleSlaveryUtility.IsStage5Slave(pawn);
         }
     }
 }

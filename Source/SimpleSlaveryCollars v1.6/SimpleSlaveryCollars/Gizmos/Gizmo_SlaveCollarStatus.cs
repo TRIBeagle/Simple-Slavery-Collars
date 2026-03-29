@@ -1,5 +1,5 @@
 // SimpleSlaveryCollars | Gizmos | Gizmo_SlaveCollarStatus.cs
-// 목적 : 노예 칼라 충전 상태 기즈모 — 충전 바 + 드래그 임계값 슬라이더 + 자가충전 토글
+// 목적 : 노예 칼라 충전 상태 기즈모 — 충전 바 + 드래그 임계값 슬라이더
 // 용도 : 충전 옵션 ON 시 기존 Arm/Detonate 기즈모와 함께 표시
 // 주의 : EMP 비활성화 중에는 바 회색 + "EMP 비활성화" 텍스트
 //        드래그 중 collar.rechargeThreshold 실시간 갱신 → 세이브에 반영
@@ -7,7 +7,6 @@
 using RimWorld;
 using UnityEngine;
 using Verse;
-using Verse.Sound;
 
 namespace SimpleSlaveryCollars.Gizmos
 {
@@ -30,8 +29,6 @@ namespace SimpleSlaveryCollars.Gizmos
             SolidColorMaterials.NewSolidColorTexture(new Color(0.03f, 0.035f, 0.05f));
         private static readonly Texture2D BarDragTex =
             SolidColorMaterials.NewSolidColorTexture(new Color(0.74f, 0.97f, 0.8f));
-
-        private const float HeaderBtnSize = 24f;
 
         // 임계값 드래그 상태 (Gizmo_SetFuelLevel과 동일 패턴: static)
         private static bool draggingBar;
@@ -59,49 +56,27 @@ namespace SimpleSlaveryCollars.Gizmos
                 return new GizmoResult(GizmoState.Clear);
 
             bool empDisabled = collar.IsEmpDisabled;
-            bool chargeEnabled = SimpleSlaveryCollarsSetting.CollarChargeEnable;
 
-            // ── 상단: 칼라 이름 + 자가충전 토글 ──
+            // ── 상단: 칼라 이름(폰 이름) ──
             Rect headerRect = innerRect;
             headerRect.height = Text.LineHeightOf(GameFont.Small);
-            float headerBtnX = headerRect.xMax;
-            bool mouseOverBtn = false;
 
-            // 자가충전 토글 버튼 (충전 ON일 때만)
-            if (chargeEnabled)
-            {
-                headerBtnX -= HeaderBtnSize;
-                Rect toggleRect = new Rect(headerBtnX, headerRect.y, HeaderBtnSize, HeaderBtnSize);
-
-                GUI.DrawTexture(toggleRect, collar.selfRechargeAllowed
-                    ? Widgets.CheckboxOnTex : Widgets.CheckboxOffTex);
-
-                if (Widgets.ButtonInvisible(toggleRect))
-                {
-                    collar.selfRechargeAllowed = !collar.selfRechargeAllowed;
-                    if (collar.selfRechargeAllowed)
-                        SoundDefOf.Tick_High.PlayOneShotOnCamera();
-                    else
-                        SoundDefOf.Tick_Low.PlayOneShotOnCamera();
-                }
-
-                if (Mouse.IsOver(toggleRect))
-                {
-                    Widgets.DrawHighlight(toggleRect);
-                    TooltipHandler.TipRegion(toggleRect, "SSC_Collar_SelfRecharge_Toggle".Translate());
-                    mouseOverBtn = true;
-                }
-            }
-
-            headerRect.xMax = headerBtnX - 2f;
-
-            // 칼라 타입 라벨
-            Text.Font = GameFont.Small;
+            // 칼라 타입 라벨 — 다중 선택 시에만 폰 이름 부기
             string collarLabel = collar.def.LabelCap.Resolve();
-            string truncated = collarLabel.Truncate(headerRect.width);
+            string fullLabel = collarLabel;
+            if (Find.Selector.NumSelected > 1 && collar.Wearer != null)
+                fullLabel = $"{collarLabel}({collar.Wearer.LabelShort})";
+
+            // 폭 초과 시 Tiny 폰트로 축소
+            Text.Font = GameFont.Small;
+            if (Text.CalcSize(fullLabel).x > headerRect.width)
+                Text.Font = GameFont.Tiny;
+
+            string truncated = fullLabel.Truncate(headerRect.width);
             Widgets.Label(headerRect, truncated);
-            if (truncated != collarLabel && Mouse.IsOver(headerRect))
-                TooltipHandler.TipRegion(headerRect, collarLabel);
+            Text.Font = GameFont.Small;
+            if (truncated != fullLabel && Mouse.IsOver(headerRect))
+                TooltipHandler.TipRegion(headerRect, fullLabel);
 
             // ── 하단: 충전 바 ──
             Rect barRect = innerRect;
@@ -113,12 +88,6 @@ namespace SimpleSlaveryCollars.Gizmos
                 Widgets.FillableBar(barRect, 1f, BarEmpTex, BarEmptyTex, doBorder: true);
                 DrawBarLabel(barRect, "SSC_Collar_Disrupted".Translate());
             }
-            else if (!chargeEnabled)
-            {
-                // 충전 비활성화 — 무한
-                Widgets.FillableBar(barRect, 1f, BarFilledTex, BarEmptyTex, doBorder: true);
-                DrawBarLabel(barRect, "SSC_Collar_Unlimited".Translate());
-            }
             else
             {
                 // 드래그 가능한 임계값 슬라이더 + 충전 바
@@ -127,17 +96,17 @@ namespace SimpleSlaveryCollars.Gizmos
 
                 Widgets.DraggableBar(barRect, fillTex, BarHighlightTex, BarEmptyTex, BarDragTex,
                     ref draggingBar, collar.charge, ref threshold,
-                    ThresholdMarkers, 20, 0.1f, 0.95f);
+                    ThresholdMarkers, 20, 0f, 1f);
 
                 collar.rechargeThreshold = threshold;
                 DrawBarLabel(barRect, $"{collar.ChargeWd:F0} / {collar.BatteryCapacityWd:F0}");
             }
 
             // ── 툴팁 ──
-            if (Mouse.IsOver(outerRect) && !mouseOverBtn)
+            if (Mouse.IsOver(outerRect))
             {
                 Widgets.DrawHighlight(outerRect);
-                TooltipHandler.TipRegion(outerRect, GetTooltip(empDisabled, chargeEnabled));
+                TooltipHandler.TipRegion(outerRect, GetTooltip(empDisabled));
             }
 
             return new GizmoResult(GizmoState.Clear);
@@ -146,14 +115,16 @@ namespace SimpleSlaveryCollars.Gizmos
         /// <summary>바 중앙에 라벨 표시.</summary>
         private static void DrawBarLabel(Rect barRect, string label)
         {
+            GameFont prevFont = Text.Font;
             Text.Font = GameFont.Small;
             Text.Anchor = TextAnchor.MiddleCenter;
             Widgets.Label(barRect, label);
             Text.Anchor = TextAnchor.UpperLeft;
+            Text.Font = prevFont;
         }
 
         /// <summary>툴팁 생성.</summary>
-        private string GetTooltip(bool empDisabled, bool chargeEnabled)
+        private string GetTooltip(bool empDisabled)
         {
             if (empDisabled)
             {
@@ -163,15 +134,11 @@ namespace SimpleSlaveryCollars.Gizmos
                 return "SSC_Collar_DisruptedFlare_Tooltip".Translate();
             }
 
-            if (!chargeEnabled)
-                return "SSC_Collar_Unlimited_Tooltip".Translate();
-
             float thresholdWd = collar.rechargeThreshold * collar.BatteryCapacityWd;
             int thresholdPct = Mathf.RoundToInt(collar.rechargeThreshold * 100f);
-            string selfStatus = collar.selfRechargeAllowed
-                ? "SSC_Collar_SelfRecharge_On".Translate()
-                : "SSC_Collar_SelfRecharge_Off".Translate();
-            return $"{"SSC_Collar_Charge_Tooltip".Translate(collar.ChargeWd.ToString("F1"), collar.BatteryCapacityWd.ToString("F1"))}\n{"SSC_Collar_RechargeThreshold".Translate()}: {thresholdWd:F1} Wd ({thresholdPct}%)\n{selfStatus}";
+            string drainIdle = "SSC_Collar_DrainIdle".Translate(collar.IdleDrainPerDay.ToString("F0"));
+            string drainActive = "SSC_Collar_DrainActive".Translate(collar.ActiveDrainPerDay.ToString("F0"));
+            return $"{"SSC_Collar_Charge_Tooltip".Translate(collar.ChargeWd.ToString("F1"), collar.BatteryCapacityWd.ToString("F1"))}\n{drainIdle}\n{drainActive}\n{"SSC_Collar_RechargeThreshold".Translate()}: {thresholdWd:F1} Wd ({thresholdPct}%)";
         }
     }
 }

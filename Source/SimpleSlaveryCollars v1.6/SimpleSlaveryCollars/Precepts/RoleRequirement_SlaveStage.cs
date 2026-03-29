@@ -21,11 +21,11 @@ namespace SimpleSlaveryCollars
 
         public override bool Met(Pawn pawn, Precept_Role role)
         {
-            // 1. 노예가 아니면 해당 역할(Slave Stage 전용)을 맡을 수 없음
+            // 노예가 아니면 이 조건은 해당 없음 → 통과
             if (!pawn.IsSlaveOfColony)
-                return false;
+                return true;
 
-            // 2. Stage5 조건: SlaveStage4 이상 && !Steadfast 일 때만 충족
+            // 노예인 경우 Stage5 조건: SlaveStage4 이상 && !Steadfast 일 때만 충족
             float time = SimpleSlaveryUtility.TimeAsSlave(pawn);
             if (time < SimpleSlaveryUtility.SlaveStage4 || SimpleSlaveryUtility.IsSteadfast(pawn))
                 return false;

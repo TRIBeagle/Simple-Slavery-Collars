@@ -186,13 +186,7 @@ namespace SimpleSlaveryCollars
         {
             if (parent is Pawn pawn && pawn.IsSlaveOfColony)
             {
-                string duration = SimpleSlaveryUtility.FormatEnslaveDurationReadable(pawn, TimeAsSlaveTicks);
-                // 구속 상태면 한 줄에 합침
-                if (_shackled)
-                {
-                    duration += ", " + "SSC_InspectShackled".Translate();
-                }
-                return duration;
+                return SimpleSlaveryUtility.FormatEnslaveDurationReadable(pawn, TimeAsSlaveTicks);
             }
             return null;
         }
@@ -287,6 +281,7 @@ namespace SimpleSlaveryCollars
                 _assimilatedAtStage4 = hediff.assimilatedAtStage4;
                 _uiRefreshedAtStage4 = hediff.uiRefreshedAtStage4;
                 _hediffDataMigrated = true;
+                Log.Message($"[SSC] {pawn.LabelShort}: Hediff_Enslaved migrated to CompSlave.");
             }
 
             // Hediff는 항상 제거 (빈 껍데기이므로 남아있을 이유 없음)

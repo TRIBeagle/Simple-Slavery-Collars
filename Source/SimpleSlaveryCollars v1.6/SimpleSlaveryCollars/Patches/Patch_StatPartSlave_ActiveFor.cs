@@ -25,7 +25,6 @@ namespace SimpleSlaveryCollars.Patches
             try
             {
                 if (!SimpleSlaveryCollarsSetting.SlavestageEnable
-                    || !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable
                     || !SimpleSlaveryCollarsSetting.RemoveWorkspeedDebuffEnable)
                     return;
 

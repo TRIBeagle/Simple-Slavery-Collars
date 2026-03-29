@@ -1,7 +1,7 @@
 // SimpleSlaveryCollars | Jobs | WorkGiver_Warden_RechargeCollar.cs
 // 목적 : 충전 부족 칼라를 감지하여 Warden에게 충전 작업을 부여
-// 용도 : WorkGiver 스캔 → 콘솔로 이동 → 충전 Job 생성
-// 주의 : Warden만 가능, 자기 자신 제외. Stage5 노예는 다른 노예 충전 가능
+// 용도 : 노예/죄수 대상. Warden이 들고 충전소로 이동하여 충전
+// 주의 : 소집/병상/정신붕괴 상태는 제외
 
 using RimWorld;
 using Verse;
@@ -11,7 +11,7 @@ using SimpleSlaveryCollars.Utilities;
 namespace SimpleSlaveryCollars.Jobs
 {
     /// <summary>
-    /// Warden 전용 WorkGiver — 칼라 충전 부족 노예를 콘솔로 데려가 충전.
+    /// Warden 전용 WorkGiver — 칼라 충전 부족 노예/죄수를 충전소로 데려가 충전.
     /// </summary>
     public class WorkGiver_Warden_RechargeCollar : WorkGiver_Warden
     {
@@ -24,18 +24,21 @@ namespace SimpleSlaveryCollars.Jobs
         {
             if (!SimpleSlaveryCollarsSetting.CollarChargeEnable) return null;
 
-            var slave = t as Pawn;
-            if (slave == null || pawn == slave) return null;
-            if (!slave.IsSlaveOfColony) return null;
-            if (slave.InAggroMentalState) return null;
+            var target = t as Pawn;
+            if (target == null || pawn == target) return null;
+            if (!target.IsSlaveOfColony && !target.IsPrisonerOfColony) return null;
+            if (target.InAggroMentalState) return null;
+            if (target.Drafted) return null;
+            if (target.Downed) return null;
+            if (target.InBed()) return null;
 
             // 칼라 확인
-            var collar = SimpleSlaveryUtility.GetSlaveCollar(slave) as SlaveApparel;
+            var collar = SimpleSlaveryUtility.GetSlaveCollar(target) as SlaveApparel;
             if (collar == null) return null;
             if (collar.charge > collar.rechargeThreshold) return null;
 
             // 예약 가능 확인
-            if (!pawn.CanReserve(slave)) return null;
+            if (!pawn.CanReserve(target)) return null;
 
             // 충전소 찾기 (콘솔 또는 배터리)
             var station = FindNearestChargeStation(pawn);
@@ -43,7 +46,8 @@ namespace SimpleSlaveryCollars.Jobs
             if (!pawn.CanReserveAndReach(station, PathEndMode.InteractionCell, pawn.NormalMaxDanger()))
                 return null;
 
-            var job = JobMaker.MakeJob(SimpleSlaveryDefOf.RechargeSlaveCollar, slave, station);
+            var job = JobMaker.MakeJob(SimpleSlaveryDefOf.RechargeSlaveCollar, target, station);
+            job.count = 1;
             return job;
         }
 
