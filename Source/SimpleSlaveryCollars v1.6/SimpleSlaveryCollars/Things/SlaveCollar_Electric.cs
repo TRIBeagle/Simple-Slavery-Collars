@@ -31,20 +31,7 @@ namespace SimpleSlaveryCollars
 
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {
-                var status = armed ? "SSC_Collar_StateArmed".Translate() : "SSC_Collar_StateUnarmed".Translate();
-                var disabled = new Command_Action
-                {
-                    defaultLabel = status,
-                    defaultDesc = "SSC_Collar_RemoteOnly_Desc".Translate(),
-                    icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Electric", true),
-                    action = () =>
-                    {
-                        Messages.Message("SSC_Collar_RemoteOnly_Reason".Translate(), MessageTypeDefOf.RejectInput);
-                    }
-                };
-                disabled.Disable("SSC_Collar_RemoteOnly_Reason".Translate());
-
-                yield return disabled;
+                yield return MakeRemoteOnlyDisabledGizmo("UI/Commands/DetonateCollar_Electric");
                 yield break;
             }
             // 1. Arm the collar
@@ -63,6 +50,7 @@ namespace SimpleSlaveryCollars
                 armCollar.Disable("SSC_Collar_Inoperable".Translate());
             yield return armCollar;
         }
+
         public override void ExposeData()
         {
             base.ExposeData();

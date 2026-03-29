@@ -175,12 +175,30 @@ namespace SimpleSlaveryCollars
         /// <summary>이 칼라가 armed 상태인지. 서브클래스에서 구현.</summary>
         public abstract bool IsArmed { get; }
 
+        /// <summary>RemoteOnlyOnConsoleEnable 활성 시 비활성 기즈모 생성. 아이콘은 서브클래스 iconPath로 결정.</summary>
+        protected Command_Action MakeRemoteOnlyDisabledGizmo(string iconPath)
+        {
+            var status = IsArmed ? "SSC_Collar_StateArmed".Translate() : "SSC_Collar_StateUnarmed".Translate();
+            var gizmo = new Command_Action
+            {
+                defaultLabel = status,
+                defaultDesc = "SSC_Collar_RemoteOnly_Desc".Translate(),
+                icon = ContentFinder<Texture2D>.Get(iconPath, true),
+                action = () =>
+                {
+                    Messages.Message("SSC_Collar_RemoteOnly_Reason".Translate(), MessageTypeDefOf.RejectInput);
+                }
+            };
+            gizmo.Disable("SSC_Collar_RemoteOnly_Reason".Translate());
+            return gizmo;
+        }
+
         public override void ExposeData()
         {
             base.ExposeData();
             Scribe_Values.Look(ref charge, "ssc_charge", 1f);
             Scribe_Values.Look(ref empDisabledTicks, "ssc_empDisabledTicks", 0);
-Scribe_Values.Look(ref rechargeThreshold, "ssc_rechargeThreshold", 0.5f);
+            Scribe_Values.Look(ref rechargeThreshold, "ssc_rechargeThreshold", 0.5f);
         }
 
         /// <summary>

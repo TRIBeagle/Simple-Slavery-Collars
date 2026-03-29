@@ -29,23 +29,8 @@ namespace SimpleSlaveryCollars
 
             if (SimpleSlaveryCollarsSetting.RemoteOnlyOnConsoleEnable)
             {
-                var status = armed ? "SSC_Collar_StateArmed".Translate() : "SSC_Collar_StateUnarmed".Translate();
-                var iconPath = armed
-                    ? "UI/Commands/DetonateCollar_Explosive"
-                    : "UI/Commands/ArmCollar_Explosive";
-                var disabled = new Command_Action
-                {
-                    defaultLabel = status,
-                    defaultDesc = "SSC_Collar_RemoteOnly_Desc".Translate(),
-                    icon = ContentFinder<Texture2D>.Get(iconPath, true),
-                    action = () =>
-                    {
-                        Messages.Message("SSC_Collar_RemoteOnly_Reason".Translate(), MessageTypeDefOf.RejectInput);
-                    }
-                };
-                disabled.Disable("SSC_Collar_RemoteOnly_Reason".Translate());
-
-                yield return disabled;
+                yield return MakeRemoteOnlyDisabledGizmo(
+                    armed ? "UI/Commands/DetonateCollar_Explosive" : "UI/Commands/ArmCollar_Explosive");
                 yield break;
             }
             // 1. Arm the collar
