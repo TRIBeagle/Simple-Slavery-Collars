@@ -151,7 +151,7 @@ namespace SimpleSlaveryCollars.Utilities
             float maxChance = 0.01f;
 
             float chance = Math.Max(((Math.Min(Math.Max(age, youngAge), oldAge) - youngAge) / (oldAge - youngAge)) * maxChance, minChance);
-            BodyPartRecord heart = pawn.RaceProps.body.AllParts.Find(p => p.def == BodyPartDefOf.Heart);
+            BodyPartRecord heart = FindBodyPart(pawn, BodyPartDefOf.Heart);
 
             if (heart != null && Rand.Chance(chance))
             {
@@ -292,6 +292,20 @@ namespace SimpleSlaveryCollars.Utilities
 
             string tail = "SSC_Stage_Suffix".Translate(stage);
             return $"{baseText} {tail}";
+        }
+
+        /// <summary>
+        /// AllParts에서 지정 BodyPartDef를 for 루프로 검색. .Find() 클로저 할당 회피용.
+        /// </summary>
+        internal static BodyPartRecord FindBodyPart(Pawn pawn, BodyPartDef def)
+        {
+            var parts = pawn.RaceProps.body.AllParts;
+            for (int i = 0; i < parts.Count; i++)
+            {
+                if (parts[i].def == def)
+                    return parts[i];
+            }
+            return null;
         }
 
         #region Stage 경계값 틱 캐시

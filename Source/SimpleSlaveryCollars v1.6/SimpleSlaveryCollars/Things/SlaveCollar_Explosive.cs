@@ -16,7 +16,7 @@ namespace SimpleSlaveryCollars
     public class SlaveCollar_Explosive : SlaveApparel
     {
         public bool armed = false;
-        public int arm_cooldown = 0; // 무장 직후 정신붕괴 방지 쿨다운 (틱)
+        public int armCooldown = 0; // 무장 직후 정신붕괴 방지 쿨다운 (틱)
 
         public override bool IsArmed => armed;
 
@@ -59,10 +59,10 @@ namespace SimpleSlaveryCollars
                 armed = !armed;
                 if (armed)
                 {
-                    if (arm_cooldown == 0)
+                    if (armCooldown == 0)
                     {
                         SimpleSlaveryUtility.TryInstantBreak(Wearer, Rand.Range(0.25f, 0.33f)); // 25~33% 확률 정신붕괴
-                        arm_cooldown = 2500; // 약 42초 쿨다운 (2500틱)
+                        armCooldown = 2500; // 약 42초 쿨다운 (2500틱)
                     }
                 }
             };
@@ -98,6 +98,7 @@ namespace SimpleSlaveryCollars
         /// </summary>
         public void GoBoom()
         {
+            if (Wearer == null) return;
             // 폭발 전 위치/맵 캐시 — DoExplosion에서 Wearer가 사망할 수 있음
             var pos = Wearer.Position;
             var map = Wearer.Map;
@@ -107,7 +108,7 @@ namespace SimpleSlaveryCollars
             if (Wearer.Dead) return;
 
             // Neck이 없는 종족 방어 — corePart(몸통)로 폴백
-            var neck = Wearer.RaceProps.body.AllParts.Find(part => part.def == SimpleSlaveryDefOf.Neck);
+            var neck = SimpleSlaveryUtility.FindBodyPart(Wearer, SimpleSlaveryDefOf.Neck);
             if (neck == null)
             {
                 neck = Wearer.RaceProps.body.corePart;
@@ -121,8 +122,23 @@ namespace SimpleSlaveryCollars
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref armed, "armed", false);
-            Scribe_Values.Look(ref arm_cooldown, "arm_cooldown", 0);
+            Scribe_Values.Look(ref armed, "ssc_armed", false);
+            Scribe_Values.Look(ref armCooldown, "ssc_armCooldown", 0);
+
+            // [마이그레이션] 구버전 키 폴백 — 1.7에서 삭제
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
+            {
+                if (!armed)
+                    Scribe_Values.Look(ref armed, "armed", false);
+                if (armCooldown == 0)
+                    Scribe_Values.Look(ref armCooldown, "arm_cooldown", 0);
+            }
+        }
+
+        public override void Notify_Unequipped(Pawn pawn)
+        {
+            base.Notify_Unequipped(pawn);
+            armed = false;
         }
 
         protected override void TickInterval(int delta)
@@ -133,8 +149,8 @@ namespace SimpleSlaveryCollars
             if (armed && !IsOperational)
                 armed = false;
 
-            if (!armed || arm_cooldown <= 0) return;
-            arm_cooldown = Math.Max(arm_cooldown - delta, 0);
+            if (!armed || armCooldown <= 0) return;
+            armCooldown = Math.Max(armCooldown - delta, 0);
         }
     }
 }

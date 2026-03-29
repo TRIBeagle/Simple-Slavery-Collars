@@ -17,7 +17,7 @@ namespace SimpleSlaveryCollars
     public class SlaveCollar_Electric : SlaveApparel
     {
         public bool armed = false;
-        public int zap_cooldown = 0;
+        public int zapCooldown = 0;
         public const int zap_period = 50; // 감전 간격 (틱). 50틱 ≈ 0.83초
 
         public override bool IsArmed => armed;
@@ -66,8 +66,23 @@ namespace SimpleSlaveryCollars
         public override void ExposeData()
         {
             base.ExposeData();
-            Scribe_Values.Look(ref armed, "armed", false);
-            Scribe_Values.Look(ref zap_cooldown, "zap_cooldown", 0);
+            Scribe_Values.Look(ref armed, "ssc_armed", false);
+            Scribe_Values.Look(ref zapCooldown, "ssc_zapCooldown", 0);
+
+            // [마이그레이션] 구버전 키 폴백 — 1.7에서 삭제
+            if (Scribe.mode == LoadSaveMode.LoadingVars)
+            {
+                if (!armed)
+                    Scribe_Values.Look(ref armed, "armed", false);
+                if (zapCooldown == 0)
+                    Scribe_Values.Look(ref zapCooldown, "zap_cooldown", 0);
+            }
+        }
+
+        public override void Notify_Unequipped(Pawn pawn)
+        {
+            base.Notify_Unequipped(pawn);
+            armed = false;
         }
 
         protected override void TickInterval(int delta)
@@ -80,11 +95,11 @@ namespace SimpleSlaveryCollars
 
             if (!armed) return;
 
-            zap_cooldown -= delta;
-            if (zap_cooldown <= 0)
+            zapCooldown -= delta;
+            if (zapCooldown <= 0)
             {
                 Zap();
-                zap_cooldown = zap_period;
+                zapCooldown = zap_period;
             }
         }
         /// <summary>
@@ -96,14 +111,14 @@ namespace SimpleSlaveryCollars
         public void Zap()
         {
             // 상태 체크를 DamageInfo 생성보다 먼저 수행
-            if (Wearer.Downed || !Wearer.Spawned)
+            if (Wearer == null || Wearer.Downed || !Wearer.Spawned)
             {
                 armed = false;
                 return;
             }
 
             // Neck이 없는 종족 방어 — corePart(몸통)로 폴백
-            var neck = Wearer.RaceProps.body.AllParts.Find(part => part.def == SimpleSlaveryDefOf.Neck);
+            var neck = SimpleSlaveryUtility.FindBodyPart(Wearer, SimpleSlaveryDefOf.Neck);
             if (neck == null)
             {
                 neck = Wearer.RaceProps.body.corePart;

@@ -21,10 +21,13 @@ namespace SimpleSlaveryCollars.Patches
     [HarmonyPatch(typeof(Pawn_GuestTracker), "SetGuestStatus")]
     public static class Patch_Pawn_GuestTracker_SetGuestStatus
     {
+        // ___slaveFactionInt 대신 캐시된 FieldRef 사용 — 필드명 변경 시에도 패치 자체는 유지됨
+        private static readonly AccessTools.FieldRef<Pawn_GuestTracker, Faction> slaveFactionRef =
+            AccessTools.FieldRefAccess<Pawn_GuestTracker, Faction>("slaveFactionInt");
+
         [HarmonyPostfix]
         public static void Postfix(
             Pawn_GuestTracker __instance,
-            ref Faction ___slaveFactionInt,
             Faction newHost,
             GuestStatus guestStatus,
             Pawn ___pawn)
@@ -41,7 +44,7 @@ namespace SimpleSlaveryCollars.Patches
                     catch (Exception ex) { Log.Error($"[SSC] ApplyShacklesDefault error: {ex}"); }
 
                     // === 2) Stage5 동화 ===
-                    try { TryAssimilation(__instance, ref ___slaveFactionInt, ___pawn); }
+                    try { TryAssimilation(__instance, ___pawn); }
                     catch (Exception ex) { Log.Error($"[SSC] TryAssimilation error: {ex}"); }
                 }
                 else if (guestStatus != GuestStatus.Slave)
@@ -72,10 +75,10 @@ namespace SimpleSlaveryCollars.Patches
 
         /// <summary>
         /// Stage5 노예(x ≥ SlaveStage4 && !Steadfast) + SlaveFaction != Player 시 동화.
+        /// slaveFactionRef 캐시 필드로 접근 — 시그니처에서 분리하여 필드명 변경에도 패치 유지.
         /// </summary>
         private static void TryAssimilation(
             Pawn_GuestTracker guest,
-            ref Faction slaveFactionInt,
             Pawn pawn)
         {
             if (!SimpleSlaveryCollarsSetting.SlavestageEnable) return;
@@ -87,7 +90,12 @@ namespace SimpleSlaveryCollars.Patches
             if (SimpleSlaveryUtility.IsSteadfast(pawn)) return;
             if (guest.SlaveFaction == Faction.OfPlayer) return;
 
-            slaveFactionInt = Faction.OfPlayer;
+            if (slaveFactionRef == null)
+            {
+                Log.ErrorOnce("[SSC] slaveFactionInt FieldRef is null — field may have been renamed in RimWorld update.", 0x55435F01);
+                return;
+            }
+            slaveFactionRef(guest) = Faction.OfPlayer;
             Messages.Message(
                 "SSC_Message_Assimilation".Translate().AdjustedFor(pawn),
                 (LookTargets)pawn,

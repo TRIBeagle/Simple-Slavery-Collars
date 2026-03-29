@@ -62,8 +62,13 @@ namespace SimpleSlaveryCollars.Patches
                 sb.AppendLine($"{finalLabel}: {finalTicks.ToStringTicksToPeriod()}");
 
                 // 마지막 줄(원본의 SuppressionFinalInterval) 교체
-                if (__result == null) __result = string.Empty;
+                if (string.IsNullOrEmpty(__result))
+                {
+                    __result = sb.ToString();
+                    return;
+                }
 
+                // Environment.NewLine 기준 마지막 줄 제거 — 바닐라 포맷 변경 시 원본 유지
                 int lastNewLine = __result.LastIndexOf(Environment.NewLine);
                 if (lastNewLine >= 0)
                     __result = __result.Remove(lastNewLine);

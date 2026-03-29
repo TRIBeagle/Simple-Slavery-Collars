@@ -23,7 +23,6 @@ namespace SimpleSlaveryCollars.Patches
             try
             {
                 if (!SimpleSlaveryCollarsSetting.SlavestageEnable ||
-                    !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable ||
                     !SimpleSlaveryCollarsSetting.Stage5SlaveWorkUnlockEnable)
                     return;
 
@@ -33,9 +32,26 @@ namespace SimpleSlaveryCollars.Patches
                 if (pawn == null || !SimpleSlaveryUtility.IsStage5Slave(pawn))
                     return;
 
+                // 실제 제거 대상이 있는지 먼저 확인 — 불필요한 리스트 할당 방지
+                bool hasDisabled = false;
+                for (int i = 0; i < __result.Count; i++)
+                {
+                    if (__result[i].disabledForSlaves)
+                    {
+                        hasDisabled = true;
+                        break;
+                    }
+                }
+                if (!hasDisabled) return;
+
                 // 바닐라 캐시 리스트 오염 방지 — 복사본에서 수정
-                __result = new List<WorkTypeDef>(__result);
-                __result.RemoveAll(wt => wt.disabledForSlaves);
+                var copy = new List<WorkTypeDef>(__result.Count);
+                for (int i = 0; i < __result.Count; i++)
+                {
+                    if (!__result[i].disabledForSlaves)
+                        copy.Add(__result[i]);
+                }
+                __result = copy;
             }
             catch (Exception ex)
             {
