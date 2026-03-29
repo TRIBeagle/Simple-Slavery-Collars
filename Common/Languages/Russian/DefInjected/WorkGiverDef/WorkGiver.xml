@@ -4,6 +4,14 @@
   <DoShackling.label>рабские кандалы</DoShackling.label>
   <DoShackling.verb>отрегулировать кандалы</DoShackling.verb>
   <DoShackling.gerund>регулирует кандалы</DoShackling.gerund>
-
+  <ActivateRemoteCollar.label>активация дистанционного ошейника</ActivateRemoteCollar.label>
+  <ActivateRemoteCollar.verb>активировать дистанционный ошейник</ActivateRemoteCollar.verb>
+  <ActivateRemoteCollar.gerund>активация дистанционного ошейника</ActivateRemoteCollar.gerund>
+  <RechargeSlaveCollar.label>зарядка ошейника раба</RechargeSlaveCollar.label>
+  <RechargeSlaveCollar.verb>зарядить ошейник</RechargeSlaveCollar.verb>
+  <RechargeSlaveCollar.gerund>зарядка ошейника раба</RechargeSlaveCollar.gerund>
+  <SelfRechargeSlaveCollar.label>самостоятельная зарядка ошейника</SelfRechargeSlaveCollar.label>
+  <SelfRechargeSlaveCollar.verb>зарядить свой ошейник</SelfRechargeSlaveCollar.verb>
+  <SelfRechargeSlaveCollar.gerund>самостоятельная зарядка ошейника</SelfRechargeSlaveCollar.gerund>
 
 </LanguageData>

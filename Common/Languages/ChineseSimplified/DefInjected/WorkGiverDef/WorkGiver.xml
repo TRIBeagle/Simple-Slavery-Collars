@@ -7,5 +7,11 @@
   <ActivateRemoteCollar.label>激活远程项圈</ActivateRemoteCollar.label>
   <ActivateRemoteCollar.verb>激活远程项圈</ActivateRemoteCollar.verb>
   <ActivateRemoteCollar.gerund>激活远程项圈</ActivateRemoteCollar.gerund>
+  <RechargeSlaveCollar.label>充电奴隶项圈</RechargeSlaveCollar.label>
+  <RechargeSlaveCollar.verb>充电项圈</RechargeSlaveCollar.verb>
+  <RechargeSlaveCollar.gerund>充电奴隶项圈</RechargeSlaveCollar.gerund>
+  <SelfRechargeSlaveCollar.label>自行充电项圈</SelfRechargeSlaveCollar.label>
+  <SelfRechargeSlaveCollar.verb>自行充电项圈</SelfRechargeSlaveCollar.verb>
+  <SelfRechargeSlaveCollar.gerund>自行充电项圈</SelfRechargeSlaveCollar.gerund>
 
 </LanguageData>

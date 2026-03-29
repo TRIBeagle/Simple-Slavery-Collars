@@ -4,7 +4,8 @@
   <SetSlaveCollar.reportString>正在为TargetA调整奴隶项圈。</SetSlaveCollar.reportString>
   <ShackleSlave.reportString>正在为TargetA调整脚镣。</ShackleSlave.reportString>
   <ActivateRemoteCollar.reportString>正在对TargetA激活远程奴隶项圈。</ActivateRemoteCollar.reportString>
-  <ActivateRemoteCollar.reportString>正在对指定人员激活远程奴隶项圈。</ActivateRemoteCollar.reportString>
-
+  <ActivateRemoteCollarGroup.reportString>正在对指定人员激活远程奴隶项圈。</ActivateRemoteCollarGroup.reportString>
+  <RechargeSlaveCollar.reportString>正在为TargetA充电奴隶项圈。</RechargeSlaveCollar.reportString>
+  <SelfRechargeSlaveCollar.reportString>正在TargetA自行充电项圈。</SelfRechargeSlaveCollar.reportString>
 
 </LanguageData>

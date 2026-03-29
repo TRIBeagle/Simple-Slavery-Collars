@@ -4,6 +4,14 @@
   <DoShackling.label>acorrentando escravos</DoShackling.label>
   <DoShackling.verb>ajustar grilhões</DoShackling.verb>
   <DoShackling.gerund>ajustando grilhões</DoShackling.gerund>
-
+  <ActivateRemoteCollar.label>ativar coleira remota</ActivateRemoteCollar.label>
+  <ActivateRemoteCollar.verb>ativar coleira remota</ActivateRemoteCollar.verb>
+  <ActivateRemoteCollar.gerund>ativando coleira remota</ActivateRemoteCollar.gerund>
+  <RechargeSlaveCollar.label>recarregar coleira de escravo</RechargeSlaveCollar.label>
+  <RechargeSlaveCollar.verb>recarregar coleira</RechargeSlaveCollar.verb>
+  <RechargeSlaveCollar.gerund>recarregando coleira de escravo</RechargeSlaveCollar.gerund>
+  <SelfRechargeSlaveCollar.label>recarregar própria coleira</SelfRechargeSlaveCollar.label>
+  <SelfRechargeSlaveCollar.verb>recarregar própria coleira</SelfRechargeSlaveCollar.verb>
+  <SelfRechargeSlaveCollar.gerund>recarregando própria coleira</SelfRechargeSlaveCollar.gerund>
 
 </LanguageData>

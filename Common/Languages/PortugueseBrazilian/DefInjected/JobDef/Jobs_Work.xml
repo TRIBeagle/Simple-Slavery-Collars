@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
 
-  <SetSlaveCollar.reportString>Adjusting collars for TargetA.</SetSlaveCollar.reportString>
+  <SetSlaveCollar.reportString>Ajustando coleira para TargetA.</SetSlaveCollar.reportString>
   <ShackleSlave.reportString>Ajustando grilhões para TargetA.</ShackleSlave.reportString>
-
+  <ActivateRemoteCollar.reportString>Ativando coleira remota de escravo em TargetA.</ActivateRemoteCollar.reportString>
+  <ActivateRemoteCollarGroup.reportString>Ativando coleiras remotas nos alvos designados.</ActivateRemoteCollarGroup.reportString>
+  <RechargeSlaveCollar.reportString>Recarregando coleira de escravo de TargetA.</RechargeSlaveCollar.reportString>
+  <SelfRechargeSlaveCollar.reportString>Recarregando própria coleira em TargetA.</SelfRechargeSlaveCollar.reportString>
 
 </LanguageData>

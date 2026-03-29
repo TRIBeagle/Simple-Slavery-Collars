@@ -34,11 +34,10 @@
 	<SSC_Collar_DisruptedFlare_Tooltip>Disabled by solar flare</SSC_Collar_DisruptedFlare_Tooltip>
 	<SSC_Collar_Unlimited_Tooltip>Charging system disabled — unlimited operation</SSC_Collar_Unlimited_Tooltip>
 	<SSC_Collar_Charge_Tooltip>Charge: {0} / {1} Wd</SSC_Collar_Charge_Tooltip>
+	<SSC_Collar_DrainIdle>Drain (idle): {0} Wd/day</SSC_Collar_DrainIdle>
+	<SSC_Collar_DrainActive>Drain (active): {0} Wd/day</SSC_Collar_DrainActive>
 	<SSC_Collar_RechargeThreshold>Recharge Threshold</SSC_Collar_RechargeThreshold>
-	<SSC_Collar_SelfRecharge_Toggle>Toggle self-recharge (Stage5 slaves/colonists only)</SSC_Collar_SelfRecharge_Toggle>
-	<SSC_Collar_SelfRecharge_On>Self-recharge: Allowed</SSC_Collar_SelfRecharge_On>
-	<SSC_Collar_SelfRecharge_Off>Self-recharge: Disabled</SSC_Collar_SelfRecharge_Off>
-	<SSC_Collar_Inoperable>Collar not operational (low charge or EM disruption)</SSC_Collar_Inoperable>
+	<SSC_Collar_Inoperable>Inoperable (low charge / EM disruption)</SSC_Collar_Inoperable>
 
 	<!-- ===== 远程 — 旧模式 ===== -->
 	<SSC_Remote_ExplosiveArm>远程项圈武装</SSC_Remote_ExplosiveArm>
@@ -58,6 +57,7 @@
 	<SSC_Console_Header_Type>身份</SSC_Console_Header_Type>
 	<SSC_Console_Header_Collar>项圈</SSC_Console_Header_Collar>
 	<SSC_Console_Header_Status>状态</SSC_Console_Header_Status>
+	<SSC_Console_Header_Action>Action</SSC_Console_Header_Action>
 	<SSC_Console_CollarExplosive>爆炸</SSC_Console_CollarExplosive>
 	<SSC_Console_CollarElectric>电击</SSC_Console_CollarElectric>
 	<SSC_Console_CollarCrypto>冷冻</SSC_Console_CollarCrypto>
@@ -145,11 +145,11 @@
 	<SSC_Setting_RebelCycle_Title>叛乱周期变化</SSC_Setting_RebelCycle_Title>
 	<SSC_Setting_RebelCycle_Desc>选择是否通过奴隶阶段启用叛乱周期变化。如果奴隶阶段关闭，则无效。默认：开启</SSC_Setting_RebelCycle_Desc>
 	<SSC_Setting_RemoveWorkDebuff_Title>移除全局工作速度减益</SSC_Setting_RemoveWorkDebuff_Title>
-	<SSC_Setting_RemoveWorkDebuff_Desc>选择是否通过奴隶阶段移除全局工作速度减益。如果奴隶阶段或减少叛乱周期关闭，则无效。默认：开启</SSC_Setting_RemoveWorkDebuff_Desc>
+	<SSC_Setting_RemoveWorkDebuff_Desc>选择是否通过奴隶阶段移除全局工作速度减益。如果奴隶阶段关闭，则无效。默认：开启</SSC_Setting_RemoveWorkDebuff_Desc>
 	<SSC_Setting_AssignSlave_Title>奴隶角色分配</SSC_Setting_AssignSlave_Title>
-	<SSC_Setting_AssignSlave_Desc>选择是否允许将奴隶分配给角色。如果奴隶阶段或减少叛乱周期关闭，则无效。默认：开启</SSC_Setting_AssignSlave_Desc>
-	<SSC_Setting_Stage5WorkUnlock_Title>5级奴隶工作限制解除</SSC_Setting_Stage5WorkUnlock_Title>
-	<SSC_Setting_Stage5WorkUnlock_Desc>允许5级奴隶执行所有类型的工作而没有限制，就像殖民者一样。如果奴隶阶段或减少叛乱周期关闭，则此选项无效。默认：开启</SSC_Setting_Stage5WorkUnlock_Desc>
+	<SSC_Setting_AssignSlave_Desc>选择是否允许将奴隶分配给角色。如果奴隶阶段关闭，则无效。默认：开启</SSC_Setting_AssignSlave_Desc>
+	<SSC_Setting_Stage5WorkUnlock_Title>5级奴隶工作/仪式限制解除</SSC_Setting_Stage5WorkUnlock_Title>
+	<SSC_Setting_Stage5WorkUnlock_Desc>允许5级奴隶执行所有类型的工作并参与仪式角色。如果奴隶阶段关闭，则此选项无效。默认：开启</SSC_Setting_Stage5WorkUnlock_Desc>
 	<SSC_Setting_Assimilation_Title>奴隶同化至定居点</SSC_Setting_Assimilation_Title>
 	<SSC_Setting_Assimilation_Desc>选择是否允许当奴隶阶段达到5级时，奴隶的母阵营变更为玩家的阵营。如果您释放已成为玩家阵营的奴隶，该奴隶将加入定居点。如果奴隶阶段关闭，则无效。默认：开启</SSC_Setting_Assimilation_Desc>
 	<SSC_Setting_RemoteOnlyConsole_Title>仅在通讯台激活项圈</SSC_Setting_RemoteOnlyConsole_Title>
@@ -168,6 +168,11 @@
 	<SSC_Setting_CollarDisruption_Desc>Collars are temporarily disabled by EMP hits or solar flares. Default: On</SSC_Setting_CollarDisruption_Desc>
 	<SSC_Setting_DrainMultiplier_Title>Collar drain global multiplier</SSC_Setting_DrainMultiplier_Title>
 	<SSC_Setting_DrainMultiplier_Desc>Multiplied to all collar power drain. 1 = default, 0.5 = half, 2 = double. Default: 1</SSC_Setting_DrainMultiplier_Desc>
+	<SSC_Setting_DefaultRechargeThreshold_Title>Default Recharge Threshold ({0}%)</SSC_Setting_DefaultRechargeThreshold_Title>
+	<SSC_Setting_DefaultRechargeThreshold_Desc>Initial auto-recharge threshold for newly equipped collars. Adjustable per-collar via the charge gizmo. Default: 50%</SSC_Setting_DefaultRechargeThreshold_Desc>
+	<SSC_Setting_Header_SlaveManagement>--- Slave Management ---</SSC_Setting_Header_SlaveManagement>
+	<SSC_Setting_Header_StageSystem>--- Stage System ---</SSC_Setting_Header_StageSystem>
+	<SSC_Setting_Header_CollarSystem>--- Collar System ---</SSC_Setting_Header_CollarSystem>
 	<SSC_Setting_ResetAll_Title>重置设置</SSC_Setting_ResetAll_Title>
 
 	<SSC_Stat_BatteryCapacity>最大电池容量</SSC_Stat_BatteryCapacity>

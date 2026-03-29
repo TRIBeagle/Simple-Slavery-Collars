@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
 
-  <SetSlaveCollar.reportString>Adjusting collars for TargetA.</SetSlaveCollar.reportString>
-  <ShackleSlave.reportString>регулировать кандалы TargetA.</ShackleSlave.reportString>
-
+  <SetSlaveCollar.reportString>Настройка ошейника для TargetA.</SetSlaveCollar.reportString>
+  <ShackleSlave.reportString>Регулировка кандалов для TargetA.</ShackleSlave.reportString>
+  <ActivateRemoteCollar.reportString>Активация дистанционного ошейника на TargetA.</ActivateRemoteCollar.reportString>
+  <ActivateRemoteCollarGroup.reportString>Активация дистанционных ошейников на указанных целях.</ActivateRemoteCollarGroup.reportString>
+  <RechargeSlaveCollar.reportString>Зарядка ошейника раба TargetA.</RechargeSlaveCollar.reportString>
+  <SelfRechargeSlaveCollar.reportString>Самостоятельная зарядка ошейника на TargetA.</SelfRechargeSlaveCollar.reportString>
 
 </LanguageData>

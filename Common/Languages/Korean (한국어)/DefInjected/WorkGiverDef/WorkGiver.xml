@@ -1,11 +1,17 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <LanguageData>
 
   <DoShackling.label>족쇄 조정</DoShackling.label>
   <DoShackling.verb>족쇄 조정</DoShackling.verb>
-  <DoShackling.gerund>족쇄 조정</DoShackling.gerund>
+  <DoShackling.gerund> 족쇄 조정</DoShackling.gerund>
   <ActivateRemoteCollar.label>원격 목걸이 작동</ActivateRemoteCollar.label>
   <ActivateRemoteCollar.verb>원격 목걸이 작동</ActivateRemoteCollar.verb>
-  <ActivateRemoteCollar.gerund>원격 목걸이 작동</ActivateRemoteCollar.gerund>
+  <ActivateRemoteCollar.gerund> 원격 목걸이 작동</ActivateRemoteCollar.gerund>
+  <RechargeSlaveCollar.label>노예 목걸이 충전</RechargeSlaveCollar.label>
+  <RechargeSlaveCollar.verb>목걸이 충전</RechargeSlaveCollar.verb>
+  <RechargeSlaveCollar.gerund> 목걸이 충전</RechargeSlaveCollar.gerund>
+  <SelfRechargeSlaveCollar.label>목걸이 자가 충전</SelfRechargeSlaveCollar.label>
+  <SelfRechargeSlaveCollar.verb>목걸이 직접 충전</SelfRechargeSlaveCollar.verb>
+  <SelfRechargeSlaveCollar.gerund> 목걸이 자가 충전</SelfRechargeSlaveCollar.gerund>
 
 </LanguageData>

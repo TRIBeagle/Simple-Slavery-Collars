@@ -31,14 +31,13 @@
 	<SSC_Collar_Arm>무장</SSC_Collar_Arm>
 	<SSC_Collar_Disarm>해제</SSC_Collar_Disarm>
 	<SSC_Collar_DisruptedEmp_Tooltip>EMP로 비활성화 중 (남은 시간: {0})</SSC_Collar_DisruptedEmp_Tooltip>
-	<SSC_Collar_DisruptedFlare_Tooltip>태양 흑점으로 비활성화 중</SSC_Collar_DisruptedFlare_Tooltip>
+	<SSC_Collar_DisruptedFlare_Tooltip>흑점 폭발로 비활성화 중</SSC_Collar_DisruptedFlare_Tooltip>
 	<SSC_Collar_Unlimited_Tooltip>충전 시스템 꺼짐 — 무제한 작동</SSC_Collar_Unlimited_Tooltip>
 	<SSC_Collar_Charge_Tooltip>충전량: {0} / {1} Wd</SSC_Collar_Charge_Tooltip>
+	<SSC_Collar_DrainIdle>소모량 (대기): {0} Wd/일</SSC_Collar_DrainIdle>
+	<SSC_Collar_DrainActive>소모량 (작동): {0} Wd/일</SSC_Collar_DrainActive>
 	<SSC_Collar_RechargeThreshold>충전 임계값</SSC_Collar_RechargeThreshold>
-	<SSC_Collar_SelfRecharge_Toggle>자가 충전 허용 토글 (Stage5 노예/식민자만 가능)</SSC_Collar_SelfRecharge_Toggle>
-	<SSC_Collar_SelfRecharge_On>자가 충전: 허용</SSC_Collar_SelfRecharge_On>
-	<SSC_Collar_SelfRecharge_Off>자가 충전: 금지</SSC_Collar_SelfRecharge_Off>
-	<SSC_Collar_Inoperable>칼라가 작동하지 않습니다 (충전 부족 또는 전자기 교란)</SSC_Collar_Inoperable>
+	<SSC_Collar_Inoperable>목걸이 작동 불가 (충전 부족/전자기 교란)</SSC_Collar_Inoperable>
 
 	<!-- ===== 원격 — 레거시 모드 ===== -->
 	<SSC_Remote_ExplosiveArm>원격 목걸이 무장</SSC_Remote_ExplosiveArm>
@@ -58,6 +57,7 @@
 	<SSC_Console_Header_Type>신분</SSC_Console_Header_Type>
 	<SSC_Console_Header_Collar>목걸이</SSC_Console_Header_Collar>
 	<SSC_Console_Header_Status>상태</SSC_Console_Header_Status>
+	<SSC_Console_Header_Action>제어</SSC_Console_Header_Action>
 	<SSC_Console_CollarExplosive>폭발</SSC_Console_CollarExplosive>
 	<SSC_Console_CollarElectric>전기</SSC_Console_CollarElectric>
 	<SSC_Console_CollarCrypto>암호화</SSC_Console_CollarCrypto>
@@ -145,11 +145,11 @@
 	<SSC_Setting_RebelCycle_Title>반란 주기 변화</SSC_Setting_RebelCycle_Title>
 	<SSC_Setting_RebelCycle_Desc>노예의 감정변화에 따른 반란 주기 변화를 사용할지 선택합니다. 노예 감정변화가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</SSC_Setting_RebelCycle_Desc>
 	<SSC_Setting_RemoveWorkDebuff_Title>전역 작업 속도 디버프 제거</SSC_Setting_RemoveWorkDebuff_Title>
-	<SSC_Setting_RemoveWorkDebuff_Desc>노예의 감정변화에 따른 전역 작업 속도 디버프 제거 기능을 사용할지 선택합니다. 노예 감정변화나 반란 주기 감소가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</SSC_Setting_RemoveWorkDebuff_Desc>
+	<SSC_Setting_RemoveWorkDebuff_Desc>노예의 감정변화에 따른 전역 작업 속도 디버프 제거 기능을 사용할지 선택합니다. 노예 감정변화가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</SSC_Setting_RemoveWorkDebuff_Desc>
 	<SSC_Setting_AssignSlave_Title>노예 역할 할당</SSC_Setting_AssignSlave_Title>
-	<SSC_Setting_AssignSlave_Desc>노예에게 역할을 할당하는 것을 허용할지 선택합니다. 노예 감정변화나 반란 주기 감소가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</SSC_Setting_AssignSlave_Desc>
-	<SSC_Setting_Stage5WorkUnlock_Title>노예 5단계 작업 제한 해제</SSC_Setting_Stage5WorkUnlock_Title>
-	<SSC_Setting_Stage5WorkUnlock_Desc>노예가 5단계에 도달하면 모든 작업 제한이 해제되어 일반 식민지민과 동일하게 모든 작업을 할 수 있습니다. 노예 감정변화나 반란 주기 감소가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</SSC_Setting_Stage5WorkUnlock_Desc>
+	<SSC_Setting_AssignSlave_Desc>노예에게 역할을 할당하는 것을 허용할지 선택합니다. 노예 감정변화가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</SSC_Setting_AssignSlave_Desc>
+	<SSC_Setting_Stage5WorkUnlock_Title>노예 5단계 작업/의식 제한 해제</SSC_Setting_Stage5WorkUnlock_Title>
+	<SSC_Setting_Stage5WorkUnlock_Desc>노예가 5단계에 도달하면 모든 작업 제한이 해제되고 의식 역할에도 참여할 수 있습니다. 노예 감정변화가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</SSC_Setting_Stage5WorkUnlock_Desc>
 	<SSC_Setting_Assimilation_Title>노예 정착지 합류</SSC_Setting_Assimilation_Title>
 	<SSC_Setting_Assimilation_Desc>노예의 감정변화가 5단계가 되었을 때, 노예의 출신세력을 플레이어의 세력으로 변경하는 것을 허용할지 선택합니다. 플레이어의 세력이 된 노예를 풀어주면 정착지로 합류합니다. 노예 감정변화가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</SSC_Setting_Assimilation_Desc>
 	<SSC_Setting_RemoteOnlyConsole_Title>통신기에서만 목걸이 작동 허용</SSC_Setting_RemoteOnlyConsole_Title>
@@ -163,11 +163,16 @@
 	<SSC_Setting_Stage4Period_Title>감정 변화 4단계</SSC_Setting_Stage4Period_Title>
 	<SSC_Setting_Stage4Period_Desc>감정 변화 4단계가 적용되는 기간을 설정합니다. 기본값: 15일</SSC_Setting_Stage4Period_Desc>
 	<SSC_Setting_CollarCharge_Title>목걸이 충전 시스템</SSC_Setting_CollarCharge_Title>
-	<SSC_Setting_CollarCharge_Desc>목걸이가 전력을 소모하며, 방전 시 비활성화됩니다. 간수가 콘솔에서 충전합니다. 기본: 켜짐</SSC_Setting_CollarCharge_Desc>
+	<SSC_Setting_CollarCharge_Desc>목걸이가 전력을 소모하며, 방전 시 비활성화됩니다. 간수가 콘솔에서 충전합니다. 기본값: 켜짐</SSC_Setting_CollarCharge_Desc>
 	<SSC_Setting_CollarDisruption_Title>전자기 교란 영향</SSC_Setting_CollarDisruption_Title>
-	<SSC_Setting_CollarDisruption_Desc>EMP 피격이나 태양 흑점 시 목걸이가 일시적으로 비활성화됩니다. 기본: 켜짐</SSC_Setting_CollarDisruption_Desc>
+	<SSC_Setting_CollarDisruption_Desc>EMP 피격이나 흑점 폭발 시 목걸이가 일시적으로 비활성화됩니다. 기본값: 켜짐</SSC_Setting_CollarDisruption_Desc>
 	<SSC_Setting_DrainMultiplier_Title>칼라 소모량 글로벌 배율</SSC_Setting_DrainMultiplier_Title>
 	<SSC_Setting_DrainMultiplier_Desc>모든 칼라의 전력 소모량에 곱해지는 배율. 1 = 기본, 0.5 = 절반, 2 = 두 배. 기본: 1</SSC_Setting_DrainMultiplier_Desc>
+	<SSC_Setting_DefaultRechargeThreshold_Title>기본 충전 임계값 ({0}%)</SSC_Setting_DefaultRechargeThreshold_Title>
+	<SSC_Setting_DefaultRechargeThreshold_Desc>새로 장착한 목걸이의 자동 충전 임계값 초기값. 목걸이별로 충전 기즈모에서 개별 조절 가능. 기본값: 50%</SSC_Setting_DefaultRechargeThreshold_Desc>
+	<SSC_Setting_Header_SlaveManagement>── 노예 관리 ──</SSC_Setting_Header_SlaveManagement>
+	<SSC_Setting_Header_StageSystem>── Stage 시스템 ──</SSC_Setting_Header_StageSystem>
+	<SSC_Setting_Header_CollarSystem>── 칼라 시스템 ──</SSC_Setting_Header_CollarSystem>
 	<SSC_Setting_ResetAll_Title>설정 리셋</SSC_Setting_ResetAll_Title>
 
 	<!-- ===== 의상 정보 스탯 ===== -->

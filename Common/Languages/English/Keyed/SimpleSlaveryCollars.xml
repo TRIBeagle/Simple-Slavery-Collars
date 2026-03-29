@@ -10,7 +10,7 @@
 	<SSC_Explosive_Detonate>Detonate</SSC_Explosive_Detonate>
 	<SSC_Explosive_Detonate_Desc>Detonate the explosives in the collar, instantly killing the wearer.</SSC_Explosive_Detonate_Desc>
 	<SSC_Electric_Arm>Zap</SSC_Electric_Arm>
-	<SSC_Electric_Arm_Desc>Electrocutes wearer untill uncouscious.</SSC_Electric_Arm_Desc>
+	<SSC_Electric_Arm_Desc>Electrocutes wearer until unconscious.</SSC_Electric_Arm_Desc>
 	<SSC_Crypto_Arm>Freeze</SSC_Crypto_Arm>
 	<SSC_Crypto_Arm_Desc>Freezes wearer in place.</SSC_Crypto_Arm_Desc>
 
@@ -34,11 +34,10 @@
 	<SSC_Collar_DisruptedFlare_Tooltip>Disabled by solar flare</SSC_Collar_DisruptedFlare_Tooltip>
 	<SSC_Collar_Unlimited_Tooltip>Charging system disabled — unlimited operation</SSC_Collar_Unlimited_Tooltip>
 	<SSC_Collar_Charge_Tooltip>Charge: {0} / {1} Wd</SSC_Collar_Charge_Tooltip>
+	<SSC_Collar_DrainIdle>Drain (idle): {0} Wd/day</SSC_Collar_DrainIdle>
+	<SSC_Collar_DrainActive>Drain (active): {0} Wd/day</SSC_Collar_DrainActive>
 	<SSC_Collar_RechargeThreshold>Recharge Threshold</SSC_Collar_RechargeThreshold>
-	<SSC_Collar_SelfRecharge_Toggle>Toggle self-recharge (Stage5 slaves/colonists only)</SSC_Collar_SelfRecharge_Toggle>
-	<SSC_Collar_SelfRecharge_On>Self-recharge: Allowed</SSC_Collar_SelfRecharge_On>
-	<SSC_Collar_SelfRecharge_Off>Self-recharge: Disabled</SSC_Collar_SelfRecharge_Off>
-	<SSC_Collar_Inoperable>Collar not operational (low charge or EM disruption)</SSC_Collar_Inoperable>
+	<SSC_Collar_Inoperable>Inoperable (low charge / EM disruption)</SSC_Collar_Inoperable>
 
 	<!-- ===== Remote — Legacy Mode ===== -->
 	<SSC_Remote_ExplosiveArm>Arm Collar</SSC_Remote_ExplosiveArm>
@@ -46,7 +45,7 @@
 	<SSC_Remote_ExplosiveDetonate>Detonate</SSC_Remote_ExplosiveDetonate>
 	<SSC_Remote_ExplosiveDetonate_Desc>Detonate the explosives in the collar, instantly killing the wearer.</SSC_Remote_ExplosiveDetonate_Desc>
 	<SSC_Remote_ElectricArm>Zap</SSC_Remote_ElectricArm>
-	<SSC_Remote_ElectricArm_Desc>Electrocutes wearer untill uncouscious.</SSC_Remote_ElectricArm_Desc>
+	<SSC_Remote_ElectricArm_Desc>Electrocutes wearer until unconscious.</SSC_Remote_ElectricArm_Desc>
 	<SSC_Remote_CryptoArm>Freeze</SSC_Remote_CryptoArm>
 	<SSC_Remote_CryptoArm_Desc>Freezes wearer in place.</SSC_Remote_CryptoArm_Desc>
 
@@ -58,6 +57,7 @@
 	<SSC_Console_Header_Type>Type</SSC_Console_Header_Type>
 	<SSC_Console_Header_Collar>Collar</SSC_Console_Header_Collar>
 	<SSC_Console_Header_Status>Status</SSC_Console_Header_Status>
+	<SSC_Console_Header_Action>Action</SSC_Console_Header_Action>
 	<SSC_Console_CollarExplosive>Explosive</SSC_Console_CollarExplosive>
 	<SSC_Console_CollarElectric>Electric</SSC_Console_CollarElectric>
 	<SSC_Console_CollarCrypto>Crypto</SSC_Console_CollarCrypto>
@@ -145,11 +145,11 @@
 	<SSC_Setting_RebelCycle_Title>Rebellion Cycle Change On/Off</SSC_Setting_RebelCycle_Title>
 	<SSC_Setting_RebelCycle_Desc>Choose whether to enable Rebellion Cycle Change by Slave Stage. If the slave stage is off, it has no effect. Default: On</SSC_Setting_RebelCycle_Desc>
 	<SSC_Setting_RemoveWorkDebuff_Title>Remove Global Work Speed Debuff On/Off</SSC_Setting_RemoveWorkDebuff_Title>
-	<SSC_Setting_RemoveWorkDebuff_Desc>Choose whether to Remove Global Work Speed Debuff by Slave Stage. If the slave stage or reduce rebellion cycle is off, it has no effect. Default: On</SSC_Setting_RemoveWorkDebuff_Desc>
+	<SSC_Setting_RemoveWorkDebuff_Desc>Choose whether to Remove Global Work Speed Debuff by Slave Stage. If the slave stage is off, it has no effect. Default: On</SSC_Setting_RemoveWorkDebuff_Desc>
 	<SSC_Setting_AssignSlave_Title>Assign Slave On/Off</SSC_Setting_AssignSlave_Title>
-	<SSC_Setting_AssignSlave_Desc>Choose whether to allow slaves to be assigned to roles. If the slave stage or reduce rebellion cycle is off, it has no effect. Default: On</SSC_Setting_AssignSlave_Desc>
-	<SSC_Setting_Stage5WorkUnlock_Title>Unlock Work Restrictions for Stage 5 Slaves On/Off</SSC_Setting_Stage5WorkUnlock_Title>
-	<SSC_Setting_Stage5WorkUnlock_Desc>Allows stage 5 slaves to perform all work types without restrictions, just like colonists. If Slave Stage or Reduce Rebellion Cycle is off, this option has no effect. Default: On</SSC_Setting_Stage5WorkUnlock_Desc>
+	<SSC_Setting_AssignSlave_Desc>Choose whether to allow slaves to be assigned to roles. If the slave stage is off, it has no effect. Default: On</SSC_Setting_AssignSlave_Desc>
+	<SSC_Setting_Stage5WorkUnlock_Title>Unlock Work/Ritual Restrictions for Stage 5 Slaves On/Off</SSC_Setting_Stage5WorkUnlock_Title>
+	<SSC_Setting_Stage5WorkUnlock_Desc>Allows stage 5 slaves to perform all work types and participate in ritual roles without restrictions. If the slave stage is off, this option has no effect. Default: On</SSC_Setting_Stage5WorkUnlock_Desc>
 	<SSC_Setting_Assimilation_Title>Assimilation Slave On/Off</SSC_Setting_Assimilation_Title>
 	<SSC_Setting_Assimilation_Desc>Choose whether to allow the slave's home faction to be changed to the player's faction when the slave stage reaches level 5. If you release the slave who has become the player's faction, the slave will join the settlement. If the slave stage is off, it has no effect. Default: On</SSC_Setting_Assimilation_Desc>
 	<SSC_Setting_RemoteOnlyConsole_Title>Activate Collars Only at Comms Console On/Off</SSC_Setting_RemoteOnlyConsole_Title>
@@ -168,6 +168,11 @@
 	<SSC_Setting_CollarDisruption_Desc>Collars are temporarily disabled by EMP hits or solar flares. Default: On</SSC_Setting_CollarDisruption_Desc>
 	<SSC_Setting_DrainMultiplier_Title>Collar drain global multiplier</SSC_Setting_DrainMultiplier_Title>
 	<SSC_Setting_DrainMultiplier_Desc>Multiplied to all collar power drain. 1 = default, 0.5 = half, 2 = double. Default: 1</SSC_Setting_DrainMultiplier_Desc>
+	<SSC_Setting_DefaultRechargeThreshold_Title>Default Recharge Threshold ({0}%)</SSC_Setting_DefaultRechargeThreshold_Title>
+	<SSC_Setting_DefaultRechargeThreshold_Desc>Initial auto-recharge threshold for newly equipped collars. Adjustable per-collar via the charge gizmo. Default: 50%</SSC_Setting_DefaultRechargeThreshold_Desc>
+	<SSC_Setting_Header_SlaveManagement>--- Slave Management ---</SSC_Setting_Header_SlaveManagement>
+	<SSC_Setting_Header_StageSystem>--- Stage System ---</SSC_Setting_Header_StageSystem>
+	<SSC_Setting_Header_CollarSystem>--- Collar System ---</SSC_Setting_Header_CollarSystem>
 	<SSC_Setting_ResetAll_Title>Reset All Setting</SSC_Setting_ResetAll_Title>
 
 	<!-- ===== Apparel Stats ===== -->
