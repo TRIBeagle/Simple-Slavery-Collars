@@ -7,7 +7,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>SimpleSlaveryCollars</RootNamespace>
     <AssemblyName>SimpleSlaveryCollars</AssemblyName>
-    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <BaseDirectory>..</BaseDirectory>
     <NoWin32Manifest>False</NoWin32Manifest>
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
@@ -48,11 +48,14 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="Compat\CompatManager.cs" />
+    <Compile Include="Compat\Compat_HAR.cs" />
     <Compile Include="CompProperties_RemoteSlaveCollar.cs" />
     <Compile Include="CompRemoteSlaveCollar.cs" />
     <Compile Include="Collars.cs" />
     <Compile Include="CompProperties_Slave.cs" />
     <Compile Include="CompTarget\CompTarget_SetSlaveCollar.cs" />
+    <Compile Include="Debug\SimpleSlaveryCollars_DebugActions.cs" />
     <Compile Include="DefOf.cs" />
     <Compile Include="HarmonyInit.cs" />
     <Compile Include="Jobs\SetSlaveCollar.cs" />
@@ -61,8 +64,7 @@
     <Compile Include="RecordWorker_TimeAsSlave.cs" />
     <Compile Include="RoleRequirement_NotSlave.cs" />
     <Compile Include="RoleRequirement_SlaveStage.cs" />
-    <Compile Include="Debug\SimpleSlaveryCollars_DebugActions.cs" />
-    <Compile Include="SimpleSlaveryCollars_Setting.cs" />
+<Compile Include="SimpleSlaveryCollars_Setting.cs" />
     <Compile Include="SimpleSlaveryCollars_Mod.cs" />
     <Compile Include="CompSlave.cs" />
     <Compile Include="SlaveUtility.cs" />

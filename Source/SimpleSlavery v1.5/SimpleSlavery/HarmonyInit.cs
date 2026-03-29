@@ -1,13 +1,28 @@
-﻿using HarmonyLib;
+// SimpleSlaveryCollars | Core | HarmonyInit.cs
+// 목적 : 모드 초기화 시점에 Harmony 패치를 일괄 등록
+// 용도 : [StaticConstructorOnStartup]을 통해 RimWorld 로딩 시 자동 실행
+// 주의 : Harmony ID는 고유 문자열("TRIBeagle.simpleslaverycollars")로 관리해야 함
+
+using HarmonyLib;
 using System.Reflection;
 using Verse;
+using SimpleSlaveryCollars.Compat;
 
 namespace SimpleSlaveryCollars
 {
+    /// <summary>
+    /// 모드 로드 시 Harmony 패치를 일괄 등록하는 초기화 클래스.
+    /// </summary>
     [StaticConstructorOnStartup]
     public static class HarmonyInit
     {
-        static HarmonyInit() => new Harmony("TRIBeagle.simpleslaverycollars").PatchAll(Assembly.GetExecutingAssembly());
+        static HarmonyInit()
+        {
+            new Harmony("TRIBeagle.simpleslaverycollars")
+                .PatchAll(Assembly.GetExecutingAssembly());
+
+            // 호환 패치 (HAR 등) — Def 로딩 완료 후 실행
+            LongEventHandler.ExecuteWhenFinished(CompatManager.ReportAllOnce);
+        }
     }
 }
-
