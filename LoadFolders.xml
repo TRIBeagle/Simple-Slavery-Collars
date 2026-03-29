@@ -13,7 +13,6 @@
     <li>Common</li>
     <li>LegacyLang</li>
     <li>1.5</li>
-    <li IfModActive="erdelf.HumanoidAlienRaces">HAR v1.5</li>
   </v1.5>
   <v1.6>
     <li>Common</li>
