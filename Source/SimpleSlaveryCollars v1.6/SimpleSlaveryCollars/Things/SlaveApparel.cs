@@ -5,6 +5,7 @@
 //        기존 세이브에서 ssc_charge 키 없으면 만충(1f)으로 로드
 
 using RimWorld;
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
@@ -174,6 +175,23 @@ namespace SimpleSlaveryCollars
 
         /// <summary>이 칼라가 armed 상태인지. 서브클래스에서 구현.</summary>
         public abstract bool IsArmed { get; }
+
+        /// <summary>armed 토글 기즈모 생성. 서브클래스에서 labelKey/descKey/iconPath/toggleAction 지정.</summary>
+        protected Command_Toggle MakeArmedToggle(string labelKey, string descKey, string iconPath, Action toggleAction)
+        {
+            var toggle = new Command_Toggle
+            {
+                isActive = () => IsArmed,
+                defaultLabel = labelKey.Translate(),
+                defaultDesc = descKey.Translate(),
+                toggleAction = toggleAction,
+                activateSound = SoundDefOf.Click,
+                icon = ContentFinder<Texture2D>.Get(iconPath, true)
+            };
+            if (!IsOperational)
+                toggle.Disable("SSC_Collar_Inoperable".Translate());
+            return toggle;
+        }
 
         /// <summary>RemoteOnlyOnConsoleEnable 활성 시 비활성 기즈모 생성. 아이콘은 서브클래스 iconPath로 결정.</summary>
         protected Command_Action MakeRemoteOnlyDisabledGizmo(string iconPath)

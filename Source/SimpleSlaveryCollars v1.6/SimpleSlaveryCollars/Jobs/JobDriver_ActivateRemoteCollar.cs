@@ -86,34 +86,7 @@ namespace SimpleSlaveryCollars.Jobs
                     var comp = console.TryGetComp<CompRemoteSlaveCollar>();
                     if (comp == null) return;
 
-                    var actionType = (RemoteCollarAction)job.count;
-                    switch (actionType)
-                    {
-                        case RemoteCollarAction.ArmExplosive:
-                            comp.DoRemoteCollarExplosive(true, target);
-                            break;
-                        case RemoteCollarAction.DisarmExplosive:
-                            comp.DoRemoteCollarExplosive(false, target);
-                            break;
-                        case RemoteCollarAction.DetonateExplosive:
-                            comp.DoRemoteCollarGoBoom(target);
-                            break;
-                        case RemoteCollarAction.ArmElectric:
-                            comp.DoRemoteCollarElectric(true, target);
-                            break;
-                        case RemoteCollarAction.DisarmElectric:
-                            comp.DoRemoteCollarElectric(false, target);
-                            break;
-                        case RemoteCollarAction.ArmCrypto:
-                            comp.DoRemoteCollarCrypto(true, target);
-                            break;
-                        case RemoteCollarAction.DisarmCrypto:
-                            comp.DoRemoteCollarCrypto(false, target);
-                            break;
-                        default:
-                            // [안전] 알 수 없는 액션은 무시
-                            break;
-                    }
+                    comp.ExecuteAction((RemoteCollarAction)job.count, target);
 
                     // [Safety] 액션 직후 대상 Pawn 예약 해제 → 중복 Job 방지
                     comp.ReleaseReservation(target);

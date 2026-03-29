@@ -82,32 +82,7 @@ namespace SimpleSlaveryCollars.Jobs
                             var pawnTarget = targets[i].Thing as Pawn;
                             if (pawnTarget == null || pawnTarget.Dead) continue;
 
-                            switch (actionType)
-                            {
-                                case RemoteCollarAction.ArmExplosive:
-                                    comp.DoRemoteCollarExplosive(true, pawnTarget);
-                                    break;
-                                case RemoteCollarAction.DisarmExplosive:
-                                    comp.DoRemoteCollarExplosive(false, pawnTarget);
-                                    break;
-                                case RemoteCollarAction.DetonateExplosive:
-                                    comp.DoRemoteCollarGoBoom(pawnTarget);
-                                    break;
-                                case RemoteCollarAction.ArmElectric:
-                                    comp.DoRemoteCollarElectric(true, pawnTarget);
-                                    break;
-                                case RemoteCollarAction.DisarmElectric:
-                                    comp.DoRemoteCollarElectric(false, pawnTarget);
-                                    break;
-                                case RemoteCollarAction.ArmCrypto:
-                                    comp.DoRemoteCollarCrypto(true, pawnTarget);
-                                    break;
-                                case RemoteCollarAction.DisarmCrypto:
-                                    comp.DoRemoteCollarCrypto(false, pawnTarget);
-                                    break;
-                                default:
-                                    break;
-                            }
+                            comp.ExecuteAction(actionType, pawnTarget);
 
                             // [Safety] 실행 직후 대상 Pawn 예약 해제 → 중복 Job 방지
                             comp.ReleaseReservation(pawnTarget);

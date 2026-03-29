@@ -4,7 +4,6 @@
 // 주의 : Zap() 실행 시 Dead/Downed 체크 → 연쇄 크래시 방지
 
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
@@ -35,20 +34,8 @@ namespace SimpleSlaveryCollars
                 yield break;
             }
             // 1. Arm the collar
-            var armCollar = new Command_Toggle();
-            Func<bool> isArmed = () => armed;
-            armCollar.isActive = isArmed;
-            armCollar.defaultLabel = "SSC_Electric_Arm".Translate();
-            armCollar.defaultDesc = "SSC_Electric_Arm_Desc".Translate();
-            armCollar.toggleAction = delegate
-            {
-                armed = !armed;
-            };
-            armCollar.activateSound = SoundDefOf.Click;
-            armCollar.icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Electric", true);
-            if (!IsOperational)
-                armCollar.Disable("SSC_Collar_Inoperable".Translate());
-            yield return armCollar;
+            yield return MakeArmedToggle("SSC_Electric_Arm", "SSC_Electric_Arm_Desc",
+                "UI/Commands/DetonateCollar_Electric", () => { armed = !armed; });
         }
 
         public override void ExposeData()
@@ -106,11 +93,7 @@ namespace SimpleSlaveryCollars
             }
 
             // Neck이 없는 종족 방어 — corePart(몸통)로 폴백
-            var neck = SimpleSlaveryUtility.FindBodyPart(Wearer, SimpleSlaveryDefOf.Neck);
-            if (neck == null)
-            {
-                neck = Wearer.RaceProps.body.corePart;
-            }
+            var neck = SimpleSlaveryUtility.GetNeckOrCorePart(Wearer);
             if (neck == null)
             {
                 armed = false;

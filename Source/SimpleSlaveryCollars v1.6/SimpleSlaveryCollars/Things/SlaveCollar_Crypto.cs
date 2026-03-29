@@ -4,7 +4,6 @@
 // 주의 : RevertMentalState()에서 이전 정신상태 복원. mindState null 방어 필수
 
 using RimWorld;
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
@@ -35,22 +34,12 @@ namespace SimpleSlaveryCollars
                 yield break;
             }
             // 1. Arm the collar
-            var armCollar = new Command_Toggle();
-            Func<bool> isArmed = () => armed;
-            armCollar.isActive = isArmed;
-            armCollar.defaultLabel = "SSC_Crypto_Arm".Translate();
-            armCollar.defaultDesc = "SSC_Crypto_Arm_Desc".Translate();
-            armCollar.toggleAction = delegate
-            {
-                armed = !armed;
-                if (!armed)
-                    RevertMentalState();
-            };
-            armCollar.activateSound = SoundDefOf.Click;
-            armCollar.icon = ContentFinder<Texture2D>.Get("UI/Commands/DetonateCollar_Crypto", true);
-            if (!IsOperational)
-                armCollar.Disable("SSC_Collar_Inoperable".Translate());
-            yield return armCollar;
+            yield return MakeArmedToggle("SSC_Crypto_Arm", "SSC_Crypto_Arm_Desc",
+                "UI/Commands/DetonateCollar_Crypto", () =>
+                {
+                    armed = !armed;
+                    if (!armed) RevertMentalState();
+                });
 
         }
 

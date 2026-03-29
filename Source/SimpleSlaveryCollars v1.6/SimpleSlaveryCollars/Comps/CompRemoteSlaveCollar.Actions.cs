@@ -113,6 +113,37 @@ namespace SimpleSlaveryCollars
         }
         #endregion
 
+        #region 실행/명령 (디스패치)
+        /// <summary>RemoteCollarAction에 따라 적절한 개별 명령을 디스패치. JobDriver에서 공용 호출.</summary>
+        public void ExecuteAction(RemoteCollarAction actionType, Pawn targetPawn)
+        {
+            switch (actionType)
+            {
+                case RemoteCollarAction.ArmExplosive:
+                    DoRemoteCollarExplosive(true, targetPawn);
+                    break;
+                case RemoteCollarAction.DisarmExplosive:
+                    DoRemoteCollarExplosive(false, targetPawn);
+                    break;
+                case RemoteCollarAction.DetonateExplosive:
+                    DoRemoteCollarGoBoom(targetPawn);
+                    break;
+                case RemoteCollarAction.ArmElectric:
+                    DoRemoteCollarElectric(true, targetPawn);
+                    break;
+                case RemoteCollarAction.DisarmElectric:
+                    DoRemoteCollarElectric(false, targetPawn);
+                    break;
+                case RemoteCollarAction.ArmCrypto:
+                    DoRemoteCollarCrypto(true, targetPawn);
+                    break;
+                case RemoteCollarAction.DisarmCrypto:
+                    DoRemoteCollarCrypto(false, targetPawn);
+                    break;
+            }
+        }
+        #endregion
+
         #region 실행/명령 (개별)
         /// <summary>지정 Pawn의 폭발 칼라 Armed 토글 및 초기 충격.</summary>
         public void DoRemoteCollarExplosive(bool active, Pawn targetPawn)

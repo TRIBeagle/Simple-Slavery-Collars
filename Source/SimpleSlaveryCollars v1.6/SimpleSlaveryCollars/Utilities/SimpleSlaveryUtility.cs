@@ -308,6 +308,13 @@ namespace SimpleSlaveryCollars.Utilities
             return null;
         }
 
+        /// <summary>Neck 부위 검색 후 없으면 corePart로 폴백. 칼라 효과 적용 시 공용.</summary>
+        internal static BodyPartRecord GetNeckOrCorePart(Pawn pawn)
+        {
+            if (pawn == null) return null;
+            return FindBodyPart(pawn, SimpleSlaveryDefOf.Neck) ?? pawn.RaceProps.body.corePart;
+        }
+
         #region Stage 경계값 틱 캐시
         // 설정은 게임 중 변경 안됨. 같은 틱 내 반복 곱셈 제거
         private static int _stageCacheTick = -1;
