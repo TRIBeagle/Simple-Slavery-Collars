@@ -429,3 +429,11 @@ FodyWeavers.xsd
 # Rider/VS
 .idea/
 .vs/
+
+# Claude Code / VSCode local settings
+.claude/
+.vscode/
+CLAUDE.md
+agent_docs/
+TEST_CHECKLIST.md
+NON_STANDARD_PATTERNS.md
