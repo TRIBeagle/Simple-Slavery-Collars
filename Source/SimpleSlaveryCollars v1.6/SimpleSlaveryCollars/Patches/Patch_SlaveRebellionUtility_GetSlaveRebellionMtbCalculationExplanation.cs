@@ -28,6 +28,7 @@ namespace SimpleSlaveryCollars.Patches
         {
             try
             {
+                if (pawn?.needs == null) return;
                 Need_Suppression need = pawn.needs.TryGetNeed<Need_Suppression>();
                 if (!SimpleSlaveryCollarsSetting.SlavestageEnable
                     || !SimpleSlaveryCollarsSetting.RebelCycleChangeEnable

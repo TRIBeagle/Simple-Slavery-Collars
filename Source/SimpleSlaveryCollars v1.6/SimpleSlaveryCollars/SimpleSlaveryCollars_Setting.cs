@@ -4,6 +4,7 @@
 // 주의   : Reset 버튼 클릭 시 모든 값 기본값으로 복원
 // 저장   : Scribe_Values 통해 모든 옵션 직렬화
 
+using System;
 using RimWorld;
 using UnityEngine;
 using Verse;
@@ -68,6 +69,15 @@ namespace SimpleSlaveryCollars
             Scribe_Values.Look(ref Slavestage2Period, "Slavestage2Period", 15f);
             Scribe_Values.Look(ref Slavestage3Period, "Slavestage3Period", 15f);
             Scribe_Values.Look(ref Slavestage4Period, "Slavestage4Period", 15f);
+
+            // 기존 세이브에서 0 이하 값 방어 — 최소 1일
+            if (Scribe.mode == LoadSaveMode.PostLoadInit)
+            {
+                Slavestage1Period = Math.Max(Slavestage1Period, 1f);
+                Slavestage2Period = Math.Max(Slavestage2Period, 1f);
+                Slavestage3Period = Math.Max(Slavestage3Period, 1f);
+                Slavestage4Period = Math.Max(Slavestage4Period, 1f);
+            }
         }
 
         /// <summary>
@@ -106,13 +116,13 @@ namespace SimpleSlaveryCollars
 
                 ls.Gap(4f);
                 ls.Label("SSC_Setting_Stage1Period_Title".Translate(), -1f, "SSC_Setting_Stage1Period_Desc".Translate());
-                ls.TextFieldNumeric(ref Slavestage1Period, ref _stage1PeriodBuffer);
+                ls.TextFieldNumeric(ref Slavestage1Period, ref _stage1PeriodBuffer, 1f, 999f);
                 ls.Label("SSC_Setting_Stage2Period_Title".Translate(), -1f, "SSC_Setting_Stage2Period_Desc".Translate());
-                ls.TextFieldNumeric(ref Slavestage2Period, ref _stage2PeriodBuffer);
+                ls.TextFieldNumeric(ref Slavestage2Period, ref _stage2PeriodBuffer, 1f, 999f);
                 ls.Label("SSC_Setting_Stage3Period_Title".Translate(), -1f, "SSC_Setting_Stage3Period_Desc".Translate());
-                ls.TextFieldNumeric(ref Slavestage3Period, ref _stage3PeriodBuffer);
+                ls.TextFieldNumeric(ref Slavestage3Period, ref _stage3PeriodBuffer, 1f, 999f);
                 ls.Label("SSC_Setting_Stage4Period_Title".Translate(), -1f, "SSC_Setting_Stage4Period_Desc".Translate());
-                ls.TextFieldNumeric(ref Slavestage4Period, ref _stage4PeriodBuffer);
+                ls.TextFieldNumeric(ref Slavestage4Period, ref _stage4PeriodBuffer, 1f, 999f);
             }
 
             ls.Gap();

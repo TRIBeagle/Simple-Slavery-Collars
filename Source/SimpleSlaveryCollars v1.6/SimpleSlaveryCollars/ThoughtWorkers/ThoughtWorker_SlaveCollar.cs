@@ -35,6 +35,10 @@ namespace SimpleSlaveryCollars
             if (collar == null || collar is SlaveCollar_Explosive)
                 return ThoughtState.Inactive;
 
+            // story가 없는 종족(메카노이드 등) 방어
+            if (pawn.story?.traits == null)
+                return ThoughtState.Inactive;
+
             // Masochist 특성 보유 → Stage2
             if (pawn.story.traits.HasTrait(MasochistTrait))
                 return ThoughtState.ActiveAtStage(2);

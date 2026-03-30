@@ -12,7 +12,7 @@ namespace SimpleSlaveryCollars
 {
     /// <summary>
     /// Pawn의 Slavery Stage를 검사하여 역할 배정을 제약한다.
-    /// Stage4 이하(또는 Steadfast 보유)는 제한 없음, Stage5면 차단.
+    /// 비노예 → 무조건 통과. Stage5(동화 완료) 노예만 허용, 그 외 노예는 차단.
     /// </summary>
     public class RoleRequirement_SlaveStage : RoleRequirement
     {
@@ -25,7 +25,7 @@ namespace SimpleSlaveryCollars
             if (!pawn.IsSlaveOfColony)
                 return true;
 
-            // 노예인 경우 Stage5 조건: SlaveStage4 이상 && !Steadfast 일 때만 충족
+            // Stage5(동화 완료) 노예만 역할 허용. Stage4 이하 or Steadfast → 차단
             float time = SimpleSlaveryUtility.TimeAsSlave(pawn);
             if (time < SimpleSlaveryUtility.SlaveStage4 || SimpleSlaveryUtility.IsSteadfast(pawn))
                 return false;
