@@ -394,7 +394,7 @@ namespace SimpleSlaveryCollars.Gizmos
                 Text.Font = GameFont.Small;
                 if (Text.CalcSize(inoperableText).x > totalW)
                     Text.Font = GameFont.Tiny;
-                Widgets.Label(new Rect(x, y - (BtnH - BtnH) / 2f, totalW, BtnH), inoperableText);
+                Widgets.Label(new Rect(x, y, totalW, BtnH), inoperableText);
                 Text.Anchor = TextAnchor.UpperLeft;
                 Text.Font = GameFont.Small;
                 GUI.color = Color.white;

@@ -17,12 +17,17 @@ namespace SimpleSlaveryCollars.Gizmos
         public SlaveApparel collar;
 
         // 바 텍스처 (static 캐시)
-        private static readonly Texture2D BarFilledTex =
-            SolidColorMaterials.NewSolidColorTexture(new Color(0.24f, 0.55f, 0.72f));
+        // 충전량 구간별 색상 (75%+/50%+/25%+/25%-)
+        private static readonly Texture2D BarFullTex =
+            SolidColorMaterials.NewSolidColorTexture(new Color(0.24f, 0.55f, 0.72f));   // 파랑
+        private static readonly Texture2D BarMidTex =
+            SolidColorMaterials.NewSolidColorTexture(new Color(0.75f, 0.68f, 0.22f));   // 노랑
+        private static readonly Texture2D BarLowTex =
+            SolidColorMaterials.NewSolidColorTexture(new Color(0.82f, 0.45f, 0.18f));   // 주황
+        private static readonly Texture2D BarCriticalTex =
+            SolidColorMaterials.NewSolidColorTexture(new Color(0.75f, 0.25f, 0.20f));   // 빨강
         private static readonly Texture2D BarHighlightTex =
             SolidColorMaterials.NewSolidColorTexture(new Color(0.34f, 0.65f, 0.82f));
-        private static readonly Texture2D BarLowTex =
-            SolidColorMaterials.NewSolidColorTexture(new Color(0.75f, 0.25f, 0.20f));
         private static readonly Texture2D BarEmpTex =
             SolidColorMaterials.NewSolidColorTexture(new Color(0.35f, 0.35f, 0.35f));
         private static readonly Texture2D BarEmptyTex =
@@ -92,7 +97,7 @@ namespace SimpleSlaveryCollars.Gizmos
             {
                 // 드래그 가능한 임계값 슬라이더 + 충전 바
                 float threshold = collar.rechargeThreshold;
-                Texture2D fillTex = collar.charge <= SlaveApparel.ChargeThreshold ? BarLowTex : BarFilledTex;
+                Texture2D fillTex = GetChargeTex(collar.charge);
 
                 Widgets.DraggableBar(barRect, fillTex, BarHighlightTex, BarEmptyTex, BarDragTex,
                     ref draggingBar, collar.charge, ref threshold,
@@ -110,6 +115,15 @@ namespace SimpleSlaveryCollars.Gizmos
             }
 
             return new GizmoResult(GizmoState.Clear);
+        }
+
+        /// <summary>충전량 구간별 텍스처 반환.</summary>
+        private static Texture2D GetChargeTex(float charge)
+        {
+            if (charge > 0.75f) return BarFullTex;      // 파랑
+            if (charge > 0.50f) return BarMidTex;       // 노랑
+            if (charge > 0.25f) return BarLowTex;       // 주황
+            return BarCriticalTex;                       // 빨강
         }
 
         /// <summary>바 중앙에 라벨 표시.</summary>
