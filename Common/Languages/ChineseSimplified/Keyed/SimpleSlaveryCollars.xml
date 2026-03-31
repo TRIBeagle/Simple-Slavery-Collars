@@ -152,6 +152,8 @@
 	<SSC_Setting_Stage5WorkUnlock_Desc>允许5级奴隶执行所有类型的工作并参与仪式角色。如果奴隶阶段关闭，则此选项无效。默认：开启</SSC_Setting_Stage5WorkUnlock_Desc>
 	<SSC_Setting_Assimilation_Title>奴隶同化至定居点</SSC_Setting_Assimilation_Title>
 	<SSC_Setting_Assimilation_Desc>选择是否允许当奴隶阶段达到5级时，奴隶的母阵营变更为玩家的阵营。如果您释放已成为玩家阵营的奴隶，该奴隶将加入定居点。如果奴隶阶段关闭，则无效。默认：开启</SSC_Setting_Assimilation_Desc>
+	<SSC_Setting_IgnoreUnwavering_Title>Ignore Unwavering Loyalty for Stage 5</SSC_Setting_IgnoreUnwavering_Title>
+	<SSC_Setting_IgnoreUnwavering_Desc>Allow slaves with unwavering loyalty to reach stage 5. Upon assimilation, their unwavering loyalty is removed. Default: Off</SSC_Setting_IgnoreUnwavering_Desc>
 	<SSC_Setting_RemoteOnlyConsole_Title>仅在通讯台激活项圈</SSC_Setting_RemoteOnlyConsole_Title>
 	<SSC_Setting_RemoteOnlyConsole_Desc>选择奴隶项圈的远程激活按钮是否只能从通讯台操作，而不能直接由奴隶操作。当尝试远程激活时，殖民者必须前往通讯台手动激活。默认：开启</SSC_Setting_RemoteOnlyConsole_Desc>
 	<SSC_Setting_Stage1Period_Title>情感变化1阶段</SSC_Setting_Stage1Period_Title>

@@ -31,6 +31,7 @@ namespace SimpleSlaveryCollars
         public static bool AssignSlaveEnable = true;
         public static bool Stage5SlaveWorkUnlockEnable = true;
         public static bool AssimilationSlaveEnable = true;
+        public static bool IgnoreUnwaveringLoyalty = false;
 
         public static float Slavestage1Period = 15f;
         public static float Slavestage2Period = 15f;
@@ -60,6 +61,7 @@ namespace SimpleSlaveryCollars
             Scribe_Values.Look(ref AssignSlaveEnable, "AssignSlaveEnable", true);
             Scribe_Values.Look(ref Stage5SlaveWorkUnlockEnable, "Stage5SlaveWorkUnlockEnable", true);
             Scribe_Values.Look(ref AssimilationSlaveEnable, "AssimilationSlaveEnable", true);
+            Scribe_Values.Look(ref IgnoreUnwaveringLoyalty, "IgnoreUnwaveringLoyalty", false);
             Scribe_Values.Look(ref RemoteOnlyOnConsoleEnable, "RemoteOnlyOnConsoleEnable", true);
             Scribe_Values.Look(ref CollarChargeEnable, "CollarChargeEnable", true);
             Scribe_Values.Look(ref CollarDisruptionEnable, "CollarDisruptionEnable", true);
@@ -113,6 +115,7 @@ namespace SimpleSlaveryCollars
                 ls.CheckboxLabeled("SSC_Setting_AssignSlave_Title".Translate(), ref AssignSlaveEnable, "SSC_Setting_AssignSlave_Desc".Translate());
                 ls.CheckboxLabeled("SSC_Setting_Stage5WorkUnlock_Title".Translate(), ref Stage5SlaveWorkUnlockEnable, "SSC_Setting_Stage5WorkUnlock_Desc".Translate());
                 ls.CheckboxLabeled("SSC_Setting_Assimilation_Title".Translate(), ref AssimilationSlaveEnable, "SSC_Setting_Assimilation_Desc".Translate());
+                ls.CheckboxLabeled("SSC_Setting_IgnoreUnwavering_Title".Translate(), ref IgnoreUnwaveringLoyalty, "SSC_Setting_IgnoreUnwavering_Desc".Translate());
 
                 ls.Gap(4f);
                 ls.Label("SSC_Setting_Stage1Period_Title".Translate(), -1f, "SSC_Setting_Stage1Period_Desc".Translate());

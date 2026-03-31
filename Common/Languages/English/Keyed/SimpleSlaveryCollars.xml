@@ -152,6 +152,8 @@
 	<SSC_Setting_Stage5WorkUnlock_Desc>Allows stage 5 slaves to perform all work types and participate in ritual roles without restrictions. If the slave stage is off, this option has no effect. Default: On</SSC_Setting_Stage5WorkUnlock_Desc>
 	<SSC_Setting_Assimilation_Title>Assimilation Slave On/Off</SSC_Setting_Assimilation_Title>
 	<SSC_Setting_Assimilation_Desc>Choose whether to allow the slave's home faction to be changed to the player's faction when the slave stage reaches level 5. If you release the slave who has become the player's faction, the slave will join the settlement. If the slave stage is off, it has no effect. Default: On</SSC_Setting_Assimilation_Desc>
+	<SSC_Setting_IgnoreUnwavering_Title>Ignore Unwavering Loyalty for Stage 5</SSC_Setting_IgnoreUnwavering_Title>
+	<SSC_Setting_IgnoreUnwavering_Desc>Allow slaves with unwavering loyalty to reach stage 5. Upon assimilation, their unwavering loyalty is removed. Default: Off</SSC_Setting_IgnoreUnwavering_Desc>
 	<SSC_Setting_RemoteOnlyConsole_Title>Activate Collars Only at Comms Console On/Off</SSC_Setting_RemoteOnlyConsole_Title>
 	<SSC_Setting_RemoteOnlyConsole_Desc>Choose whether the remote activation button for slave collars can only be operated from the Comms Console, and not directly by the slaves. When remote activation is attempted, a colonist must go to the Comms Console to activate it manually. Default: On</SSC_Setting_RemoteOnlyConsole_Desc>
 	<SSC_Setting_Stage1Period_Title>Slave Stage 1 Period</SSC_Setting_Stage1Period_Title>

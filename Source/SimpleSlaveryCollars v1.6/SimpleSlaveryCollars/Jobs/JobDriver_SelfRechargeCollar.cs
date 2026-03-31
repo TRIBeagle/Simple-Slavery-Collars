@@ -52,7 +52,7 @@ namespace SimpleSlaveryCollars.Jobs
 
             // 2) 충전 대기
             var waitToil = Toils_General.Wait(RechargeDuration, TargetIndex.A);
-            waitToil.WithProgressBarToilDelay(TargetIndex.A);
+            waitToil.WithProgressBarToilDelay(TargetIndex.A, interpolateBetweenActorAndTarget: true);
             yield return waitToil;
 
             // 3) 충전 완료

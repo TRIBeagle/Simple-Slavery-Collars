@@ -163,30 +163,19 @@ namespace SimpleSlaveryCollars.Utilities
         }
 
         /// <summary>
-        /// Pawn이 Steadfast(의지 강함)인지 판정합니다. Wimp면 false, Nerves의 Degree>0이면 true.
+        /// Pawn이 동화 불가(Steadfast)인지 판정합니다.
+        /// 바닐라 확고한 충성심(Recruitable=false) 상태면 Stage5 진입 불가.
         /// </summary>
-        // TraitDef.Named 반복 호출 방지 — 1회 캐싱. volatile로 스레드 안전성 보장
-        private static volatile TraitDef _wimpTraitDef;
-        internal static TraitDef WimpTrait => _wimpTraitDef ?? (_wimpTraitDef = TraitDef.Named("Wimp"));
-
         public static bool IsSteadfast(Pawn pawn)
         {
-            if (pawn?.story?.traits == null) return false;
-            if (pawn.story.traits.HasTrait(WimpTrait))
-            {
-                return false;
-            }
-
-            if (pawn.story.traits.HasTrait(SimpleSlaveryDefOf.Nerves))
-            {
-                if (pawn.story.traits.GetTrait(SimpleSlaveryDefOf.Nerves).Degree > 0)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            if (pawn?.guest == null) return false;
+            if (SimpleSlaveryCollarsSetting.IgnoreUnwaveringLoyalty) return false;
+            return !pawn.guest.Recruitable;
         }
+
+        // 칼라 장착 시 정신붕괴 확률 체크용 (IsSteadfast와 무관)
+        private static volatile TraitDef _wimpTraitDef;
+        internal static TraitDef WimpTrait => _wimpTraitDef ?? (_wimpTraitDef = TraitDef.Named("Wimp"));
 
         /// <summary>
         /// CompSlave 또는 Record를 기준으로 과거 노예 이력이 있는지 반환합니다.

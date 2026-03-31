@@ -152,6 +152,8 @@
 	<SSC_Setting_Stage5WorkUnlock_Desc>노예가 5단계에 도달하면 모든 작업 제한이 해제되고 의식 역할에도 참여할 수 있습니다. 노예 감정변화가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</SSC_Setting_Stage5WorkUnlock_Desc>
 	<SSC_Setting_Assimilation_Title>노예 정착지 합류</SSC_Setting_Assimilation_Title>
 	<SSC_Setting_Assimilation_Desc>노예의 감정변화가 5단계가 되었을 때, 노예의 출신세력을 플레이어의 세력으로 변경하는 것을 허용할지 선택합니다. 플레이어의 세력이 된 노예를 풀어주면 정착지로 합류합니다. 노예 감정변화가 비활성화되어 있으면 아무런 효과가 없습니다. 기본값: 활성화</SSC_Setting_Assimilation_Desc>
+	<SSC_Setting_IgnoreUnwavering_Title>확고한 충성심 무시</SSC_Setting_IgnoreUnwavering_Title>
+	<SSC_Setting_IgnoreUnwavering_Desc>확고한 충성심 상태의 노예도 5단계(완전 동화)에 도달할 수 있도록 허용합니다. 동화 완료 시 확고한 충성심이 제거됩니다. 기본값: 비활성화</SSC_Setting_IgnoreUnwavering_Desc>
 	<SSC_Setting_RemoteOnlyConsole_Title>통신기에서만 목걸이 작동 허용</SSC_Setting_RemoteOnlyConsole_Title>
 	<SSC_Setting_RemoteOnlyConsole_Desc>노예 목걸이 원격 작동 버튼이 노예에게 직접 활성화되지 않고, 통신기에서만 조작할 수 있도록 변경됩니다. 원격 작동 시 정착민이 통신기로 이동해 직접 활성화해야 합니다. 기본값: 활성화</SSC_Setting_RemoteOnlyConsole_Desc>
 	<SSC_Setting_Stage1Period_Title>감정 변화 1단계</SSC_Setting_Stage1Period_Title>

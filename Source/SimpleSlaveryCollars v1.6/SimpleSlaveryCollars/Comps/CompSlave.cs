@@ -168,6 +168,12 @@ namespace SimpleSlaveryCollars
                 {
                     pawn.guest.SetGuestStatus(Faction.OfPlayer, GuestStatus.Slave);
                 }
+                // 확고한 충성심 무시 옵션 ON → 동화 시 충성심 해제
+                if (SimpleSlaveryCollarsSetting.IgnoreUnwaveringLoyalty
+                    && pawn.guest != null && !pawn.guest.Recruitable)
+                {
+                    pawn.guest.Recruitable = true;
+                }
                 _assimilatedAtStage4 = true;
             }
 
