@@ -32,7 +32,7 @@ namespace SimpleSlaveryCollars.Jobs
             if (target.InAggroMentalState) return null;
             if (target.Drafted && !forced) return null;
             if (target.Downed && !forced) return null;
-            if (target.InBed()) return null;
+            if (target.InBed() && !forced) return null;
 
             // 칼라 확인
             var collar = SimpleSlaveryUtility.GetSlaveCollar(target) as SlaveApparel;
