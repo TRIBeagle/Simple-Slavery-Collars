@@ -28,7 +28,7 @@
 	<SSC_Collar_DrainIdle>Drain (idle): {0} Wd/day</SSC_Collar_DrainIdle>
 	<SSC_Collar_DrainActive>Drain (active): {0} Wd/day</SSC_Collar_DrainActive>
 	<SSC_Collar_RechargeThreshold>Recharge Threshold</SSC_Collar_RechargeThreshold>
-<SSC_Collar_Inoperable>Inoperable (low charge / EM disruption)</SSC_Collar_Inoperable>
+	<SSC_Collar_Inoperable>Inoperable (low charge / EM disruption)</SSC_Collar_Inoperable>
 	<SSC_Remote_ExplosiveArm>Arm Collar</SSC_Remote_ExplosiveArm>
 	<SSC_Remote_ExplosiveArm_Desc>Ready the explosives in the slave collar for detonation.</SSC_Remote_ExplosiveArm_Desc>
 	<SSC_Remote_ExplosiveDetonate>Detonate</SSC_Remote_ExplosiveDetonate>
@@ -143,7 +143,7 @@
 	<SSC_Setting_DefaultRechargeThreshold_Desc>Initial auto-recharge threshold for newly equipped collars. Adjustable per-collar via the charge gizmo. Default: 50%</SSC_Setting_DefaultRechargeThreshold_Desc>
 	<SSC_Setting_Header_SlaveManagement>--- Slave Management ---</SSC_Setting_Header_SlaveManagement>
 	<SSC_Setting_Header_StageSystem>--- Stage System ---</SSC_Setting_Header_StageSystem>
-	<SSC_Setting_Header_CollarSystem>--- Collar System ---</SSC_Setting_Header_CollarSystem>
+	<SSC_Setting_Header_CollarSystem>--- Charging System ---</SSC_Setting_Header_CollarSystem>
 	<SSC_Setting_ResetAll_Title>Reset All Setting</SSC_Setting_ResetAll_Title>
 
 	<SSC_Stat_BatteryCapacity>Max Battery Capacity</SSC_Stat_BatteryCapacity>

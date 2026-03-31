@@ -174,7 +174,7 @@
 	<SSC_Setting_DefaultRechargeThreshold_Desc>Initial auto-recharge threshold for newly equipped collars. Adjustable per-collar via the charge gizmo. Default: 50%</SSC_Setting_DefaultRechargeThreshold_Desc>
 	<SSC_Setting_Header_SlaveManagement>--- Slave Management ---</SSC_Setting_Header_SlaveManagement>
 	<SSC_Setting_Header_StageSystem>--- Stage System ---</SSC_Setting_Header_StageSystem>
-	<SSC_Setting_Header_CollarSystem>--- Collar System ---</SSC_Setting_Header_CollarSystem>
+	<SSC_Setting_Header_CollarSystem>--- Charging System ---</SSC_Setting_Header_CollarSystem>
 	<SSC_Setting_ResetAll_Title>Reset All Setting</SSC_Setting_ResetAll_Title>
 
 	<!-- ===== Apparel Stats ===== -->

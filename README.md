@@ -39,7 +39,7 @@ The original standalone slavery mechanics have been removed (DLC covers this). T
 - Slaves progress through 5 stages over time (configurable period per stage)
 - Each stage affects mood, rebellion chance, and work restrictions
 - Stage 5 (Assimilation): slave faction switches to player, work type restrictions lifted
-- Steadfast trait blocks Stage 5 benefits
+- Slaves with vanilla "unwavering loyalty" are blocked from Stage 5 (configurable)
 - Shackle system with warden jobs to apply/remove restraints
 
 **DLC Slavery Tweaks**
@@ -64,6 +64,7 @@ The original standalone slavery mechanics have been removed (DLC covers this). T
 | Assign Slave | ON | Allow slave role assignment in rituals |
 | Stage 5 Work Unlock | ON | Unlock all work types at Stage 5 |
 | Assimilation | ON | Stage 5 slaves join player faction |
+| Ignore Unwavering Loyalty | OFF | Allow unwavering slaves to reach Stage 5 |
 | Remote Only on Console | ON | Restrict collar control to console |
 | Collar Charge | ON | Enable battery/charge system |
 | Collar Disruption | ON | Enable EMP/flare vulnerability |
@@ -88,6 +89,7 @@ The original standalone slavery mechanics have been removed (DLC covers this). T
   - Proxyer (Japanese) -- [Translation link](https://steamcommunity.com/sharedfiles/filedetails/?id=1636672484)
   - Aramati (Portuguese-BR)
   - xRg (Russian)
+  - lzw-723 (Chinese Simplified)
 
 ### License
 
@@ -133,7 +135,7 @@ Thirite의 **Simple Slavery** 모드를 기반으로, RimWorld 1.6 및 이데올
 - 노예가 시간에 따라 5단계를 거쳐 진행 (단계별 기간 설정 가능)
 - 각 단계별 기분, 반란 확률, 작업 제한 영향
 - Stage 5 (동화): 노예 소속이 플레이어 팩션으로 변경, 작업 제한 해제
-- Steadfast 트레이트 보유 시 Stage 5 혜택 차단
+- 바닐라 "확고한 충성심" 상태의 노예는 Stage 5 도달 불가 (옵션으로 무시 가능)
 - 족쇄 시스템 + 감시원 족쇄 적용/해제 Job
 
 **DLC 노예 시스템 트윅**
@@ -158,6 +160,7 @@ Thirite의 **Simple Slavery** 모드를 기반으로, RimWorld 1.6 및 이데올
 | 노예 역할 배정 | ON | 의식에서 노예 역할 배정 허용 |
 | Stage 5 작업 해제 | ON | Stage 5 도달 시 모든 작업 해금 |
 | 동화 | ON | Stage 5 노예가 플레이어 팩션 합류 |
+| 확고한 충성심 무시 | OFF | 확고한 충성심 노예도 Stage 5 도달 허용 |
 | 콘솔 전용 원격 | ON | 목걸이 제어를 콘솔로 제한 |
 | 목걸이 충전 | ON | 배터리/충전 시스템 활성화 |
 | 목걸이 교란 | ON | EMP/태양 흑점 취약성 활성화 |
@@ -182,6 +185,7 @@ Thirite의 **Simple Slavery** 모드를 기반으로, RimWorld 1.6 및 이데올
   - Proxyer (일본어) -- [번역 링크](https://steamcommunity.com/sharedfiles/filedetails/?id=1636672484)
   - Aramati (포르투갈어-BR)
   - xRg (러시아어)
+  - lzw-723 (중국어 간체)
 
 ### 라이선스
 

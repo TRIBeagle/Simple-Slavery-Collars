@@ -174,7 +174,7 @@
 	<SSC_Setting_DefaultRechargeThreshold_Desc>새로 장착한 목걸이의 자동 충전 임계값 초기값. 목걸이별로 충전 기즈모에서 개별 조절 가능. 기본값: 50%</SSC_Setting_DefaultRechargeThreshold_Desc>
 	<SSC_Setting_Header_SlaveManagement>── 노예 관리 ──</SSC_Setting_Header_SlaveManagement>
 	<SSC_Setting_Header_StageSystem>── Stage 시스템 ──</SSC_Setting_Header_StageSystem>
-	<SSC_Setting_Header_CollarSystem>── 칼라 시스템 ──</SSC_Setting_Header_CollarSystem>
+	<SSC_Setting_Header_CollarSystem>── 충전 시스템 ──</SSC_Setting_Header_CollarSystem>
 	<SSC_Setting_ResetAll_Title>설정 리셋</SSC_Setting_ResetAll_Title>
 
 	<!-- ===== 의상 정보 스탯 ===== -->
