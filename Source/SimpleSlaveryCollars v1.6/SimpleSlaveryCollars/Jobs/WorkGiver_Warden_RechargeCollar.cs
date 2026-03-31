@@ -30,8 +30,8 @@ namespace SimpleSlaveryCollars.Jobs
             // Stage5 노예는 자가충전 가능 → 간수 충전 불필요
             if (SimpleSlaveryUtility.IsStage5Slave(target)) return null;
             if (target.InAggroMentalState) return null;
-            if (target.Drafted) return null;
-            if (target.Downed) return null;
+            if (target.Drafted && !forced) return null;
+            if (target.Downed && !forced) return null;
             if (target.InBed()) return null;
 
             // 칼라 확인
