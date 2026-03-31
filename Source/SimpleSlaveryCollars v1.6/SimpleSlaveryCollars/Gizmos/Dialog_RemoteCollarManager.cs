@@ -656,7 +656,7 @@ namespace SimpleSlaveryCollars.Gizmos
             InvalidateCache();
         }
 
-        /// <summary>맵에 Warden 작업이 활성화된 식민자가 있는지.</summary>
+        /// <summary>맵에 Warden 작업이 활성화된 정착민이 있는지.</summary>
         private bool HasWardenOnMap()
         {
             var colonists = _comp.parent.Map.mapPawns.FreeColonistsSpawned;

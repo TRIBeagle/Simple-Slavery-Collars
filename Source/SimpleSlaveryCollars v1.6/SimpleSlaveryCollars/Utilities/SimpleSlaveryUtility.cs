@@ -27,7 +27,7 @@ namespace SimpleSlaveryCollars.Utilities
         }
 
         /// <summary>
-        /// Pawn이 식민자이거나 Stage5 노예인지 여부를 판정합니다. Stage5는 (x ≥ SlaveStage4) && !Steadfast 조건입니다.
+        /// Pawn이 정착민이거나 Stage5 노예인지 여부를 판정합니다. Stage5는 (x ≥ SlaveStage4) && !Steadfast 조건입니다.
         /// </summary>
         public static bool IsStage5Slave(Pawn pawn)
         {

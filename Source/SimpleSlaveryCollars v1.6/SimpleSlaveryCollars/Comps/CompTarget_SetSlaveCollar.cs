@@ -1,5 +1,5 @@
 ﻿// SimpleSlaveryCollars | Comps | CompTarget_SetSlaveCollar.cs
-// 목적   : 플레이어가 식민자/죄수/노예 Pawn을 직접 지정해 'SetSlaveCollar' 작업을 배정하는 대상 지정/효과 컴포넌트
+// 목적   : 플레이어가 정착민/죄수/노예 Pawn을 직접 지정해 'SetSlaveCollar' 작업을 배정하는 대상 지정/효과 컴포넌트
 // 용도   : 아이템/장치에 부착되어 사용 시 대상 선택 UI 노출 → 선택 Pawn에게 작업(Job) 부여
 // 변경   : 2025-09-22 주석 규칙(v4.2) 적용 — 헤더·클래스/메서드 요약 추가
 // 주의   : 예약/도달 불가 시 즉시 반환하여 안전하게 작업 배정 실패 처리
@@ -14,7 +14,7 @@ namespace SimpleSlaveryCollars
 {
     /// <summary>
     /// 플레이어가 직접 대상을 고르는 Targetable 컴포넌트.
-    /// - Pawn만 선택 가능, 범위는 식민자/죄수/노예로 제한.
+    /// - Pawn만 선택 가능, 범위는 정착민/죄수/노예로 제한.
     /// </summary>
     public class CompTargetable_ColonyPawn : CompTargetable
     {
@@ -24,7 +24,7 @@ namespace SimpleSlaveryCollars
         protected override bool PlayerChoosesTarget => true;
 
         /// <summary>
-        /// 대상 선택 파라미터 설정(파온 한정, 식민자/죄수/노예만, 건물 제외).
+        /// 대상 선택 파라미터 설정(Pawn 한정, 정착민/죄수/노예만, 건물 제외).
         /// </summary>
         protected override TargetingParameters GetTargetingParameters()
         {

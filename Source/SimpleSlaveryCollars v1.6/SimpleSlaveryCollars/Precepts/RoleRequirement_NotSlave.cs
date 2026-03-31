@@ -10,7 +10,7 @@ using Verse;
 namespace SimpleSlaveryCollars
 {
     /// <summary>
-    /// Pawn이 자유 식민자(노예 아님)일 때만 역할 부여 가능.
+    /// Pawn이 자유 정착민(노예 아님)일 때만 역할 부여 가능.
     /// </summary>
     public class RoleRequirement_NotSlave : RoleRequirement
     {

@@ -34,7 +34,7 @@
 	<SSC_Remote_ExplosiveDetonate>Detonate</SSC_Remote_ExplosiveDetonate>
 	<SSC_Remote_ExplosiveDetonate_Desc>Detonate the explosives in the collar, instantly killing the wearer.</SSC_Remote_ExplosiveDetonate_Desc>
 	<SSC_Remote_ElectricArm>Zap</SSC_Remote_ElectricArm>
-	<SSC_Remote_ElectricArm_Desc>Electrocutes wearer untill uncouscious.</SSC_Remote_ElectricArm_Desc>
+	<SSC_Remote_ElectricArm_Desc>Electrocutes wearer until unconscious.</SSC_Remote_ElectricArm_Desc>
 	<SSC_Remote_CryptoArm>Freeze</SSC_Remote_CryptoArm>
 	<SSC_Remote_CryptoArm_Desc>Freezes wearer in place.</SSC_Remote_CryptoArm_Desc>
 	<SSC_Console_ManageCollars>Manage Collars</SSC_Console_ManageCollars>
