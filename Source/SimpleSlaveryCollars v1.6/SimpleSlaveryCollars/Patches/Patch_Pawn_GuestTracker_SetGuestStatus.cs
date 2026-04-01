@@ -90,11 +90,6 @@ namespace SimpleSlaveryCollars.Patches
             if (SimpleSlaveryUtility.IsSteadfast(pawn)) return;
             if (guest.SlaveFaction == Faction.OfPlayer) return;
 
-            if (slaveFactionRef == null)
-            {
-                Log.ErrorOnce("[SSC] slaveFactionInt FieldRef is null — field may have been renamed in RimWorld update.", 0x55435F01);
-                return;
-            }
             slaveFactionRef(guest) = Faction.OfPlayer;
             Messages.Message(
                 "SSC_Message_Assimilation".Translate().AdjustedFor(pawn),

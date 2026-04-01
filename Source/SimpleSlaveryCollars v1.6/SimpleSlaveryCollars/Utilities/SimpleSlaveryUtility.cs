@@ -283,18 +283,11 @@ namespace SimpleSlaveryCollars.Utilities
             return $"{baseText} {tail}";
         }
 
-        /// <summary>
-        /// AllParts에서 지정 BodyPartDef를 for 루프로 검색. .Find() 클로저 할당 회피용.
-        /// </summary>
+        /// <summary>바닐라 BodyDef.GetPartsWithDef (Dictionary 캐시) 기반 부위 검색.</summary>
         internal static BodyPartRecord FindBodyPart(Pawn pawn, BodyPartDef def)
         {
-            var parts = pawn.RaceProps.body.AllParts;
-            for (int i = 0; i < parts.Count; i++)
-            {
-                if (parts[i].def == def)
-                    return parts[i];
-            }
-            return null;
+            var parts = pawn.RaceProps.body.GetPartsWithDef(def);
+            return (parts != null && parts.Count > 0) ? parts[0] : null;
         }
 
         /// <summary>Neck 부위 검색 후 없으면 corePart로 폴백. 칼라 효과 적용 시 공용.</summary>
