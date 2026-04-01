@@ -20,6 +20,7 @@ The original standalone slavery mechanics have been removed (DLC covers this). T
 - Charge bar gizmo with draggable recharge threshold slider
 - Self-recharge: assimilated (Stage 5) slaves can recharge their own collar at a console
 - Warden recharge: wardens escort slaves to recharge stations when charge drops below threshold
+- Right-click forced recharge: works on any collar-wearing colony member, even if drafted, downed, or bedridden
 - Configurable drain multiplier
 
 **EMP / Solar Flare Disruption**
@@ -118,6 +119,7 @@ Thirite의 **Simple Slavery** 모드를 기반으로, RimWorld 1.6 및 이데올
 - 드래그 가능한 충전 임계값 슬라이더가 있는 충전 바 기즈모
 - 자가충전: 동화(Stage 5) 노예가 콘솔에서 자가 충전 가능
 - 감시원 충전: 감시원이 충전량 부족 시 노예를 콘솔로 에스코트
+- 우클릭 강제 충전: 칼라 착용 식민지 소속 전체 가능 (소집/다운/병상 무관)
 - 글로벌 소모 배율 조절 가능
 
 **EMP / 태양 흑점 교란**
