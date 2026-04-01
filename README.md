@@ -50,6 +50,8 @@ The original standalone slavery mechanics have been removed (DLC covers this). T
 
 **Compatibility**
 - Humanoid Alien Races (HAR) support via reflection (graceful fallback if not installed)
+- Compatible with Small/Tiny/Micro Comms Console and Vanilla Gravship Expanded comms terminal
+- Safe to add mid-game. Do NOT remove mid-game (save data corruption)
 - Safe save/load: all new fields have safe defaults for existing saves
 - Fully configurable: every feature can be toggled on/off in mod settings
 
@@ -146,6 +148,8 @@ Thirite의 **Simple Slavery** 모드를 기반으로, RimWorld 1.6 및 이데올
 
 **호환성**
 - Humanoid Alien Races (HAR) 리플렉션 지원 (미설치 시 정상 폴백)
+- Small/Tiny/Micro Comms Console 및 Vanilla Gravship Expanded 통신기 호환
+- 게임 도중 모드 추가: OK. 게임 도중 모드 제거: 권장하지 않음 (세이브 손상 가능)
 - 세이브 호환: 모든 신규 필드에 안전한 기본값 적용
 - 전체 설정 가능: 모든 기능을 모드 설정에서 개별 ON/OFF 가능
 
