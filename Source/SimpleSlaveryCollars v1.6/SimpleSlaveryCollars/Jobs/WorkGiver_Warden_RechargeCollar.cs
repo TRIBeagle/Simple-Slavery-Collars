@@ -26,13 +26,20 @@ namespace SimpleSlaveryCollars.Jobs
 
             var target = t as Pawn;
             if (target == null || pawn == target) return null;
-            if (!target.IsSlaveOfColony && !target.IsPrisonerOfColony) return null;
-            // Stage5 노예는 자가충전 가능 → 간수 충전 불필요
-            if (SimpleSlaveryUtility.IsStage5Slave(target)) return null;
             if (target.InAggroMentalState) return null;
-            if (target.Drafted && !forced) return null;
-            if (target.Downed && !forced) return null;
-            if (target.InBed() && !forced) return null;
+
+            if (forced)
+            {
+                // 우클릭 강제: 칼라 착용 식민지 소속이면 누구든 가능 (드래프트/다운/병상 무관)
+                if (!SimpleSlaveryUtility.IsColonyMember(target)) return null;
+            }
+            else
+            {
+                // 자동: 노예(1~4단계)/죄수만. Stage5/정착민은 자가충전.
+                if (!target.IsSlaveOfColony && !target.IsPrisonerOfColony) return null;
+                if (SimpleSlaveryUtility.IsStage5Slave(target)) return null;
+                if (target.Drafted || target.Downed || target.InBed()) return null;
+            }
 
             // 칼라 확인
             var collar = SimpleSlaveryUtility.GetSlaveCollar(target) as SlaveApparel;
