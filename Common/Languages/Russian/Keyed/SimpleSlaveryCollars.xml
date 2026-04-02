@@ -28,6 +28,8 @@
 	<SSC_Collar_DrainIdle>Drain (idle): {0} Wd/day</SSC_Collar_DrainIdle>
 	<SSC_Collar_DrainActive>Drain (active): {0} Wd/day</SSC_Collar_DrainActive>
 	<SSC_Collar_RechargeThreshold>Recharge Threshold</SSC_Collar_RechargeThreshold>
+	<SSC_Collar_Suspended>Suspended</SSC_Collar_Suspended>
+	<SSC_Collar_Suspended_Tooltip>Collar is inactive — wearer is in cryptosleep.</SSC_Collar_Suspended_Tooltip>
 	<SSC_Collar_Inoperable>Inoperable (low charge / EM disruption)</SSC_Collar_Inoperable>
 	<SSC_Remote_ExplosiveArm>Arm Collar</SSC_Remote_ExplosiveArm>
 	<SSC_Remote_ExplosiveArm_Desc>Ready the explosives in the slave collar for detonation.</SSC_Remote_ExplosiveArm_Desc>

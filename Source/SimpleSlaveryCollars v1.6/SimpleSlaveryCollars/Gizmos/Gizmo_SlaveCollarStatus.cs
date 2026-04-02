@@ -60,6 +60,7 @@ namespace SimpleSlaveryCollars.Gizmos
             if (collar == null)
                 return new GizmoResult(GizmoState.Clear);
 
+            bool suspended = collar.Wearer != null && collar.Wearer.Suspended;
             bool empDisabled = collar.IsEmpDisabled;
 
             // ── 상단: 칼라 이름(폰 이름) ──
@@ -87,7 +88,13 @@ namespace SimpleSlaveryCollars.Gizmos
             Rect barRect = innerRect;
             barRect.yMin = headerRect.yMax + 4f;
 
-            if (empDisabled)
+            if (suspended)
+            {
+                // 동면 중 — 회색 바
+                Widgets.FillableBar(barRect, collar.charge, BarEmpTex, BarEmptyTex, doBorder: true);
+                DrawBarLabel(barRect, "SSC_Collar_Suspended".Translate());
+            }
+            else if (empDisabled)
             {
                 // 전자기 교란(EMP/흑점) — 회색 바
                 Widgets.FillableBar(barRect, 1f, BarEmpTex, BarEmptyTex, doBorder: true);
@@ -111,7 +118,7 @@ namespace SimpleSlaveryCollars.Gizmos
             if (Mouse.IsOver(outerRect))
             {
                 Widgets.DrawHighlight(outerRect);
-                TooltipHandler.TipRegion(outerRect, GetTooltip(empDisabled));
+                TooltipHandler.TipRegion(outerRect, GetTooltip(suspended, empDisabled));
             }
 
             return new GizmoResult(GizmoState.Clear);
@@ -138,8 +145,11 @@ namespace SimpleSlaveryCollars.Gizmos
         }
 
         /// <summary>툴팁 생성.</summary>
-        private string GetTooltip(bool empDisabled)
+        private string GetTooltip(bool suspended, bool empDisabled)
         {
+            if (suspended)
+                return "SSC_Collar_Suspended_Tooltip".Translate();
+
             if (empDisabled)
             {
                 // 흑점이면 잔여 시간 없음, EMP면 잔여 시간 표시

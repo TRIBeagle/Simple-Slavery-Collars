@@ -225,6 +225,9 @@ namespace SimpleSlaveryCollars
         /// </summary>
         protected override void TickInterval(int delta)
         {
+            // 동면관(Suspended) 상태면 소모/쿨다운 정지
+            if (Wearer != null && Wearer.Suspended) return;
+
             // EMP 쿨다운 감소
             if (empDisabledTicks > 0)
                 empDisabledTicks = Mathf.Max(0, empDisabledTicks - delta);

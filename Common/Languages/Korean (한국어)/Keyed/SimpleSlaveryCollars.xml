@@ -37,6 +37,8 @@
 	<SSC_Collar_DrainIdle>소모량 (대기): {0} Wd/일</SSC_Collar_DrainIdle>
 	<SSC_Collar_DrainActive>소모량 (작동): {0} Wd/일</SSC_Collar_DrainActive>
 	<SSC_Collar_RechargeThreshold>충전 임계값</SSC_Collar_RechargeThreshold>
+	<SSC_Collar_Suspended>동면 중</SSC_Collar_Suspended>
+	<SSC_Collar_Suspended_Tooltip>착용자가 동면 상태 — 목걸이 비활성.</SSC_Collar_Suspended_Tooltip>
 	<SSC_Collar_Inoperable>목걸이 작동 불가 (충전 부족/전자기 교란)</SSC_Collar_Inoperable>
 
 	<!-- ===== 원격 — 레거시 모드 ===== -->
