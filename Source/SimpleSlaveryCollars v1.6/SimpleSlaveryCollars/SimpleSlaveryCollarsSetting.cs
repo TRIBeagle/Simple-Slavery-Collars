@@ -1,4 +1,4 @@
-// SimpleSlaveryCollars | Core | SimpleSlaveryCollars_Setting.cs
+// SimpleSlaveryCollars | Core | SimpleSlaveryCollarsSetting.cs
 // 목적   : 모드 옵션 저장/로드 및 설정 UI 제공
 // 용도   : RimWorld ModSettings 확장
 // 주의   : Reset 버튼 클릭 시 모든 값 기본값으로 복원

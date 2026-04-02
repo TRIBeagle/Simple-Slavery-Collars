@@ -116,8 +116,8 @@
     <Compile Include="Records\RecordWorker_TimeAsSlave.cs" />
     <Compile Include="Precepts\RoleRequirement_NotSlave.cs" />
     <Compile Include="Precepts\RoleRequirement_SlaveStage.cs" />
-    <Compile Include="SimpleSlaveryCollars_Mod.cs" />
-    <Compile Include="SimpleSlaveryCollars_Setting.cs" />
+    <Compile Include="SimpleSlaveryCollarsMod.cs" />
+    <Compile Include="SimpleSlaveryCollarsSetting.cs" />
     <Compile Include="Enums\SimpleSlaveryCollarType.cs" />
     <Compile Include="Debugs\SimpleSlaveryDebugActions.cs" />
     <Compile Include="Things\SlaveCollar_Crypto.cs" />
