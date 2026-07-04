@@ -9,7 +9,6 @@ using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Verse;
-using SimpleSlaveryCollars.Utilities;
 using SimpleSlaveryCollars.Gizmos;
 
 namespace SimpleSlaveryCollars

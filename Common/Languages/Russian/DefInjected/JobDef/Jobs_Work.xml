@@ -4,7 +4,6 @@
   <SetSlaveCollar.reportString>Настройка ошейника для TargetA.</SetSlaveCollar.reportString>
   <ShackleSlave.reportString>Регулировка кандалов для TargetA.</ShackleSlave.reportString>
   <ActivateRemoteCollar.reportString>Активация дистанционного ошейника на TargetA.</ActivateRemoteCollar.reportString>
-  <ActivateRemoteCollarGroup.reportString>Активация дистанционных ошейников на указанных целях.</ActivateRemoteCollarGroup.reportString>
   <RechargeSlaveCollar.reportString>Зарядка ошейника раба TargetA.</RechargeSlaveCollar.reportString>
   <SelfRechargeSlaveCollar.reportString>Самостоятельная зарядка ошейника на TargetA.</SelfRechargeSlaveCollar.reportString>
 

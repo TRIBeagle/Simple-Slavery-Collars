@@ -9,4 +9,27 @@
   <ExplosiveCollar.stages.2.description>Это кажется плохой идеей.</ExplosiveCollar.stages.2.description>
 
 
+
+  <!-- [보충] 영문 폴백 (프로젝트 규칙: EN 복사) -->
+  <EnslavedThought.stages.0.label>enslaved(1/5)</EnslavedThought.stages.0.label>
+  <EnslavedThought.stages.0.description>I've just been enslaved by these people. I can't believe this.</EnslavedThought.stages.0.description>
+  <EnslavedThought.stages.1.label>enslaved(2/5)</EnslavedThought.stages.1.label>
+  <EnslavedThought.stages.1.description>I'm being kept as a slave. I just wish I could be let free.</EnslavedThought.stages.1.description>
+  <EnslavedThought.stages.2.label>enslaved(3/5)</EnslavedThought.stages.2.label>
+  <EnslavedThought.stages.2.description>I feel like I'm never going to be free again.</EnslavedThought.stages.2.description>
+  <EnslavedThought.stages.3.label>enslaved(4/5)</EnslavedThought.stages.3.label>
+  <EnslavedThought.stages.3.description>I don't even know what it's like to be free anymore.</EnslavedThought.stages.3.description>
+  <EnslavedThought.stages.4.label>stockholm syndrome(5/5)</EnslavedThought.stages.4.label>
+  <EnslavedThought.stages.4.description>These people aren't so bad after all.</EnslavedThought.stages.4.description>
+  <SlaveCollar.stages.0.label>slave collar</SlaveCollar.stages.0.label>
+  <SlaveCollar.stages.0.description>They've put an slave collar around my neck.</SlaveCollar.stages.0.description>
+  <SlaveCollar.stages.1.label>slave collar</SlaveCollar.stages.1.label>
+  <SlaveCollar.stages.1.description>I'm used to wearing collar now.</SlaveCollar.stages.1.description>
+  <SlaveCollar.stages.2.label>slave collar(masochist)</SlaveCollar.stages.2.label>
+  <SlaveCollar.stages.2.description>It feels good to wear.</SlaveCollar.stages.2.description>
+  <SlaveCollar.stages.3.label>slave collar(colonist)</SlaveCollar.stages.3.label>
+  <SlaveCollar.stages.3.description>I'm not a slave!</SlaveCollar.stages.3.description>
+  <WasEnslaved_Assimilation.stages.0.label>was enslaved(Assimilation)</WasEnslaved_Assimilation.stages.0.label>
+  <WasEnslaved_Assimilation.stages.0.description>I'm finally a member of the settlement.</WasEnslaved_Assimilation.stages.0.description>
+
 </LanguageData>

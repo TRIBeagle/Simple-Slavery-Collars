@@ -4,7 +4,6 @@
   <SetSlaveCollar.reportString>{TargetA}에게 노예 목걸이 조정 중</SetSlaveCollar.reportString>
   <ShackleSlave.reportString>{TargetA}에게 족쇄 조정 중</ShackleSlave.reportString>
   <ActivateRemoteCollar.reportString>{TargetA}에서 원격 노예 목걸이 작동 중</ActivateRemoteCollar.reportString>
-  <ActivateRemoteCollarGroup.reportString>지정된 인원에게 원격 노예 목걸이 작동 중</ActivateRemoteCollarGroup.reportString>
   <RechargeSlaveCollar.reportString>{TargetA}의 노예 목걸이 충전 중</RechargeSlaveCollar.reportString>
   <SelfRechargeSlaveCollar.reportString>{TargetA}에서 목걸이 자가 충전 중</SelfRechargeSlaveCollar.reportString>
 

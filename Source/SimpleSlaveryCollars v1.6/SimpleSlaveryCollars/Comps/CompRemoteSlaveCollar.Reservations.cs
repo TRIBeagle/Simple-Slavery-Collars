@@ -32,24 +32,6 @@ namespace SimpleSlaveryCollars
             }
         }
 
-        /// <summary>그룹 대상에 동일 액션 예약(기존 예약 초기화 후 재설정).</summary>
-        public void ReserveJobForGroup(List<Pawn> targetPawns, RemoteCollarAction actionType)
-        {
-            reservedPawns.Clear();
-            foreach (var pawn in targetPawns)
-            {
-                reservedPawns[pawn] = actionType;
-            }
-            string actionTypeLabel = ("SSC_Action_" + actionType).Translate();
-            groupJobPending = true;
-            groupJobActionType = actionType;
-
-            Messages.Message(
-                "SSC_Remote_GroupReserved".Translate(targetPawns.Count, actionTypeLabel),
-                MessageTypeDefOf.TaskCompletion
-            );
-        }
-
         /// <summary>해당 Pawn이 예약되어 있는지.</summary>
         public bool IsPawnReserved(Pawn pawn)
         {
@@ -74,26 +56,29 @@ namespace SimpleSlaveryCollars
             return reservedPawns.Keys;
         }
 
-        /// <summary>그룹 예약 취소(해당 액션 타입과 일치할 때만 제거).</summary>
-        public void CancelReservationsForGroup(List<Pawn> targetPawns, RemoteCollarAction actionType)
+        /// <summary>예약이 하나라도 있는지(값싼 조기 탈락용).</summary>
+        public bool HasAnyReservation => reservedPawns.Count > 0;
+
+        /// <summary>
+        /// null/사망/소멸된 예약 Pawn을 정리한다.
+        /// 로드 직후(참조 해제 실패로 null 키 발생 가능) 및 런타임 stale 방지용.
+        /// </summary>
+        public void PruneInvalidReservations()
         {
-            int cancelled = 0;
-            foreach (var pawn in targetPawns)
+            if (reservedPawns.Count == 0) return;
+
+            List<Pawn> invalid = null;
+            foreach (var kv in reservedPawns)
             {
-                if (reservedPawns.TryGetValue(pawn, out var reservedAction))
-                {
-                    if (reservedAction == actionType)
-                    {
-                        reservedPawns.Remove(pawn);
-                        cancelled++;
-                    }
-                }
+                var p = kv.Key;
+                if (p == null || p.Dead || p.Destroyed)
+                    (invalid ?? (invalid = new List<Pawn>())).Add(p);
             }
-            string actionTypeLabel = ("SSC_Action_" + actionType).Translate();
-            Messages.Message(
-                "SSC_Remote_AllCancelled".Translate(cancelled, actionTypeLabel),
-                MessageTypeDefOf.RejectInput
-            );
+            if (invalid != null)
+            {
+                for (int i = 0; i < invalid.Count; i++)
+                    reservedPawns.Remove(invalid[i]);
+            }
         }
         #endregion
     }

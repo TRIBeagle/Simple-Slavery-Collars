@@ -27,12 +27,10 @@
 
 	<!-- ===== Collar — Charge / Disruption / Gizmo ===== -->
 	<SSC_Collar_Disrupted>EM Disrupted</SSC_Collar_Disrupted>
-	<SSC_Collar_Unlimited>Unlimited</SSC_Collar_Unlimited>
 	<SSC_Collar_Arm>Arm</SSC_Collar_Arm>
 	<SSC_Collar_Disarm>Disarm</SSC_Collar_Disarm>
 	<SSC_Collar_DisruptedEmp_Tooltip>Disabled by EMP (remaining: {0})</SSC_Collar_DisruptedEmp_Tooltip>
 	<SSC_Collar_DisruptedFlare_Tooltip>Disabled by solar flare</SSC_Collar_DisruptedFlare_Tooltip>
-	<SSC_Collar_Unlimited_Tooltip>Charging system disabled — unlimited operation</SSC_Collar_Unlimited_Tooltip>
 	<SSC_Collar_Charge_Tooltip>Charge: {0} / {1} Wd</SSC_Collar_Charge_Tooltip>
 	<SSC_Collar_DrainIdle>Drain (idle): {0} Wd/day</SSC_Collar_DrainIdle>
 	<SSC_Collar_DrainActive>Drain (active): {0} Wd/day</SSC_Collar_DrainActive>
@@ -74,30 +72,7 @@
 	<SSC_Console_PawnType_Slave>Slave</SSC_Console_PawnType_Slave>
 	<SSC_Console_PawnType_Prisoner>Prisoner</SSC_Console_PawnType_Prisoner>
 
-	<!-- ===== Console — Select Mode ===== -->
-	<SSC_Console_ExplosiveArm>Arm Collar (Select)</SSC_Console_ExplosiveArm>
-	<SSC_Console_ExplosiveArm_Desc>Select pawns wearing explosive collars to arm them for detonation.</SSC_Console_ExplosiveArm_Desc>
-	<SSC_Console_ExplosiveDisarm>Disarm Collar (Select)</SSC_Console_ExplosiveDisarm>
-	<SSC_Console_ExplosiveDisarm_Desc>Select pawns wearing explosive collars to disarm them.</SSC_Console_ExplosiveDisarm_Desc>
-	<SSC_Console_ExplosiveDetonate>Detonate (Select)</SSC_Console_ExplosiveDetonate>
-	<SSC_Console_ExplosiveDetonate_Desc>Select armed explosive collar wearers to detonate their collars.</SSC_Console_ExplosiveDetonate_Desc>
-	<SSC_Console_ElectricArm>Zap (Select)</SSC_Console_ElectricArm>
-	<SSC_Console_ElectricArm_Desc>Select pawns wearing shock collars to zap them into unconsciousness.</SSC_Console_ElectricArm_Desc>
-	<SSC_Console_ElectricDisarm>Disarm Shock Collar (Select)</SSC_Console_ElectricDisarm>
-	<SSC_Console_ElectricDisarm_Desc>Select pawns wearing shock collars to disarm them.</SSC_Console_ElectricDisarm_Desc>
-	<SSC_Console_CryptoArm>Freeze (Select)</SSC_Console_CryptoArm>
-	<SSC_Console_CryptoArm_Desc>Select pawns wearing cryo collars to freeze them in place.</SSC_Console_CryptoArm_Desc>
-	<SSC_Console_CryptoDisarm>Disarm Cryo Collar (Select)</SSC_Console_CryptoDisarm>
-	<SSC_Console_CryptoDisarm_Desc>Select pawns wearing cryo collars to disarm them.</SSC_Console_CryptoDisarm_Desc>
-
 	<!-- ===== Remote — Group UI ===== -->
-	<SSC_Remote_GroupAll>All pawns</SSC_Remote_GroupAll>
-	<SSC_Remote_GroupSlaves>Slaves</SSC_Remote_GroupSlaves>
-	<SSC_Remote_GroupPrisoners>Prisoners</SSC_Remote_GroupPrisoners>
-	<SSC_Remote_GroupColonists>Colonists </SSC_Remote_GroupColonists>
-	<SSC_Remote_GroupSlavesAndPrisoners>Slaves + prisoners</SSC_Remote_GroupSlavesAndPrisoners>
-	<SSC_Remote_ExecuteForGroup>Execute on all selected group members</SSC_Remote_ExecuteForGroup>
-	<SSC_Remote_CancelAll>Cancel all reservations for selected group</SSC_Remote_CancelAll>
 	<SSC_Remote_NoEligiblePawn>There are no eligible pawns in the selected group for this operation.</SSC_Remote_NoEligiblePawn>
 
 	<!-- ===== Remote — Reservation Messages ===== -->
@@ -105,7 +80,6 @@
 	<SSC_Remote_GroupReserved>{1} operation(s) have been scheduled for {0} pawn(s).</SSC_Remote_GroupReserved>
 	<SSC_Remote_AlreadyReserved>This operation has already been scheduled.</SSC_Remote_AlreadyReserved>
 	<SSC_Remote_AlreadyReservedShort>(Scheduled)</SSC_Remote_AlreadyReservedShort>
-	<SSC_Remote_AllCancelled>All scheduled {1} operation(s) for {0} pawn(s) have been cancelled.</SSC_Remote_AllCancelled>
 
 	<!-- ===== Remote — Action Labels ===== -->
 	<SSC_Action_ArmExplosive>Install explosive collar</SSC_Action_ArmExplosive>
@@ -133,11 +107,6 @@
 	<SSC_Job_SetCollar>{0} has {1} wear a slave collar.</SSC_Job_SetCollar>
 	<SSC_Job_SetCollarFailed>{0} is trying to wear a slave collar to {1}.</SSC_Job_SetCollarFailed>
 	<SSC_Migration_Done>{0}: migrated legacy slave-time record to Comp</SSC_Migration_Done>
-
-	<!-- ===== Role Requirements ===== -->
-	<SSC_Role_NotSlave>Must not be slave</SSC_Role_NotSlave>
-	<SSC_Role_SlaveStage>Must be at least slave stage 5</SSC_Role_SlaveStage>
-	<SSC_Role_NoAssignable>No assignable roles are available for this slave.</SSC_Role_NoAssignable>
 
 	<!-- ===== Settings ===== -->
 	<SSC_Setting_ShacklesDefault_Title>Shackles Default</SSC_Setting_ShacklesDefault_Title>

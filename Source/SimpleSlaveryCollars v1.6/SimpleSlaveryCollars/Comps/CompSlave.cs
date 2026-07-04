@@ -52,9 +52,6 @@ namespace SimpleSlaveryCollars
 
         // ── 프로퍼티: 시간 ──
 
-        /// <summary>[읽기전용] null: 미설정, 값 존재 시 누적 틱.</summary>
-        public float? TimeAsSlaveTicksNullable => _timeAsSlaveTicks < 0f ? (float?)null : _timeAsSlaveTicks;
-
         /// <summary>[읽기전용] 미설정이면 0으로 간주한 누적 틱.</summary>
         public float TimeAsSlaveTicks => _timeAsSlaveTicks < 0f ? 0f : _timeAsSlaveTicks;
 
@@ -85,6 +82,8 @@ namespace SimpleSlaveryCollars
         /// </summary>
         public override void PostExposeData()
         {
+            base.PostExposeData();
+
             // 시간 누적 필드
             Scribe_Values.Look(ref _timeAsSlaveTicks, "ssc_timeAsSlaveTicks", -1f);
             Scribe_Values.Look(ref _lastGameTick, "ssc_lastGameTick", -1);

@@ -643,10 +643,6 @@ namespace SimpleSlaveryCollars.Gizmos
             for (int i = 0; i < allReserved.Count; i++)
                 _comp.ReleaseReservation(allReserved[i]);
 
-            // 그룹 Job 대기 중이면 함께 해제
-            if (_comp.groupJobPending)
-                _comp.groupJobPending = false;
-
             if (count > 0)
             {
                 Messages.Message(

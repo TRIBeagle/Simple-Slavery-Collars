@@ -101,7 +101,6 @@
     <Compile Include="Patches\Patch_GenGuest_SlaveRelease.cs" />
     <Compile Include="Hediffs\Hediff_CryptoStasis.cs" />
     <Compile Include="Jobs\JobDriver_ActivateRemoteCollar.cs" />
-    <Compile Include="Jobs\JobDriver_ActivateRemoteCollarGroup.cs" />
     <Compile Include="Jobs\JobDriver_SetSlaveCollar.cs" />
     <Compile Include="Jobs\WorkGiver_ActivateRemoteCollar.cs" />
     <Compile Include="Jobs\WorkGiver_Warden_ShackleSlave.cs" />

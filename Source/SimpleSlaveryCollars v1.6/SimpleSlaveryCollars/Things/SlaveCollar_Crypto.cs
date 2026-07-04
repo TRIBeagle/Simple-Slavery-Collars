@@ -16,6 +16,8 @@ namespace SimpleSlaveryCollars
         public bool armed = false;
         // 이펙트 쿨다운 — 저장 불필요 (시각 효과 전용)
         private int _fleckCooldown;
+        // Hediff 존재 보장/침대 자동해제 검사 간격 카운터 — 저장 불필요 (성능)
+        private int _stasisCheckCooldown;
         // 로드 후 1회 일관성 검증 플래그 — 저장 불필요
         private bool _postLoadValidated;
 
@@ -78,20 +80,31 @@ namespace SimpleSlaveryCollars
         /// </summary>
         public void CryptoStasis()
         {
-            Hediff_CryptoStasis stasisHediff = null;
-            if (!Wearer.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Crypto_Stasis))
+            // [성능] Hediff 존재 보장 + 침대 자동해제 검사는 매 틱 불필요 — 30틱 간격으로만 수행.
+            // 정신상태 강제(아래)는 값싸므로 매 틱 유지해 동결 상태를 즉시 재확립.
+            if (_stasisCheckCooldown <= 0)
             {
-                Wearer.health.AddHediff(SimpleSlaveryDefOf.Crypto_Stasis);
-                stasisHediff = Wearer.health.hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Crypto_Stasis) as Hediff_CryptoStasis;
-                // 캐스트 실패 방어 — XML에서 hediffClass가 Hediff_CryptoStasis가 아니면 null
-                stasisHediff?.SaveMemory();
+                _stasisCheckCooldown = 30;
+
+                if (!Wearer.health.hediffSet.HasHediff(SimpleSlaveryDefOf.Crypto_Stasis))
+                {
+                    Wearer.health.AddHediff(SimpleSlaveryDefOf.Crypto_Stasis);
+                    // 캐스트 실패 방어 — XML에서 hediffClass가 Hediff_CryptoStasis가 아니면 null
+                    var stasisHediff = Wearer.health.hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Crypto_Stasis) as Hediff_CryptoStasis;
+                    stasisHediff?.SaveMemory();
+                }
+                if (Wearer.InBed())
+                {
+                    armed = false;
+                    RevertMentalState();
+                    return;
+                }
             }
-            if (Wearer.InBed())
+            else
             {
-                armed = false;
-                RevertMentalState();
-                return;
+                _stasisCheckCooldown--;
             }
+
             // mindState/mentalStateHandler null 방어 — 로딩 중, 디스폰 직후 등
             if (Wearer.mindState?.mentalStateHandler == null) return;
             if (Wearer.mindState.mentalStateHandler.CurStateDef != SimpleSlaveryDefOf.CryptoStasis)

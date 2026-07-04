@@ -265,9 +265,6 @@ namespace SimpleSlaveryCollars
             return actualWd;
         }
 
-        /// <summary>충전량 퍼센트 (0~100).</summary>
-        public int ChargePercent => Mathf.RoundToInt(charge * 100f);
-
         /// <summary>의상 정보창에 배터리 용량/소모 속도를 보호막 벨트 스타일로 표기.</summary>
         public override IEnumerable<StatDrawEntry> SpecialDisplayStats()
         {

@@ -27,12 +27,10 @@
 
 	<!-- ===== 项圈 — 充电 / 电磁干扰 / Gizmo ===== -->
 	<SSC_Collar_Disrupted>EM Disrupted</SSC_Collar_Disrupted>
-	<SSC_Collar_Unlimited>Unlimited</SSC_Collar_Unlimited>
 	<SSC_Collar_Arm>Arm</SSC_Collar_Arm>
 	<SSC_Collar_Disarm>Disarm</SSC_Collar_Disarm>
 	<SSC_Collar_DisruptedEmp_Tooltip>Disabled by EMP (remaining: {0})</SSC_Collar_DisruptedEmp_Tooltip>
 	<SSC_Collar_DisruptedFlare_Tooltip>Disabled by solar flare</SSC_Collar_DisruptedFlare_Tooltip>
-	<SSC_Collar_Unlimited_Tooltip>Charging system disabled — unlimited operation</SSC_Collar_Unlimited_Tooltip>
 	<SSC_Collar_Charge_Tooltip>Charge: {0} / {1} Wd</SSC_Collar_Charge_Tooltip>
 	<SSC_Collar_DrainIdle>Drain (idle): {0} Wd/day</SSC_Collar_DrainIdle>
 	<SSC_Collar_DrainActive>Drain (active): {0} Wd/day</SSC_Collar_DrainActive>
@@ -75,29 +73,8 @@
 	<SSC_Console_PawnType_Prisoner>囚犯</SSC_Console_PawnType_Prisoner>
 
 	<!-- ===== 控制台 — 选择模式 ===== -->
-	<SSC_Console_ExplosiveArm>远程项圈武装（选择）</SSC_Console_ExplosiveArm>
-	<SSC_Console_ExplosiveArm_Desc>从佩戴爆炸性项圈的人员列表中选择目标来下达武装命令。</SSC_Console_ExplosiveArm_Desc>
-	<SSC_Console_ExplosiveDisarm>远程项圈解除武装（选择）</SSC_Console_ExplosiveDisarm>
-	<SSC_Console_ExplosiveDisarm_Desc>从佩戴爆炸性项圈的人员列表中选择目标来下达解除命令。</SSC_Console_ExplosiveDisarm_Desc>
-	<SSC_Console_ExplosiveDetonate>远程引爆（选择）</SSC_Console_ExplosiveDetonate>
-	<SSC_Console_ExplosiveDetonate_Desc>从已武装爆炸性项圈的人员列表中选择目标来下达引爆命令。</SSC_Console_ExplosiveDetonate_Desc>
-	<SSC_Console_ElectricArm>远程压制（选择）</SSC_Console_ElectricArm>
-	<SSC_Console_ElectricArm_Desc>从佩戴电击项圈的人员列表中选择目标来下达压制命令。</SSC_Console_ElectricArm_Desc>
-	<SSC_Console_ElectricDisarm>远程压制解除（选择）</SSC_Console_ElectricDisarm>
-	<SSC_Console_ElectricDisarm_Desc>从佩戴电击项圈的人员列表中选择目标来下达解除命令。</SSC_Console_ElectricDisarm_Desc>
-	<SSC_Console_CryptoArm>远程冻结（选择）</SSC_Console_CryptoArm>
-	<SSC_Console_CryptoArm_Desc>从佩戴冷冻项圈的人员列表中选择目标来下达冻结命令。</SSC_Console_CryptoArm_Desc>
-	<SSC_Console_CryptoDisarm>远程冻结解除（选择）</SSC_Console_CryptoDisarm>
-	<SSC_Console_CryptoDisarm_Desc>从佩戴冷冻项圈的人员列表中选择目标来下达解除命令。</SSC_Console_CryptoDisarm_Desc>
 
 	<!-- ===== 远程 — 分组 UI ===== -->
-	<SSC_Remote_GroupAll>所有人员</SSC_Remote_GroupAll>
-	<SSC_Remote_GroupSlaves>奴隶</SSC_Remote_GroupSlaves>
-	<SSC_Remote_GroupPrisoners>囚犯</SSC_Remote_GroupPrisoners>
-	<SSC_Remote_GroupColonists>殖民者</SSC_Remote_GroupColonists>
-	<SSC_Remote_GroupSlavesAndPrisoners>奴隶+囚犯</SSC_Remote_GroupSlavesAndPrisoners>
-	<SSC_Remote_ExecuteForGroup>对选定组全体执行</SSC_Remote_ExecuteForGroup>
-	<SSC_Remote_CancelAll>取消选定组全体预约</SSC_Remote_CancelAll>
 	<SSC_Remote_NoEligiblePawn>选定组中没有符合此操作的对象。</SSC_Remote_NoEligiblePawn>
 
 	<!-- ===== 远程 — 预约消息 ===== -->
@@ -105,7 +82,6 @@
 	<SSC_Remote_GroupReserved>已为{0}人预约{1}操作。</SSC_Remote_GroupReserved>
 	<SSC_Remote_AlreadyReserved>操作已预约。</SSC_Remote_AlreadyReserved>
 	<SSC_Remote_AlreadyReservedShort>（已预约）</SSC_Remote_AlreadyReservedShort>
-	<SSC_Remote_AllCancelled>已取消对{0}人的{1}操作预约。</SSC_Remote_AllCancelled>
 
 	<!-- ===== 远程 — 动作标签 ===== -->
 	<SSC_Action_ArmExplosive>爆炸性项圈武装</SSC_Action_ArmExplosive>
@@ -135,9 +111,6 @@
 	<SSC_Migration_Done>{0}：已将旧版奴隶时间记录迁移至组件</SSC_Migration_Done>
 
 	<!-- ===== 角色要求 ===== -->
-	<SSC_Role_NotSlave>必须不是奴隶</SSC_Role_NotSlave>
-	<SSC_Role_SlaveStage>奴隶必须已同化至定居点</SSC_Role_SlaveStage>
-	<SSC_Role_NoAssignable>该奴隶没有可分配的角色。</SSC_Role_NoAssignable>
 
 	<!-- ===== 设置 ===== -->
 	<SSC_Setting_ShacklesDefault_Title>脚镣默认设置</SSC_Setting_ShacklesDefault_Title>

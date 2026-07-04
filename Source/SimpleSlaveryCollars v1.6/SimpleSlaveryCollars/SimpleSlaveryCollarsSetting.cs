@@ -5,7 +5,6 @@
 // 저장   : Scribe_Values 통해 모든 옵션 직렬화
 
 using System;
-using RimWorld;
 using UnityEngine;
 using Verse;
 

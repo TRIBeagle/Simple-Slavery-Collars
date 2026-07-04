@@ -26,7 +26,8 @@ namespace SimpleSlaveryCollars.Patches
         {
             try
             {
-                if (RestraintsUtility.InRestraints(pawn) && pawn.IsSlaveOfColony)
+                // [성능] 값싼 IsSlaveOfColony를 먼저 검사해 비싼 InRestraints 호출을 회피
+                if (pawn.IsSlaveOfColony && RestraintsUtility.InRestraints(pawn))
                 {
                     __result = true;
                 }

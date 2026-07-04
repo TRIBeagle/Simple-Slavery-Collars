@@ -27,12 +27,10 @@
 
 	<!-- ===== 칼라 — 충전 / 전자기 교란 / 기즈모 ===== -->
 	<SSC_Collar_Disrupted>전자기 교란</SSC_Collar_Disrupted>
-	<SSC_Collar_Unlimited>무제한</SSC_Collar_Unlimited>
 	<SSC_Collar_Arm>무장</SSC_Collar_Arm>
 	<SSC_Collar_Disarm>해제</SSC_Collar_Disarm>
 	<SSC_Collar_DisruptedEmp_Tooltip>EMP로 비활성화 중 (남은 시간: {0})</SSC_Collar_DisruptedEmp_Tooltip>
 	<SSC_Collar_DisruptedFlare_Tooltip>흑점 폭발로 비활성화 중</SSC_Collar_DisruptedFlare_Tooltip>
-	<SSC_Collar_Unlimited_Tooltip>충전 시스템 꺼짐 — 무제한 작동</SSC_Collar_Unlimited_Tooltip>
 	<SSC_Collar_Charge_Tooltip>충전량: {0} / {1} Wd</SSC_Collar_Charge_Tooltip>
 	<SSC_Collar_DrainIdle>소모량 (대기): {0} Wd/일</SSC_Collar_DrainIdle>
 	<SSC_Collar_DrainActive>소모량 (작동): {0} Wd/일</SSC_Collar_DrainActive>
@@ -75,29 +73,8 @@
 	<SSC_Console_PawnType_Prisoner>죄수</SSC_Console_PawnType_Prisoner>
 
 	<!-- ===== 콘솔 — 선택 모드 ===== -->
-	<SSC_Console_ExplosiveArm>원격 목걸이 무장 (선택)</SSC_Console_ExplosiveArm>
-	<SSC_Console_ExplosiveArm_Desc>폭발성 목걸이를 착용한 인원 목록에서 대상을 선택해 무장 명령을 내립니다.</SSC_Console_ExplosiveArm_Desc>
-	<SSC_Console_ExplosiveDisarm>원격 목걸이 무장 해제 (선택)</SSC_Console_ExplosiveDisarm>
-	<SSC_Console_ExplosiveDisarm_Desc>폭발성 목걸이를 착용한 인원 목록에서 대상을 선택해 해제 명령을 내립니다.</SSC_Console_ExplosiveDisarm_Desc>
-	<SSC_Console_ExplosiveDetonate>원격 폭발 (선택)</SSC_Console_ExplosiveDetonate>
-	<SSC_Console_ExplosiveDetonate_Desc>폭발성 목걸이 장전 상태인 인원 목록에서 대상을 선택해 폭발 명령을 내립니다.</SSC_Console_ExplosiveDetonate_Desc>
-	<SSC_Console_ElectricArm>원격 제압 (선택)</SSC_Console_ElectricArm>
-	<SSC_Console_ElectricArm_Desc>전기 목걸이를 착용한 인원 목록에서 대상을 선택해 제압 명령을 내립니다.</SSC_Console_ElectricArm_Desc>
-	<SSC_Console_ElectricDisarm>원격 제압 해제 (선택)</SSC_Console_ElectricDisarm>
-	<SSC_Console_ElectricDisarm_Desc>전기 목걸이를 착용한 인원 목록에서 대상을 선택해 해제 명령을 내립니다.</SSC_Console_ElectricDisarm_Desc>
-	<SSC_Console_CryptoArm>원격 동결 (선택)</SSC_Console_CryptoArm>
-	<SSC_Console_CryptoArm_Desc>암호화 목걸이를 착용한 인원 목록에서 대상을 선택해 동결 명령을 내립니다.</SSC_Console_CryptoArm_Desc>
-	<SSC_Console_CryptoDisarm>원격 동결 해제 (선택)</SSC_Console_CryptoDisarm>
-	<SSC_Console_CryptoDisarm_Desc>암호화 목걸이를 착용한 인원 목록에서 대상을 선택해 해제 명령을 내립니다.</SSC_Console_CryptoDisarm_Desc>
 
 	<!-- ===== 원격 — 그룹 UI ===== -->
-	<SSC_Remote_GroupAll>모든 인원</SSC_Remote_GroupAll>
-	<SSC_Remote_GroupSlaves>노예</SSC_Remote_GroupSlaves>
-	<SSC_Remote_GroupPrisoners>죄수</SSC_Remote_GroupPrisoners>
-	<SSC_Remote_GroupColonists>정착민</SSC_Remote_GroupColonists>
-	<SSC_Remote_GroupSlavesAndPrisoners>노예+죄수</SSC_Remote_GroupSlavesAndPrisoners>
-	<SSC_Remote_ExecuteForGroup>선택한 그룹 전체 실행</SSC_Remote_ExecuteForGroup>
-	<SSC_Remote_CancelAll>선택한 그룹 전체 취소</SSC_Remote_CancelAll>
 	<SSC_Remote_NoEligiblePawn>선택한 그룹에 대해 작업을 지정할 수 있는 대상이 없습니다.</SSC_Remote_NoEligiblePawn>
 
 	<!-- ===== 원격 — 예약 메시지 ===== -->
@@ -105,7 +82,6 @@
 	<SSC_Remote_GroupReserved>{0}명에 대해 {1} 작업을 예약했습니다.</SSC_Remote_GroupReserved>
 	<SSC_Remote_AlreadyReserved>이미 예약된 작업입니다.</SSC_Remote_AlreadyReserved>
 	<SSC_Remote_AlreadyReservedShort>(예약됨)</SSC_Remote_AlreadyReservedShort>
-	<SSC_Remote_AllCancelled>{0}명에 대한 {1} 작업이 모두 취소되었습니다.</SSC_Remote_AllCancelled>
 
 	<!-- ===== 원격 — 액션 라벨 ===== -->
 	<SSC_Action_ArmExplosive>폭발성 목걸이 무장</SSC_Action_ArmExplosive>
@@ -135,9 +111,6 @@
 	<SSC_Migration_Done>{0}: 기존 노예 기간 기록을 Comp로 이전했습니다</SSC_Migration_Done>
 
 	<!-- ===== 역할 요구사항 ===== -->
-	<SSC_Role_NotSlave>노예가 아니어야 함</SSC_Role_NotSlave>
-	<SSC_Role_SlaveStage>노예가 정착지에 동화되어야 함</SSC_Role_SlaveStage>
-	<SSC_Role_NoAssignable>해당 노예에게 할당 가능한 역할이 없습니다.</SSC_Role_NoAssignable>
 
 	<!-- ===== 설정 ===== -->
 	<SSC_Setting_ShacklesDefault_Title>족쇄 기본값</SSC_Setting_ShacklesDefault_Title>

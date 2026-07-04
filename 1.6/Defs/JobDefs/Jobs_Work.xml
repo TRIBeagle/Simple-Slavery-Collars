@@ -18,13 +18,6 @@
         <playerInterruptible>true</playerInterruptible>
     </JobDef>
     <JobDef>
-        <defName>ActivateRemoteCollarGroup</defName>
-        <driverClass>SimpleSlaveryCollars.Jobs.JobDriver_ActivateRemoteCollarGroup</driverClass>
-        <reportString>Activating remote slave collars on designated targets.</reportString>
-		<casualInterruptible>false</casualInterruptible>
-        <playerInterruptible>true</playerInterruptible>
-    </JobDef>
-    <JobDef>
         <defName>RechargeSlaveCollar</defName>
         <driverClass>SimpleSlaveryCollars.Jobs.JobDriver_RechargeCollar</driverClass>
         <reportString>Recharging slave collar for TargetA.</reportString>

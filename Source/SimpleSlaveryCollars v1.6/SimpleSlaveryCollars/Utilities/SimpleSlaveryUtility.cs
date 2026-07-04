@@ -53,22 +53,6 @@ namespace SimpleSlaveryCollars.Utilities
         }
 
         /// <summary>
-        /// Pawn이 SlaveCollar를 착용 중인지 판정합니다.
-        /// </summary>
-        public static bool HasSlaveCollar(Pawn pawn)
-        {
-            if (pawn == null) return false;
-
-            if (pawn.apparel == null) return false;
-
-            foreach (var item in pawn.apparel.WornApparel)
-            {
-                if (IsSlaveCollar(item)) return true;
-            }
-            return false;
-        }
-
-        /// <summary>
         /// Pawn이 착용한 SlaveCollar 인스턴스를 반환합니다. 없으면 null을 반환합니다.
         /// </summary>
         public static Apparel GetSlaveCollar(Pawn pawn)
@@ -178,16 +162,6 @@ namespace SimpleSlaveryCollars.Utilities
         internal static TraitDef WimpTrait => _wimpTraitDef ?? (_wimpTraitDef = TraitDef.Named("Wimp"));
 
         /// <summary>
-        /// CompSlave 또는 Record를 기준으로 과거 노예 이력이 있는지 반환합니다.
-        /// </summary>
-        public static bool EverBeenSlave(Pawn pawn)
-        {
-            CompSlave comp = pawn?.TryGetComp<CompSlave>();
-            if (comp?.TimeAsSlaveTicks > 0f) return true;
-            return pawn?.records.GetAsInt(SimpleSlaveryDefOf.TimeAsSlave) > 0;
-        }
-
-        /// <summary>
         /// CompSlave(TimeAsSlaveTicks)를 우선으로 노예 경과 시간을 반환합니다. Comp 없으면 Record 폴백.
         /// </summary>
         public static float TimeAsSlave(Pawn pawn)
@@ -195,26 +169,6 @@ namespace SimpleSlaveryCollars.Utilities
             CompSlave comp = pawn?.TryGetComp<CompSlave>();
             if (comp != null) return comp.TimeAsSlaveTicks;
             return pawn?.records?.GetValue(SimpleSlaveryDefOf.TimeAsSlave) ?? 0f;
-        }
-
-        /// <summary>
-        /// 노예 경과 시간을 강제 설정합니다. Comp가 없을 경우 Record에 폴백 설정을 시도합니다.
-        /// </summary>
-        public static void SetTimeAsSlave(Pawn pawn, float ticks)
-        {
-            if (pawn == null) return;
-
-            CompSlave comp = pawn.TryGetComp<CompSlave>();
-            if (comp != null) { comp.SetTimeAsSlaveTicks(ticks); return; }
-
-            // 길고 복잡했던 리플렉션 코드를 SSC_ReflectionCache 호출 한 줄로 대체
-            if (pawn.records != null)
-            {
-                if (!SimpleSlaveryReflectionUtility.TrySetRecord(pawn.records, SimpleSlaveryDefOf.TimeAsSlave, Mathf.Max(0f, ticks)))
-                {
-                    Log.Warning("[SSC] SetTimeAsSlave fallback failed (safe to ignore).");
-                }
-            }
         }
 
         /// <summary>

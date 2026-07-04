@@ -14,4 +14,15 @@
   <Apparel_SlaveCollar_Crypto.comps.CompUsable.useLabel>Put the collar on the target</Apparel_SlaveCollar_Crypto.comps.CompUsable.useLabel>
 
 
+
+  <!-- [보충] 영문 폴백 (프로젝트 규칙: EN 복사) -->
+  <Apparel_SlaveCollar_Heavy.label>heavy slave collar</Apparel_SlaveCollar_Heavy.label>
+  <Apparel_SlaveCollar_Heavy.description>A metal collar fastened around the necks of slaves.</Apparel_SlaveCollar_Heavy.description>
+  <Apparel_SlaveCollar_Heavy.comps.CompUsable.useLabel>Put the collar on the target</Apparel_SlaveCollar_Heavy.comps.CompUsable.useLabel>
+  <Apparel_SlaveCollar_Tribal.label>tribal slave collar</Apparel_SlaveCollar_Tribal.label>
+  <Apparel_SlaveCollar_Tribal.description>A simple leather collar fastened around the necks of slaves.</Apparel_SlaveCollar_Tribal.description>
+  <Apparel_SlaveCollar_Tribal.comps.CompUsable.useLabel>Put the collar on the target</Apparel_SlaveCollar_Tribal.comps.CompUsable.useLabel>
+  <Apparel_BodyStrap.comps.CompUsable.useLabel>Put the strap on the target</Apparel_BodyStrap.comps.CompUsable.useLabel>
+  <Apparel_Collar.comps.CompUsable.useLabel>Put the collar on the target</Apparel_Collar.comps.CompUsable.useLabel>
+
 </LanguageData>

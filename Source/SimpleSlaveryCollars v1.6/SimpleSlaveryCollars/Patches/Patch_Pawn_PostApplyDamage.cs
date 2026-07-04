@@ -1,7 +1,7 @@
 // SimpleSlaveryCollars | Patches | Patch_Pawn_PostApplyDamage.cs
 // 목적 : Pawn이 EMP 데미지를 받으면 착용 중인 칼라를 일시 비활성화
 // 용도 : Harmony Postfix 패치. EMP 옵션 ON일 때만 작동
-// 주의 : DamageDef.isEMP 체크. 바닐라 EMP stun 기본 틱(180) 사용
+// 주의 : DamageDefOf.EMP 정확 비교(바닐라 StunHandler와 동일 방식). 바닐라 EMP stun 기본 틱(180) 사용
 
 using System;
 using HarmonyLib;
@@ -26,6 +26,7 @@ namespace SimpleSlaveryCollars.Patches
             try
             {
                 if (!SimpleSlaveryCollarsSetting.CollarDisruptionEnable) return;
+                // 바닐라 DamageDef에는 isEMP 플래그가 없어 EMP def 정확 비교로 판정(StunHandler와 동일)
                 if (dinfo.Def != DamageDefOf.EMP) return;
 
                 var collar = SimpleSlaveryUtility.GetSlaveCollar(__instance) as SlaveApparel;

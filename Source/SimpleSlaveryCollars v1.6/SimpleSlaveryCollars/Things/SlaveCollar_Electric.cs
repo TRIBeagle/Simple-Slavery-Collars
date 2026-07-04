@@ -5,7 +5,6 @@
 
 using RimWorld;
 using System.Collections.Generic;
-using UnityEngine;
 using Verse;
 using SimpleSlaveryCollars.Gizmos;
 using Verse.Sound;

@@ -49,7 +49,6 @@ Keys not listed here are **NEW** in 1.6 (no old equivalent).
 | SimpleSlaveryCollars_SlaveTime_YearQuadrumDays | SSC_SlaveTime_YearQuadrumDays |
 | SimpleSlaveryCollars_SlaveStageSuffix | SSC_Stage_Suffix |
 | SuppressionSlavestageFactor | SSC_Stage_SuppressionFactor |
-| SimpleSlaveryCollars_NoAssignableRole | SSC_Role_NoAssignable |
 
 ## Role Requirements (unchanged)
 
@@ -71,36 +70,10 @@ Keys not listed here are **NEW** in 1.6 (no old equivalent).
 | Label_CollarCrypto_Arm_Remote | SSC_Remote_CryptoArm |
 | Desc_CollarCrypto_Arm_Remote | SSC_Remote_CryptoArm_Desc |
 
-## Console — Select Mode
-
-| Old Key | New Key |
-|---------|---------|
-| Label_CollarExplosive_Arm_Console | SSC_Console_ExplosiveArm |
-| Desc_CollarExplosive_Arm_Console | SSC_Console_ExplosiveArm_Desc |
-| Label_CollarExplosive_Disarm_Console | SSC_Console_ExplosiveDisarm |
-| Desc_CollarExplosive_Disarm_Console | SSC_Console_ExplosiveDisarm_Desc |
-| Label_CollarExplosive_Detonate_Console | SSC_Console_ExplosiveDetonate |
-| Desc_CollarExplosive_Detonate_Console | SSC_Console_ExplosiveDetonate_Desc |
-| Label_CollarElectric_Arm_Console | SSC_Console_ElectricArm |
-| Desc_CollarElectric_Arm_Console | SSC_Console_ElectricArm_Desc |
-| Label_CollarElectric_Disarm_Console | SSC_Console_ElectricDisarm |
-| Desc_CollarElectric_Disarm_Console | SSC_Console_ElectricDisarm_Desc |
-| Label_CollarCrypto_Arm_Console | SSC_Console_CryptoArm |
-| Desc_CollarCrypto_Arm_Console | SSC_Console_CryptoArm_Desc |
-| Label_CollarCrypto_Disarm_Console | SSC_Console_CryptoDisarm |
-| Desc_CollarCrypto_Disarm_Console | SSC_Console_CryptoDisarm_Desc |
-
 ## Remote — Group UI
 
 | Old Key | New Key |
 |---------|---------|
-| RemoteCollar_Group_All | SSC_Remote_GroupAll |
-| RemoteCollar_Group_Slaves | SSC_Remote_GroupSlaves |
-| RemoteCollar_Group_Prisoners | SSC_Remote_GroupPrisoners |
-| RemoteCollar_Group_Colonists | SSC_Remote_GroupColonists |
-| RemoteCollar_Group_SlavesAndPrisoners | SSC_Remote_GroupSlavesAndPrisoners |
-| RemoteCollar_ExecuteForGroup | SSC_Remote_ExecuteForGroup |
-| RemoteCollar_CancelAllReservations | SSC_Remote_CancelAll |
 | RemoteCollar_NoEligiblePawn | SSC_Remote_NoEligiblePawn |
 
 ## Remote — Reservation Messages
@@ -111,7 +84,6 @@ Keys not listed here are **NEW** in 1.6 (no old equivalent).
 | RemoteCollar_GroupReserved | SSC_Remote_GroupReserved |
 | RemoteCollar_AlreadyReserved | SSC_Remote_AlreadyReserved |
 | RemoteCollar_AlreadyReservedShort | SSC_Remote_AlreadyReservedShort |
-| RemoteCollar_AllReservationsCancelled | SSC_Remote_AllCancelled |
 
 ## Remote — Action Labels
 
