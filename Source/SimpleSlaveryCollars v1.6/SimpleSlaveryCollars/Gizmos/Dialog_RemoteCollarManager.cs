@@ -24,7 +24,7 @@ namespace SimpleSlaveryCollars.Gizmos
         private bool _filterPrisoner;
         private readonly HashSet<System.Type> _filterCollarTypes = new HashSet<System.Type>();
 
-        /// <summary>알려진 칼라 종류. 새 칼라 추가 시 여기만 확장.</summary>
+        /// <summary>필터 체크박스용 칼라 종류 목록. 새 칼라 추가 시 이 배열 + 해당 클래스의 SlaveApparel 가상 멤버만 추가.</summary>
         private static readonly (System.Type type, string labelKey)[] KnownCollarTypes =
         {
             (typeof(SlaveCollar_Explosive), "SSC_Console_CollarExplosive"),
@@ -414,20 +414,21 @@ namespace SimpleSlaveryCollars.Gizmos
                     }
                 }
             }
-            else if (info.collar is SlaveCollar_Explosive)
+            else if (info.collar.DetonateAction.HasValue)
             {
-                // 폭발 무장: [해제] [폭발] 2개 — 반씩
+                // 폭발형 무장(해제+폭발): [해제] [폭발] 2개 — 반씩
                 float btnW = (totalW - gap) / 2f;
-                if (Widgets.ButtonText(new Rect(x, y, btnW, BtnH), "SSC_Collar_Disarm".Translate()))
+                var disarmAction = GetDisarmAction(info.collar);
+                if (disarmAction.HasValue && Widgets.ButtonText(new Rect(x, y, btnW, BtnH), "SSC_Collar_Disarm".Translate()))
                 {
-                    _comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DisarmExplosive);
+                    _comp.ReserveJobForPawn(info.pawn, disarmAction.Value);
                     InvalidateCache();
                 }
 
                 GUI.color = new Color(1f, 0.5f, 0.5f);
                 if (Widgets.ButtonText(new Rect(x + btnW + gap, y, btnW, BtnH), "SSC_Explosive_Detonate".Translate()))
                 {
-                    _comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DetonateExplosive);
+                    _comp.ReserveJobForPawn(info.pawn, info.collar.DetonateAction.Value);
                     InvalidateCache();
                 }
                 GUI.color = Color.white;
@@ -515,10 +516,10 @@ namespace SimpleSlaveryCollars.Gizmos
             {
                 var info = pawns[i];
                 if (_comp.IsPawnReserved(info.pawn)) continue;
-                if (!(info.collar is SlaveCollar_Explosive)) continue;
+                if (!info.collar.DetonateAction.HasValue) continue;
                 if (!info.collar.IsArmed) continue;
 
-                _comp.ReserveJobForPawn(info.pawn, RemoteCollarAction.DetonateExplosive);
+                _comp.ReserveJobForPawn(info.pawn, info.collar.DetonateAction.Value);
                 count++;
             }
             if (count > 0)
@@ -790,32 +791,14 @@ namespace SimpleSlaveryCollars.Gizmos
 
         #region 헬퍼 — 칼라↔액션 매핑
 
-        /// <summary>칼라 종류에 맞는 무장 액션 반환. 새 칼라 추가 시 여기만 확장.</summary>
-        private static RemoteCollarAction? GetArmAction(SlaveApparel collar)
-        {
-            if (collar is SlaveCollar_Explosive) return RemoteCollarAction.ArmExplosive;
-            if (collar is SlaveCollar_Electric) return RemoteCollarAction.ArmElectric;
-            if (collar is SlaveCollar_Crypto) return RemoteCollarAction.ArmCrypto;
-            return null;
-        }
+        /// <summary>칼라 종류에 맞는 무장 액션 반환. 종류별 로직은 SlaveApparel.ArmAction 오버라이드.</summary>
+        private static RemoteCollarAction? GetArmAction(SlaveApparel collar) => collar.ArmAction;
 
-        /// <summary>칼라 종류에 맞는 해제 액션 반환. 새 칼라 추가 시 여기만 확장.</summary>
-        private static RemoteCollarAction? GetDisarmAction(SlaveApparel collar)
-        {
-            if (collar is SlaveCollar_Explosive) return RemoteCollarAction.DisarmExplosive;
-            if (collar is SlaveCollar_Electric) return RemoteCollarAction.DisarmElectric;
-            if (collar is SlaveCollar_Crypto) return RemoteCollarAction.DisarmCrypto;
-            return null;
-        }
+        /// <summary>칼라 종류에 맞는 해제 액션 반환. 종류별 로직은 SlaveApparel.DisarmAction 오버라이드.</summary>
+        private static RemoteCollarAction? GetDisarmAction(SlaveApparel collar) => collar.DisarmAction;
 
-        /// <summary>정렬용 칼라 종류 키.</summary>
-        private static int GetCollarSortKey(SlaveApparel collar)
-        {
-            if (collar is SlaveCollar_Explosive) return 0;
-            if (collar is SlaveCollar_Electric) return 1;
-            if (collar is SlaveCollar_Crypto) return 2;
-            return 3;
-        }
+        /// <summary>정렬용 칼라 종류 키. 종류별 로직은 SlaveApparel.CollarSortKey 오버라이드.</summary>
+        private static int GetCollarSortKey(SlaveApparel collar) => collar.CollarSortKey;
 
         /// <summary>폰 이름 컬러링 (노예=금/죄수=빨강/식민=하늘). 노예 판정 먼저.</summary>
         private static string GetColoredLabel(Pawn pawn)
@@ -848,13 +831,10 @@ namespace SimpleSlaveryCollars.Gizmos
             return 3;
         }
 
-        /// <summary>칼라 종류 라벨.</summary>
+        /// <summary>칼라 종류 라벨. 종류별 로직은 SlaveApparel.TypeLabelKey 오버라이드.</summary>
         private static string GetCollarTypeLabel(SlaveApparel collar)
         {
-            if (collar is SlaveCollar_Explosive) return "SSC_Console_CollarExplosive".Translate();
-            if (collar is SlaveCollar_Electric) return "SSC_Console_CollarElectric".Translate();
-            if (collar is SlaveCollar_Crypto) return "SSC_Console_CollarCrypto".Translate();
-            return "?";
+            return collar.TypeLabelKey != null ? collar.TypeLabelKey.Translate().ToString() : "?";
         }
 
         #endregion

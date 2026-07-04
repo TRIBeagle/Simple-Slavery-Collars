@@ -29,22 +29,10 @@ namespace SimpleSlaveryCollars.Patches
         {
             try
             {
-                // GetSlaveCollar 1회만 호출 + is 패턴매칭으로 타입 분기
-                var collar = SimpleSlaveryUtility.GetSlaveCollar(__instance);
-                if (collar == null) return;
-
-                if (collar is SlaveCollar_Crypto crypto)
-                {
-                    crypto.armed = false;
-                    if (!__instance.Dead)
-                    {
-                        crypto.RevertMentalState();
-                    }
-                }
-                else if (collar is SlaveCollar_Electric electric)
-                {
-                    electric.armed = false;
-                }
+                // 종류별 스트립 처리는 SlaveApparel.NotifyStripped 오버라이드로 위임
+                // (폭발=유지, 감전=해제, 크립토=해제+정신상태 복원)
+                var collar = SimpleSlaveryUtility.GetSlaveCollar(__instance) as SlaveApparel;
+                collar?.NotifyStripped(__instance);
             }
             catch (Exception ex)
             {

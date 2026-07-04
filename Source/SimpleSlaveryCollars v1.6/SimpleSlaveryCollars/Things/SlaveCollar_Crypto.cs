@@ -13,7 +13,6 @@ namespace SimpleSlaveryCollars
 {
     public class SlaveCollar_Crypto : SlaveApparel
     {
-        public bool armed = false;
         // 이펙트 쿨다운 — 저장 불필요 (시각 효과 전용)
         private int _fleckCooldown;
         // Hediff 존재 보장/침대 자동해제 검사 간격 카운터 — 저장 불필요 (성능)
@@ -21,7 +20,24 @@ namespace SimpleSlaveryCollars
         // 로드 후 1회 일관성 검증 플래그 — 저장 불필요
         private bool _postLoadValidated;
 
-        public override bool IsArmed => armed;
+        public override RemoteCollarAction? ArmAction => RemoteCollarAction.ArmCrypto;
+        public override RemoteCollarAction? DisarmAction => RemoteCollarAction.DisarmCrypto;
+        public override int CollarSortKey => 2;
+        public override string TypeLabelKey => "SSC_Console_CollarCrypto";
+
+        /// <summary>무장은 armed만 올림(동결은 Tick에서 적용). 해제 시 정신상태 복원.</summary>
+        public override void SetArmed(bool active, Pawn pawn)
+        {
+            armed = active;
+            if (!active) RevertMentalStateFor(pawn);
+        }
+
+        /// <summary>스트립 시 무장 해제 + (생존 시) 정신상태 복원.</summary>
+        public override void NotifyStripped(Pawn pawn)
+        {
+            armed = false;
+            if (!pawn.Dead) RevertMentalStateFor(pawn);
+        }
 
 
         public override IEnumerable<Gizmo> SlaveGizmos()
@@ -37,17 +53,20 @@ namespace SimpleSlaveryCollars
             }
             // 1. Arm the collar
             yield return MakeArmedToggle("SSC_Crypto_Arm", "SSC_Crypto_Arm_Desc",
-                "UI/Commands/DetonateCollar_Crypto", () =>
-                {
-                    armed = !armed;
-                    if (!armed) RevertMentalState();
-                });
+                "UI/Commands/DetonateCollar_Crypto", () => SetArmed(!IsArmed, Wearer));
 
         }
 
-        public void RevertMentalState()
+        /// <summary>Wearer 기준 정신상태 복원(내부 호출용 래퍼).</summary>
+        public void RevertMentalState() => RevertMentalStateFor(Wearer);
+
+        /// <summary>
+        /// 지정 Pawn의 CryptoStasis Hediff 제거 + 이전 정신상태 복원 + 후유증(33%).
+        /// Wearer(RevertMentalState)와 Unequip/Strip 시점 pawn 인자 버전을 통합.
+        /// </summary>
+        private void RevertMentalStateFor(Pawn pawn)
         {
-            var hediffSet = Wearer?.health?.hediffSet;
+            var hediffSet = pawn?.health?.hediffSet;
             if (hediffSet == null)
                 return;
 
@@ -59,18 +78,18 @@ namespace SimpleSlaveryCollars
             var stasisHediff = cryptoStasis as Hediff_CryptoStasis;
             var savedMentalState = stasisHediff?.revertMentalStateDef;
 
-            if (Wearer.mindState?.mentalStateHandler != null)
+            if (pawn.mindState?.mentalStateHandler != null)
             {
                 if (savedMentalState != null)
-                    Wearer.mindState.mentalStateHandler.TryStartMentalState(savedMentalState, reason: null, forceWake: true, causedByMood: false, otherPawn: null, transitionSilently: true);
+                    pawn.mindState.mentalStateHandler.TryStartMentalState(savedMentalState, reason: null, forceWake: true, causedByMood: false, otherPawn: null, transitionSilently: true);
                 else
-                    Wearer.mindState.mentalStateHandler.Reset();
+                    pawn.mindState.mentalStateHandler.Reset();
             }
 
             // Hediff 제거 + 크립토슬립 후유증 (33%)
-            Wearer.health.RemoveHediff(cryptoStasis);
+            pawn.health.RemoveHediff(cryptoStasis);
             if (Rand.Value > 0.66f)
-                Wearer.health.AddHediff(HediffDefOf.CryptosleepSickness);
+                pawn.health.AddHediff(HediffDefOf.CryptosleepSickness);
         }
 
 
@@ -121,46 +140,15 @@ namespace SimpleSlaveryCollars
             }
         }
 
-        public override void ExposeData()
-        {
-            base.ExposeData();
-            Scribe_Values.Look(ref armed, "ssc_armed", false);
-
-            // [마이그레이션] 구버전 키 폴백 — 1.7에서 삭제
-            if (Scribe.mode == LoadSaveMode.LoadingVars && !armed)
-                Scribe_Values.Look(ref armed, "armed", false);
-        }
+        // armed(ssc_armed)는 베이스 SlaveApparel에서 저장/로드하므로 ExposeData 오버라이드 불필요.
 
         public override void Notify_Unequipped(Pawn pawn)
         {
-            base.Notify_Unequipped(pawn);
-            if (armed)
-            {
-                armed = false;
-                // Notify_Unequipped 시점에는 Wearer가 null일 수 있으므로 pawn 인자 사용
-                var hediffSet = pawn?.health?.hediffSet;
-                if (hediffSet != null)
-                {
-                    Hediff cryptoStasis = hediffSet.GetFirstHediffOfDef(SimpleSlaveryDefOf.Crypto_Stasis);
-                    if (cryptoStasis != null)
-                    {
-                        var stasisHediff = cryptoStasis as Hediff_CryptoStasis;
-                        var savedMentalState = stasisHediff?.revertMentalStateDef;
-
-                        if (pawn.mindState?.mentalStateHandler != null)
-                        {
-                            if (savedMentalState != null)
-                                pawn.mindState.mentalStateHandler.TryStartMentalState(savedMentalState, reason: null, forceWake: true, causedByMood: false, otherPawn: null, transitionSilently: true);
-                            else
-                                pawn.mindState.mentalStateHandler.Reset();
-                        }
-
-                        pawn.health.RemoveHediff(cryptoStasis);
-                        if (Rand.Value > 0.66f)
-                            pawn.health.AddHediff(HediffDefOf.CryptosleepSickness);
-                    }
-                }
-            }
+            bool wasArmed = armed;
+            base.Notify_Unequipped(pawn); // armed=false + 레지스트리 해제
+            // Notify_Unequipped 시점에는 Wearer가 null일 수 있으므로 pawn 인자 사용
+            if (wasArmed)
+                RevertMentalStateFor(pawn);
         }
 
         protected override void TickInterval(int delta)

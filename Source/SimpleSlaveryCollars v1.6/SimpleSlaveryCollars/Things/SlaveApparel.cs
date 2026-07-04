@@ -173,8 +173,40 @@ namespace SimpleSlaveryCollars
             };
         }
 
-        /// <summary>이 칼라가 armed 상태인지. 서브클래스에서 구현.</summary>
-        public abstract bool IsArmed { get; }
+        // ── armed 상태 (전 칼라 공통) ──
+        /// <summary>무장 상태. 저장 키 ssc_armed(레거시 armed) — 전 서브클래스 공통.</summary>
+        public bool armed = false;
+
+        /// <summary>이 칼라가 armed 상태인지.</summary>
+        public bool IsArmed => armed;
+
+        // ── 칼라 종류별 가상 멤버 (새 칼라 추가 시 이 그룹만 오버라이드) ──
+        /// <summary>원격 무장 액션. 종류별 오버라이드.</summary>
+        public virtual RemoteCollarAction? ArmAction => null;
+
+        /// <summary>원격 해제 액션. 종류별 오버라이드.</summary>
+        public virtual RemoteCollarAction? DisarmAction => null;
+
+        /// <summary>원격 폭발 액션(폭발 칼라 전용). 그 외 null.</summary>
+        public virtual RemoteCollarAction? DetonateAction => null;
+
+        /// <summary>정렬용 종류 키. 종류별 오버라이드.</summary>
+        public virtual int CollarSortKey => 99;
+
+        /// <summary>종류 라벨 번역 키. 종류별 오버라이드.</summary>
+        public virtual string TypeLabelKey => null;
+
+        /// <summary>무장/해제 적용. 기본은 armed 토글만. 종류별 부가효과는 오버라이드.</summary>
+        public virtual void SetArmed(bool active, Pawn pawn)
+        {
+            armed = active;
+        }
+
+        /// <summary>폭발 실행(폭발 칼라 전용). 그 외 아무 동작 없음.</summary>
+        public virtual void Detonate(Pawn pawn) { }
+
+        /// <summary>Pawn 스트립 시 처리. 기본은 없음(폭발 칼라는 유지). 종류별 오버라이드.</summary>
+        public virtual void NotifyStripped(Pawn pawn) { }
 
         /// <summary>armed 토글 기즈모 생성. 서브클래스에서 labelKey/descKey/iconPath/toggleAction 지정.</summary>
         protected Command_Toggle MakeArmedToggle(string labelKey, string descKey, string iconPath, Action toggleAction)
@@ -217,6 +249,11 @@ namespace SimpleSlaveryCollars
             Scribe_Values.Look(ref charge, "ssc_charge", 1f);
             Scribe_Values.Look(ref empDisabledTicks, "ssc_empDisabledTicks", 0);
             Scribe_Values.Look(ref rechargeThreshold, "ssc_rechargeThreshold", 0.5f);
+            Scribe_Values.Look(ref armed, "ssc_armed", false);
+
+            // [마이그레이션] 구버전 키 폴백 — 1.7에서 삭제. 서브클래스에서 베이스로 승격됨.
+            if (Scribe.mode == LoadSaveMode.LoadingVars && !armed)
+                Scribe_Values.Look(ref armed, "armed", false);
         }
 
         /// <summary>
@@ -309,10 +346,11 @@ namespace SimpleSlaveryCollars
             SlaveCollarRegistry.Register(pawn, this);
         }
 
-        /// <summary>해제 시 SlaveCollarRegistry에서 등록 해제.</summary>
+        /// <summary>해제 시 armed 초기화 + SlaveCollarRegistry에서 등록 해제.</summary>
         public override void Notify_Unequipped(Pawn pawn)
         {
             base.Notify_Unequipped(pawn);
+            armed = false;
             SlaveCollarRegistry.Unregister(pawn);
         }
         #endregion

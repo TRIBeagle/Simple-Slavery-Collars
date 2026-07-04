@@ -15,10 +15,30 @@ namespace SimpleSlaveryCollars
 {
     public class SlaveCollar_Explosive : SlaveApparel
     {
-        public bool armed = false;
         public int armCooldown = 0; // 무장 직후 정신붕괴 방지 쿨다운 (틱)
 
-        public override bool IsArmed => armed;
+        public override RemoteCollarAction? ArmAction => RemoteCollarAction.ArmExplosive;
+        public override RemoteCollarAction? DisarmAction => RemoteCollarAction.DisarmExplosive;
+        public override RemoteCollarAction? DetonateAction => RemoteCollarAction.DetonateExplosive;
+        public override int CollarSortKey => 0;
+        public override string TypeLabelKey => "SSC_Console_CollarExplosive";
+
+        /// <summary>무장 시 25~33% 확률 정신붕괴 + 쿨다운. 해제는 armed만 내림.</summary>
+        public override void SetArmed(bool active, Pawn pawn)
+        {
+            armed = active;
+            if (active && armCooldown == 0)
+            {
+                SimpleSlaveryUtility.TryInstantBreak(pawn, Rand.Range(0.25f, 0.33f)); // 25~33% 확률 정신붕괴
+                armCooldown = 2500; // 약 42초 쿨다운 (2500틱)
+            }
+        }
+
+        /// <summary>armed 상태면 폭발.</summary>
+        public override void Detonate(Pawn pawn)
+        {
+            if (armed) GoBoom();
+        }
 
 
         public override IEnumerable<Gizmo> SlaveGizmos()
@@ -35,15 +55,7 @@ namespace SimpleSlaveryCollars
             }
             // 1. Arm the collar
             yield return MakeArmedToggle("SSC_Explosive_Arm", "SSC_Explosive_Arm_Desc",
-                "UI/Commands/ArmCollar_Explosive", () =>
-                {
-                    armed = !armed;
-                    if (armed && armCooldown == 0)
-                    {
-                        SimpleSlaveryUtility.TryInstantBreak(Wearer, Rand.Range(0.25f, 0.33f)); // 25~33% 확률 정신붕괴
-                        armCooldown = 2500; // 약 42초 쿨다운 (2500틱)
-                    }
-                });
+                "UI/Commands/ArmCollar_Explosive", () => SetArmed(!IsArmed, Wearer));
 
             // 2. Detonate the collar
             if (armed)
@@ -90,24 +102,12 @@ namespace SimpleSlaveryCollars
 
         public override void ExposeData()
         {
-            base.ExposeData();
-            Scribe_Values.Look(ref armed, "ssc_armed", false);
+            base.ExposeData(); // armed(ssc_armed)는 베이스에서 처리
             Scribe_Values.Look(ref armCooldown, "ssc_armCooldown", 0);
 
             // [마이그레이션] 구버전 키 폴백 — 1.7에서 삭제
-            if (Scribe.mode == LoadSaveMode.LoadingVars)
-            {
-                if (!armed)
-                    Scribe_Values.Look(ref armed, "armed", false);
-                if (armCooldown == 0)
-                    Scribe_Values.Look(ref armCooldown, "arm_cooldown", 0);
-            }
-        }
-
-        public override void Notify_Unequipped(Pawn pawn)
-        {
-            base.Notify_Unequipped(pawn);
-            armed = false;
+            if (Scribe.mode == LoadSaveMode.LoadingVars && armCooldown == 0)
+                Scribe_Values.Look(ref armCooldown, "arm_cooldown", 0);
         }
 
         protected override void TickInterval(int delta)

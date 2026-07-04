@@ -14,11 +14,19 @@ namespace SimpleSlaveryCollars
 {
     public class SlaveCollar_Electric : SlaveApparel
     {
-        public bool armed = false;
         public int zapCooldown = 0;
         public const int zap_period = 50; // 감전 간격 (틱). 50틱 ≈ 0.83초
 
-        public override bool IsArmed => armed;
+        public override RemoteCollarAction? ArmAction => RemoteCollarAction.ArmElectric;
+        public override RemoteCollarAction? DisarmAction => RemoteCollarAction.DisarmElectric;
+        public override int CollarSortKey => 1;
+        public override string TypeLabelKey => "SSC_Console_CollarElectric";
+
+        /// <summary>스트립 시 무장 해제.</summary>
+        public override void NotifyStripped(Pawn pawn)
+        {
+            armed = false;
+        }
 
 
         public override IEnumerable<Gizmo> SlaveGizmos()
@@ -39,24 +47,12 @@ namespace SimpleSlaveryCollars
 
         public override void ExposeData()
         {
-            base.ExposeData();
-            Scribe_Values.Look(ref armed, "ssc_armed", false);
+            base.ExposeData(); // armed(ssc_armed)는 베이스에서 처리
             Scribe_Values.Look(ref zapCooldown, "ssc_zapCooldown", 0);
 
             // [마이그레이션] 구버전 키 폴백 — 1.7에서 삭제
-            if (Scribe.mode == LoadSaveMode.LoadingVars)
-            {
-                if (!armed)
-                    Scribe_Values.Look(ref armed, "armed", false);
-                if (zapCooldown == 0)
-                    Scribe_Values.Look(ref zapCooldown, "zap_cooldown", 0);
-            }
-        }
-
-        public override void Notify_Unequipped(Pawn pawn)
-        {
-            base.Notify_Unequipped(pawn);
-            armed = false;
+            if (Scribe.mode == LoadSaveMode.LoadingVars && zapCooldown == 0)
+                Scribe_Values.Look(ref zapCooldown, "zap_cooldown", 0);
         }
 
         protected override void TickInterval(int delta)
